@@ -70,8 +70,13 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 - 公開中の案内先に有効な公式情報の確認根拠がある
 - 公開対象言語の日英localeが存在し、公開可能な状態である
 - 日本語の`content_revision`と英語の`based_on_ja_revision`が一致する
-- `official-ja-fallback`が日本語正式名称と一致する
-- `official-en`に公式名称の根拠が関連付いている
+- 団体の`official-ja-fallback`が日本語正式名称と一致する
+- 団体の`official-en`に公式名称の根拠が関連付いている
+- `evidence.json`の`target_type: disaster`が既存の災害IDを参照し、`target_aspect: official-name`と`target_locale: ja`または`en`を使用している
+- 災害の`official-ja`に対象災害の確認済み日本語根拠が関連付いている
+- 災害の`official-en`に対象災害の確認済み英語根拠が関連付いている
+- 災害の`official-ja-fallback`が日本語公式名称と一致し、その日本語公式名称に確認済み根拠がある
+- 災害の`descriptive`へ公式名称の根拠を誤って必須としておらず、公式名称として扱っていない
 - 団体の`name_kind`に`descriptive`が使用されていない
 - 災害の`descriptive`名称に現在状況、安全性、規模が含まれていない
 - `site_guidance_status`を災害・出来事以外のレコードが持っていない
@@ -85,8 +90,27 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 - 内部専用項目が公開成果物へ混入していない
 - 日本語だけのリンク先を英語版へ表示する場合、リンク先言語の案内がある
 - 出来事が必ず一つの災害へ属している
+- 公開中の災害に、`overview`または`government-response`を含む公開可能な災害関連が1件以上ある
+- 公開中の出来事に公開可能な出来事関連が1件以上ある
+- 公開中の出来事の親災害も`publication_status: published`である
+- 親災害の`site_guidance_status: archived`に対して、子出来事が`active`として公開されていない
 - 出来事がトップ上部へ直接表示されていない
 - 未対応言語が指定されていない
+
+### 公開可能な災害・出来事関連
+
+最低件数へ数える関連レコードは、次をすべて満たし、公開成果物へ実際に含められるものに限定します。
+
+- 関連レコード、参照元の災害・出来事、参照する案内先が`publication_status: published`である
+- 案内先が`hidden`または`archived`ではない
+- 案内先の`destination_status`と`official_information_status`が`confirmed`である
+- 案内先に必要な確認日と有効な公式情報の確認根拠がある
+- 表示期間が設定されている場合、関連レコードがその期間内である
+- `display_locales`で指定した言語の必要なlocaleが`locale_status: published`である
+- 関連localeに必要な`button_label`がある
+- 英語版から日本語のみの案内先へ進む場合に`destination_language_note`がある
+
+非公開、表示期間外、確認不十分、根拠不足、または必要なlocale・文言がない関連レコードは、存在していても最低件数へ含めません。
 
 ## 検証結果の区分
 
@@ -106,9 +130,25 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 - 掲載期間の矛盾
 - トップ案内の上限超過
 - 内部項目の公開混入
-- 公式英語名称の根拠不足
+- 団体の公式英語名称の根拠不足
+- 団体の`official-ja-fallback`が日本語正式名称と一致しない
+- `target_type: disaster`の`target_id`が存在しない
+- `target_type: disaster`で`target_aspect`が`official-name`以外である
+- 災害の`official-name`根拠に`target_locale`がない、または`ja`・`en`以外である
+- 公開する`official-ja`の災害名称に、公開時点で有効な確認済み日本語根拠がない
+- 公開する`official-en`の災害名称に、公開時点で有効な確認済み英語根拠がない
+- 災害の`official-ja-fallback`に対応する日本語公式名称の公開時点で有効な確認済み根拠がない、または名称が一致しない
+- 災害の`descriptive`を公式名称として扱っている
 - 団体名称での`descriptive`使用
 - 災害の`descriptive`名称への現在状況・安全性・規模の混入
+- 公開中の災害に公開可能な`disaster-source-links`が1件もない
+- 公開中の災害に公開可能な災害関連はあるが、`overview`または`government-response`が1件もない
+- 災害関連がすべて非公開、表示期間外、確認不十分、根拠不足、またはlocale・文言不足である
+- 公開中の災害が非公開または無効な案内先を参照している
+- 公開中の出来事に公開可能な`event-source-links`が1件もない
+- 公開中の出来事が存在しない災害、または`publication_status: published`ではない親災害を参照している
+- 親災害の`site_guidance_status: archived`に対して、子出来事が`active`として公開されている
+- 出来事関連がすべて非公開、表示期間外、確認不十分、根拠不足、またはlocale・文言不足である
 - 関連データへの`site_guidance_status`混入
 - 未対応言語の指定
 
@@ -125,6 +165,10 @@ Errorは、一部レコードだけを黙って除外して処理を続ける理
 - 期間限定案内の終了確認が不足している
 - ボタン文言や説明文が長い
 - 類似する案内先が複数存在する
+- 公開中の出来事に関連する案内先はあるが`role: primary`がなく、補助的な案内先だけで構成されている
+- 公開中の災害に`overview`はあるが、案内目的が不明確または説明文が不足している
+- 災害・出来事の案内先が運用上の確認期限を超過している
+- 一つの災害・出来事に類似する案内先が過剰に登録されている
 
 安全性への影響が大きい期限超過は、設定された条件によりErrorへ昇格できる設計とします。例えば、トップ表示中の期間限定案内が許容期限を超過している場合です。具体的な運用周期と昇格条件は後続工程で定めます。
 
@@ -163,7 +207,7 @@ Warningの存在だけでは終了コードを`1`にしません。ただし、�
 6. URL、日付、公開状態を検証する
 7. 日英localeの存在、状態、改訂番号を検証する
 8. 公式情報の確認根拠を検証する
-9. 災害、出来事、3種類の関連データを検証する
+9. 災害、出来事、3種類の関連データ、最低件数、親災害の公開状態を検証する
 10. Errorがあれば停止する
 11. WarningとInfoを報告する
 12. `published`データだけを抽出する
@@ -177,6 +221,8 @@ Warningの存在だけでは終了コードを`1`にしません。ただし、�
 ## 公開対象の抽出
 
 `publication_status`が`published`であり、必要なlocaleの`locale_status`が`published`で、表示期間と参照先の公開条件を満たすデータだけを抽出します。関連データは`site_display_start_on`と`site_display_end_on`の表示期間内にある場合だけ含めます。`site_guidance_status`を個々のリンクの抽出条件として直接使用しません。
+
+公開中の災害・出来事に必要な公開可能な関連データ、災害の`overview`または`government-response`、出来事の公開中の親災害が不足する場合はErrorとします。該当レコードだけを黙って除外して生成を続けず、公開成果物の生成全体を停止します。
 
 次は公開成果物へ含めません。
 

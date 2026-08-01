@@ -245,7 +245,9 @@ localeレコードは、少なくとも次を持ちます。
 - `official-ja-fallback`
 - `descriptive`
 
-`descriptive`は、公式名称が確認できない災害を識別するための説明的名称に限定します。本サイトによる公式認定を意味せず、現在の被害状況、安全性、規模を名称へ含めません。団体の独自英訳を許可する目的にも使用しません。
+`official-ja`と`official-en`は、`evidence.json`で対象災害、名称言語、公式名称の確認根拠を明示的に関連付けられる場合だけ使用します。`official-ja-fallback`は、確認済みの日本語公式名称と同じ文字列を英語版で使用します。
+
+`descriptive`は、公式名称が確認できない災害を識別するための説明的名称に限定し、`official-name`の確認根拠を必須としません。本サイトによる公式認定を意味せず、現在の被害状況、安全性、規模、復旧状態を名称へ含めません。団体の独自英訳を許可する目的にも使用しません。
 
 ## 公式情報の確認根拠
 
@@ -255,9 +257,12 @@ localeレコードは、少なくとも次を持ちます。
 - ページが公式ページであること
 - SNSアカウントが公式であること
 - 英語名称が公式名称であること
+- 災害の日本語名称または英語名称が公式名称であること
 - 組織間の関係
 
-公式サイトからのリンク、国・自治体の公式SNS一覧、公式のお知らせ、公式組織ページでの英語名称使用などを根拠とします。認証表示、フォロワー数、表示名だけを根拠にしません。根拠の対象、種別、確認先、確認日、参照関係などの構造情報は`core`へ、利用者向け説明は`locale`へ置きます。
+`evidence.json`の`target_type`は`organization`、`source`、`disaster`です。災害名称の根拠は、`target_type: disaster`、対象災害ID、`target_aspect: official-name`、`target_locale: ja`または`en`で関連付けます。第一版の`target_type: disaster`は災害名称の確認だけに使用し、`occurred_on`用の新しい`target_aspect`は追加しません。
+
+公式サイトからのリンク、国・自治体の公式SNS一覧、公式のお知らせ、公式組織ページでの名称使用などを根拠とします。災害名称は、対象名称を実際に使用している公的機関・関係団体自身の公式ページなどで確認します。検索結果、第三者のSNS投稿、報道記事だけを根拠とせず、認証表示、フォロワー数、表示名だけも根拠にしません。根拠データへ災害の現在状況、安全性、被害規模を保存しません。構造情報は`core`へ、利用者向け説明は`locale`へ置きます。
 
 ## 地域
 
@@ -314,6 +319,8 @@ localeレコードは、少なくとも次を持ちます。
 
 個々の関連・リンクの掲載状態は`publication_status`、表示期間は`site_display_start_on`と`site_display_end_on`で管理します。表示期間外または非公開状態の関連データは公開成果物へ含めません。`site_guidance_status`を個々の関連・リンクへ持たせません。
 
+災害・出来事の最低件数へ数える公開可能な関連データは、関連、参照元、案内先、必要なlocaleが公開可能で、表示期間内にあり、案内先の確認状態・確認日・公式情報の根拠、関連localeの`button_label`、必要な`destination_language_note`が揃ったものに限定します。単に関連レコードが存在するだけでは件数へ含めません。詳細条件は[データフィールド定義](DATA_FIELDS.md)を参照してください。
+
 ### カード関連
 
 `card-source-links.json`は通常カードと案内先を結びます。
@@ -336,6 +343,8 @@ localeレコードは、少なくとも次を持ちます。
 - `role`: `overview`、`government-response`、`support`、`supplementary`
 - トップ表示: `show_in_top_guidance`と`top_display_order`
 
+`publication_status: published`の災害は、公開可能な災害関連を1件以上持ち、そのうち最低1件を`overview`または`government-response`とします。`support`または`supplementary`だけでは公開条件を満たしません。
+
 トップ案内は最大5件とし、運用上は3件程度を優先します。`top-highlight`という`role`は作成しません。
 
 ### 出来事関連
@@ -343,6 +352,10 @@ localeレコードは、少なくとも次を持ちます。
 `event-source-links.json`は、水道、道路、住宅、医療などの案内目的と案内先を結びます。
 
 - `role`: `primary`、`supplementary`、`support`、`safety-guidance`
+
+`publication_status: published`の出来事は、いずれかの`role`を持つ公開可能な出来事関連を1件以上必要とします。通常は`primary`を優先し、補助的な案内先だけで構成してよいかは人が確認します。
+
+公開中の出来事が参照する親災害も`publication_status: published`でなければなりません。存在しない災害、非公開・非表示・アーカイブ済みの親災害を参照する出来事は公開せず、親災害が`site_guidance_status: archived`の場合に子出来事を`active`として公開しません。
 
 出来事をトップ上部へ直接表示しません。トップへ必要な案内先は、災害関連にも明示的に登録します。
 

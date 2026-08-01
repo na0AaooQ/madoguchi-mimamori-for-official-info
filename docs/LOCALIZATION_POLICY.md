@@ -60,12 +60,14 @@
 | `official-ja-fallback` | 公式英語名称を確認できないため英語版でも使用する日本語公式名称 |
 | `descriptive` | 公式名称が確認できない災害を識別するための説明的名称 |
 
-- `descriptive`は、公式名称が確認できない災害名称に限定する
-- `descriptive`を団体の独自英訳を許可する目的に使用しない
-- `official-en`には公式英語名称の確認根拠を必要とする
-- `official-ja-fallback`は対応する日本語公式名称と一致させる
-- `descriptive`を使用しても、本サイトが災害名を公式認定したことを意味しない
-- 現在の被害状況、安全性、規模などを説明的名称へ含めない
+- 日本語localeの`official-ja`には、`target_type: disaster`、対象災害ID、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`の公開時点に有効な根拠を必要とする
+- 英語localeの`official-en`には、`target_type: disaster`、対象災害ID、`target_aspect: official-name`、`target_locale: en`、`status: confirmed`の公開時点に有効な根拠を必要とする
+- 英語localeの`official-ja-fallback`は、対応する日本語localeを`official-ja`とし、英語版の名称文字列を日本語公式名称と一致させ、同じ災害IDを対象とする`target_type: disaster`、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`の公開時点に有効な根拠を必要とする
+- `descriptive`は、公式名称が確認できない災害名称に限定し、`official-name`の確認根拠を必須としない
+- `descriptive`を団体の独自英訳を許可する目的に使用せず、本サイトによる公式認定を意味しない
+- 現在の被害状況、安全性、規模、復旧状態などを説明的名称へ含めない
+
+災害名称の根拠は、対象名称を実際に使用する公的機関・関係団体自身の公式ページなどで確認します。検索結果、第三者のSNS投稿、報道記事だけや、認証バッジ、フォロワー数、表示名だけを公式名称の根拠にしません。
 
 ## サイト表示言語とリンク先言語
 
@@ -138,6 +140,8 @@ localeレコードは、少なくとも次を持ちます。
 - 独自訳を公式英語名称として扱っていない
 - 公式英語名称の根拠が対象名称を実際に示している
 - `official-ja-fallback`が日本語正式名称と一致する
+- 災害の`official-ja`と`official-en`に対象災害と言語が一致する確認済み根拠がある
+- 災害の`official-ja-fallback`に対応する日本語公式名称の確認済み根拠がある
 - 団体名称に`descriptive`を使用していない
 - 災害の`descriptive`名称に現在状況・安全性・規模を含めていない
 - 日本語だけのリンク先であることが英語版に明示されている

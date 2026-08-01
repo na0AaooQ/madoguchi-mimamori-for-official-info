@@ -258,6 +258,7 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 - `organization`
 - `source`
+- `disaster`
 
 `target_aspect`：
 
@@ -286,8 +287,43 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 - `evidence_source_id`または`evidence_url`の一方以上を必須とする
 - `target_aspect: official-name`では`target_locale`を必須とする
+- `target_locale`は第一版では`ja`または`en`だけを許可する
+- `target_type`に応じて、`target_id`が既存の団体ID、案内先ID、災害IDを参照することを必須とする
+- `target_type: disaster`では、`target_id`を既存の`disaster-`始まりの災害IDとし、`target_aspect: official-name`だけを使用する
+- 第一版で`target_type: disaster`を使用する目的は、災害の公式名称の確認根拠に限定する
+- 災害名称の根拠は、対象名称を実際に使用している公的機関・関係団体自身の公式ページなどで確認する
+- 検索結果、SNS上の第三者投稿、報道記事だけを災害の公式名称の根拠にしない
 - `evidence_url`は原則HTTPSとする
 - 認証表示、フォロワー数、表示名だけを根拠にしない
+- 災害の現在状況、安全性、被害規模を根拠データへ保存しない
+- `occurred_on`の根拠を表す新しい`target_aspect`は第一版のこの設計へ追加せず、必要性が判明した場合は後続工程で検討する
+
+#### 災害名称の確認根拠
+
+災害の公式名称を確認する`evidence.json`レコードでは、既存フィールドを次のように使用します。
+
+| 項目 | 値・意味 |
+| --- | --- |
+| `target_type` | `disaster` |
+| `target_id` | 対象となる`disaster-`始まりの災害ID |
+| `target_aspect` | `official-name` |
+| `target_locale` | `ja`または`en` |
+| `evidence_type` | 既存の許可値から選択 |
+| `evidence_source_id` | 根拠となる公式案内先ID |
+| `evidence_url` | 必要に応じて根拠となる公式URL |
+| `checked_on` | 根拠を確認した日 |
+| `status` | `confirmed`、`needs-review`、`invalid` |
+| `publication_status` | 根拠レコードの公開状態 |
+
+公開する災害名称の根拠条件は次のとおりです。
+
+ここで「公開時点に有効な根拠」とは、少なくとも`status: confirmed`、`publication_status: published`、必要な`checked_on`を持ち、根拠となる公式案内先または公式URLを確認できるレコードを指します。
+
+- 日本語localeの`name_kind: official-ja`には、同じ災害IDを`target_id`とし、`target_type: disaster`、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`で、公開時点に有効な根拠を必須とする
+- 英語localeの`name_kind: official-en`には、同じ災害IDを`target_id`とし、`target_type: disaster`、`target_aspect: official-name`、`target_locale: en`、`status: confirmed`で、公開時点に有効な根拠を必須とする
+- 英語localeの`name_kind: official-ja-fallback`では、対応する日本語localeを`name_kind: official-ja`とし、英語版の名称文字列を日本語公式名称と一致させ、同じ災害IDを対象とする`target_type: disaster`、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`の公開時点に有効な根拠を必須とする
+- `name_kind: descriptive`には`official-name`の確認根拠を必須としない。公式名称であるかのように表示せず、本サイトによる公式認定を意味しない
+- `descriptive`名称に現在の被害、安全性、規模、復旧状態を含めず、団体名称には使用しない
 
 ### `data/core/sections.json`
 
@@ -351,6 +387,7 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `site_guidance_status`は災害そのものの終了、安全、復旧を表さない
 - 現在の被害、断水、停電、運行、診療、復旧状況を保存しない
 - 個々の案内先の公開状態と表示期間は関連データで管理する
+- `publication_status: published`の災害は、公開可能な`disaster-source-links.json`を1件以上持ち、そのうち最低1件の`role`を`overview`または`government-response`とする
 
 ### `data/core/events.json`
 
@@ -394,6 +431,9 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `site_guidance_status`は出来事そのものの終了、安全、復旧を表さない
 - 現在状況、個別被害、ニュース記事を保存しない
 - 個々の案内先の公開状態と表示期間は関連データで管理する
+- `publication_status: published`の出来事は、公開可能な`event-source-links.json`を1件以上持つ
+- 公開中の出来事が参照する親災害は存在し、`publication_status: published`でなければならない
+- 親災害の`site_guidance_status: archived`に対して、子出来事を`site_guidance_status: active`として公開しない
 
 ### 3種類の関連データに共通する項目
 
@@ -421,6 +461,22 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - 同じ参照元と`source_id`の組み合わせを重複させない
 - 表示期間は本サイト上の掲載期間であり、外部制度の受付期間ではない
 - 表示期間外または`publication_status: published`以外の関連データを公開成果物へ含めない
+
+#### 公開可能な関連データ
+
+災害・出来事の最低件数へ数える「公開可能な関連データ」は、単に関連レコードが存在するだけではなく、次をすべて満たし、公開成果物へ実際に含められる関連レコードです。
+
+- 関連レコードの`publication_status`が`published`である
+- 参照元の災害または出来事が`publication_status: published`である
+- 参照する案内先が`publication_status: published`であり、`hidden`または`archived`ではない
+- 案内先の`destination_status`が`confirmed`である
+- 案内先の`official_information_status`が`confirmed`である
+- 案内先に`destination_checked_on`と`official_information_checked_on`がある
+- 案内先に有効な公式情報の確認根拠がある
+- `site_display_start_on`または`site_display_end_on`が設定されている場合、関連レコードがその表示期間内である
+- `display_locales`で指定された言語について、参照元、案内先、関連データの必要なlocaleが`locale_status: published`である
+- 対応する関連localeに必要な`button_label`がある
+- 英語版から日本語のみの案内先へ進む場合、言語別`sources.json`に必要な`destination_language_note`がある
 
 #### `card-source-links.json`の固有項目
 
@@ -471,6 +527,9 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - トップ案内は最大5件とし、運用上は3件程度を優先する
 - `top-highlight`という`role`を作らない
 - `show_in_top_guidance: true`では、親災害の`site_guidance_status`を`active`とする
+- `publication_status: published`の災害は、公開可能な災害関連を1件以上持ち、そのうち最低1件を`role: overview`または`role: government-response`とする
+- `support`または`supplementary`だけでは、公開中の災害に必要な総合的案内先を満たしたことにしない
+- 非公開、表示期間外、確認不十分、根拠不足、または必要なlocale・`button_label`がない災害関連を最低件数へ含めない
 
 #### `event-source-links.json`の固有項目
 
@@ -486,7 +545,13 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `support`
 - `safety-guidance`
 
-出来事をトップ上部へ直接表示しません。トップへ掲載する案内先は、`disaster-source-links.json`にも明示的に登録します。
+整合性ルール：
+
+- `publication_status: published`の出来事は、公開可能な出来事関連を1件以上持つ
+- 最低件数を満たす関連の`role`は`primary`、`supplementary`、`support`、`safety-guidance`のいずれでもよい
+- 通常は`primary`を優先し、補助的な案内先だけで構成してよいかは人が確認する。`primary`を必須にするかは後続の実運用結果を踏まえて再検討できる
+- 非公開、表示期間外、確認不十分、根拠不足、または必要なlocale・`button_label`がない出来事関連を最低件数へ含めない
+- 出来事をトップ上部へ直接表示しない。トップへ掲載する案内先は、`disaster-source-links.json`にも明示的に登録する
 
 ### `data/core/check-history.json`
 
@@ -723,12 +788,12 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 整合性ルール：
 
-- `descriptive`は、公式名称が確認できない災害名称に限定する
-- `descriptive`を団体の独自英訳を許可する目的に使用しない
-- `official-en`には公式英語名称の確認根拠を必要とする
-- `official-ja-fallback`は対応する日本語公式名称と一致させる
-- `descriptive`を使用しても、本サイトが災害名を公式認定したことを意味しない
-- 現在の被害状況、安全性、規模などを`descriptive`名称へ含めない
+- `official-ja`には、対象災害の`target_type: disaster`、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`の有効な根拠を必要とする
+- `official-en`には、対象災害の`target_type: disaster`、`target_aspect: official-name`、`target_locale: en`、`status: confirmed`の有効な根拠を必要とする
+- `official-ja-fallback`は、対応する日本語localeの`name_kind: official-ja`と、同じ災害IDを対象とする`target_type: disaster`、`target_aspect: official-name`、`target_locale: ja`、`status: confirmed`の有効な根拠を必要とし、名称文字列を日本語公式名称と一致させる
+- `descriptive`は、公式名称が確認できない災害名称に限定し、`official-name`の根拠を必須としない
+- `descriptive`を団体の独自英訳を許可する目的に使用せず、本サイトによる公式認定を意味しない
+- 現在の被害状況、安全性、規模、復旧状態などを`descriptive`名称へ含めない
 
 ### 言語別`events.json`
 
@@ -778,11 +843,18 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - 公開中の案内先は`official_information_status: confirmed`とする
 - 公開中の案内先に必要な確認日を持たせる
 - 公開中の案内先に有効な公式情報の確認根拠を関連付ける
-- `official-en`に公式英語名称の根拠を関連付ける
-- `official-ja-fallback`を対応する日本語正式名称と一致させる
+- 団体の`official-en`に公式英語名称の根拠を関連付ける
+- 団体の`official-ja-fallback`を対応する日本語正式名称と一致させる
+- 災害の`official-ja`に対象災害と`target_locale: ja`を指定した確認済み根拠を関連付ける
+- 災害の`official-en`に対象災害と`target_locale: en`を指定した確認済み根拠を関連付ける
+- 災害の`official-ja-fallback`に対応する日本語公式名称の確認済み根拠を関連付け、名称を日本語公式名称と一致させる
+- 災害の`descriptive`に公式名称の根拠を必須としない
 - 日本語のみの案内先を英語版へ表示する場合は`destination_language_note`を必須とする
 - 関連データの表示期間を矛盾させない
 - 表示期間外または非公開状態の関連データを公開成果物から除外する
+- 公開中の災害に、`overview`または`government-response`を含む公開可能な災害関連を1件以上持たせる
+- 公開中の出来事に公開可能な出来事関連を1件以上持たせ、親災害も`publication_status: published`とする
+- 親災害の`site_guidance_status: archived`に対して、子出来事を`active`として公開しない
 - 非公開・アーカイブ済みの参照先を公開データから参照しない
 - 内部専用項目を公開成果物へ含めない
 - 現在状況、個人情報、センシティブ情報を保存しない
