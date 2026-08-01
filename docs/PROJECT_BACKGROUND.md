@@ -26,6 +26,7 @@
 - 熊本県内および周辺地域の住民
 - 家族や知人のいる地域の情報を確認する方
 - 熊本県の土地勘がない方
+- 日本語での情報探索が難しい英語話者
 - SNSで共有する前に公式情報を確認したい方
 - 地域外から公的な支援先を確認したい方
 
@@ -54,6 +55,8 @@
 
 > まどぐちみまもり｜熊本県・熊本市の公式情報案内
 
+正式な英語表記は「Madoguchi Mimamori｜Official Information Guide for Kumamoto Prefecture and Kumamoto City」です。第一版から日本語・英語へ対応し、その他の言語は将来対応とします。英語表記と日英対応は、行政機関が運営する公式サイトであることを意味しません。
+
 「まどぐち」は、利用者と公式情報を結ぶ入口を表します。ただし、行政機関が運営する公式窓口、申請窓口、相談受付であるとの誤認を避けるため、「公的機関・関係団体自身の公式発表へ進むための案内サイト」と説明します。
 
 ## 名称決定前の予備確認
@@ -72,5 +75,6 @@
 
 - [設計原則](DESIGN_PRINCIPLES.md)
 - [情報掲載方針](INFORMATION_LISTING_POLICY.md)
+- [日英対応方針](LOCALIZATION_POLICY.md)
 - [第一版の対象を限定する決定](decisions/0005-limit-first-release-scope.md)
 - [名称採用の決定](decisions/0009-adopt-madoguchi-mimamori-name.md)
