@@ -2,7 +2,7 @@
 
 ## 文書の位置付け
 
-この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。第一版は未実装です。
+この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。第一版は未実装です。
 
 このPRでは、検証プログラム、JSON Schema、実データ、公開生成処理を実装しません。具体的な製品・ライブラリ・コマンドは後続工程で決定します。
 
@@ -37,6 +37,8 @@
 
 各スキーマは`additionalProperties: false`を基本とし、想定外の項目を見逃さない設計とします。
 
+JSON Schemaは[データフィールド定義](DATA_FIELDS.md)で確定した項目名、型、必須条件、列挙値を実装します。これらをJSON Schema実装時に再検討する未確定事項として扱いません。
+
 ## JSON Schema検証の責務
 
 JSON Schemaでは、主として次を確認します。
@@ -70,6 +72,11 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 - 日本語の`content_revision`と英語の`based_on_ja_revision`が一致する
 - `official-ja-fallback`が日本語正式名称と一致する
 - `official-en`に公式名称の根拠が関連付いている
+- 団体の`name_kind`に`descriptive`が使用されていない
+- 災害の`descriptive`名称に現在状況、安全性、規模が含まれていない
+- `site_guidance_status`を災害・出来事以外のレコードが持っていない
+- 個々の関連データの公開状態と表示期間が`publication_status`、`site_display_start_on`、`site_display_end_on`で管理されている
+- `visibility_context`が表示場面だけを表し、特定の災害IDや優先順位の代替に使用されていない
 - 同じ対象と案内先の関連データが重複していない
 - 同一表示範囲で`display_order`が重複していない
 - 表示開始日と終了日に矛盾がない
@@ -100,6 +107,9 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 - トップ案内の上限超過
 - 内部項目の公開混入
 - 公式英語名称の根拠不足
+- 団体名称での`descriptive`使用
+- 災害の`descriptive`名称への現在状況・安全性・規模の混入
+- 関連データへの`site_guidance_status`混入
 - 未対応言語の指定
 
 Errorは、一部レコードだけを黙って除外して処理を続ける理由にしません。原因を特定できるファイル、ID、検証規則を報告して停止します。
@@ -166,7 +176,7 @@ Warningの存在だけでは終了コードを`1`にしません。ただし、�
 
 ## 公開対象の抽出
 
-`publication_status`が`published`であり、必要なlocaleの`locale_status`が`published`で、表示期間と参照先の公開条件を満たすデータだけを抽出します。
+`publication_status`が`published`であり、必要なlocaleの`locale_status`が`published`で、表示期間と参照先の公開条件を満たすデータだけを抽出します。関連データは`site_display_start_on`と`site_display_end_on`の表示期間内にある場合だけ含めます。`site_guidance_status`を個々のリンクの抽出条件として直接使用しません。
 
 次は公開成果物へ含めません。
 
@@ -232,6 +242,7 @@ Warningがある場合は、対象ごとの確認結果を残してから公開�
 ## 関連文書
 
 - [データモデル](DATA_MODEL.md)
+- [データフィールド定義](DATA_FIELDS.md)
 - [日英対応方針](LOCALIZATION_POLICY.md)
 - [開発工程](DEVELOPMENT_PHASES.md)
 - [データを検証してから公開生成する決定](decisions/0015-validate-data-before-public-generation.md)

@@ -245,7 +245,9 @@
 - 災害別の交通・復旧案内
 - 災害別の支援案内
 
-期間限定リンクは、人が現在有効であることを確認した期間だけ表示します。`site_guidance_status`は`active`、`ending-review`、`archived`で管理し、災害そのものの終了状態ではなく本サイト上の案内状態を表します。災害ごとの深いURLを常設リンクとして恒久的に残しません。
+`site_guidance_status`は`data/core/disasters.json`と`data/core/events.json`のレコードに属し、災害または出来事について本サイト上で案内している状態を`active`、`ending-review`、`archived`で管理します。災害・出来事そのものの終了、安全、復旧を判定する項目ではありません。
+
+個々の期間限定リンクは、`card-source-links.json`、`disaster-source-links.json`、`event-source-links.json`の`publication_status`で掲載状態を、`site_display_start_on`と`site_display_end_on`で表示期間を管理します。表示期間外または非公開状態の関連データは公開成果物へ含めず、人が有効性を確認した期間だけ表示します。災害ごとの深いURLを常設リンクとして恒久的に残しません。
 
 ## 掲載順と表現
 
@@ -267,6 +269,7 @@
 - [サイト構成](SITE_STRUCTURE.md)
 - [運用方針](OPERATIONS_POLICY.md)
 - [データモデル](DATA_MODEL.md)
+- [データフィールド定義](DATA_FIELDS.md)
 - [日英対応方針](LOCALIZATION_POLICY.md)
 - [公式性確認の決定](decisions/0003-verify-official-sources.md)
 - [支援分野の決定](decisions/0008-government-only-support-information.md)

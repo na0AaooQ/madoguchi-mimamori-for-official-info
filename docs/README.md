@@ -12,6 +12,7 @@
 | [サイト構成](SITE_STRUCTURE.md) | 5ページ、トップ導線、カード、画面上の情報設計 |
 | [運用方針](OPERATIONS_POLICY.md) | 定期確認、期間限定リンク、更新履歴、情報量上限 |
 | [データモデル](DATA_MODEL.md) | JSON正本、core・locale、管理単位、参照関係、内部・公開履歴 |
+| [データフィールド定義](DATA_FIELDS.md) | 各core・locale JSONの項目名、型、必須条件、許可値、整合性ルール |
 | [日英対応方針](LOCALIZATION_POLICY.md) | 第一版の日英対応、公式名称、リンク先言語、翻訳改訂 |
 | [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md) | JSON Schema、意味検証、公開停止条件、内部項目除外 |
 | [開発工程](DEVELOPMENT_PHASES.md) | 工程1から工程13までの目的、成果物、完了条件 |

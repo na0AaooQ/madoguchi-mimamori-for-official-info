@@ -112,6 +112,7 @@
 - [サイト構成](docs/SITE_STRUCTURE.md)
 - [運用方針](docs/OPERATIONS_POLICY.md)
 - [データモデル](docs/DATA_MODEL.md)
+- [データフィールド定義](docs/DATA_FIELDS.md)
 - [日英対応方針](docs/LOCALIZATION_POLICY.md)
 - [データ検証・公開生成方針](docs/DATA_VALIDATION_AND_PUBLICATION.md)
 - [開発工程](docs/DEVELOPMENT_PHASES.md)

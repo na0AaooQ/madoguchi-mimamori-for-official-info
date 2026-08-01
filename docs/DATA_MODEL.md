@@ -2,7 +2,7 @@
 
 ## 文書の位置付け
 
-この文書は、第一版の管理データの正本と、各ファイルの責務・参照関係を定めます。第一版は未実装です。実際のJSONデータとJSON Schemaは後続工程で実装します。
+この文書は、第一版の管理データの正本と、各ファイルの責務・参照関係を定めます。各ファイルの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)に記録します。第一版は未実装であり、実際のJSONデータとJSON Schemaは後続工程で実装します。
 
 管理データの正本にはJSONを使用し、言語に依存しない`core`と、表示文言を持つ日本語・英語の`locale`を分離します。管理用の正本データをそのままWeb公開せず、検証済みの公開対象だけから利用者向け成果物を生成します。
 
@@ -226,13 +226,26 @@ localeレコードは、少なくとも次を持ちます。
 
 ## 公式名称
 
-名称種別は次を使用します。
+### 団体名称
+
+言語別`organizations.json`の`name_kind`は、次の3種類に限定します。
 
 - `official-ja`
 - `official-en`
 - `official-ja-fallback`
 
-`official-en`は、団体自身が使用する公式英語名称を根拠から確認できる場合だけ使用します。確認できない場合は、英語版でも日本語の正式名称を`official-ja-fallback`として表示します。独自訳を公式英語名称として扱いません。災害名称など公式名称が存在しない対象に限り、説明的名称を別種別として後続スキーマで定義できます。
+`official-en`は、団体自身が使用する公式英語名称を根拠から確認できる場合だけ使用します。確認できない場合は、英語版でも日本語の正式名称を`official-ja-fallback`として表示します。独自訳を公式英語名称として扱わず、団体名称に`descriptive`を使用しません。
+
+### 災害名称
+
+言語別`disasters.json`の`name_kind`は、次の4種類です。
+
+- `official-ja`
+- `official-en`
+- `official-ja-fallback`
+- `descriptive`
+
+`descriptive`は、公式名称が確認できない災害を識別するための説明的名称に限定します。本サイトによる公式認定を意味せず、現在の被害状況、安全性、規模を名称へ含めません。団体の独自英訳を許可する目的にも使用しません。
 
 ## 公式情報の確認根拠
 
@@ -278,7 +291,7 @@ localeレコードは、少なくとも次を持ちます。
 
 災害・出来事に、現在の断水地域、停電戸数、負傷者数、道路・運休状況、復旧見込み、施設の受入能力、安全性判断、目撃情報、個人情報を保存しません。
 
-`site_guidance_status`は災害そのものの終了状態ではなく、本サイト上で案内を表示している状態を示します。
+`site_guidance_status`は`disasters.json`と`events.json`のレコードに属し、災害または出来事について本サイト上で案内を表示している状態を示します。災害・出来事そのものの終了、安全、復旧を判定する項目ではありません。
 
 - `active`
 - `ending-review`
@@ -299,12 +312,22 @@ localeレコードは、少なくとも次を持ちます。
 
 表示期間は案内先そのものではなく、案内先をどこへ掲載するかを表す関連データ側で管理します。ボタン文言と公開用補足は対応するlocaleへ置きます。
 
+個々の関連・リンクの掲載状態は`publication_status`、表示期間は`site_display_start_on`と`site_display_end_on`で管理します。表示期間外または非公開状態の関連データは公開成果物へ含めません。`site_guidance_status`を個々の関連・リンクへ持たせません。
+
 ### カード関連
 
 `card-source-links.json`は通常カードと案内先を結びます。
 
 - `role`: `primary`、`secondary`、`temporary-highlight`
-- 表示場面の値候補: `always`、`normal`、`disaster`（項目名はJSON Schema実装時に確定する）
+- `visibility_context`: `always`、`normal`、`disaster`
+
+`visibility_context`は必須のstringであり、表示場面を表します。信頼度や優先順位を表しません。`visibility_context: disaster`でも特定の災害IDを直接参照せず、特定災害との関係は`disaster-source-links.json`で管理します。
+
+| 値 | 意味 |
+| --- | --- |
+| `always` | 通常時・災害対応時の両方で表示する |
+| `normal` | 通常時に表示する |
+| `disaster` | 災害対応時に表示する |
 
 ### 災害関連
 
@@ -327,11 +350,11 @@ localeレコードは、少なくとも次を持ちます。
 
 `data/core/check-history.json`は運用者向けであり、ブラウザや公開成果物へ含めません。
 
-確認対象の候補は、`site`、`region`、`organization`、`source`、`evidence`、`section`、`card`、`disaster`、`event`、`card-source-link`、`disaster-source-link`、`event-source-link`です。
+`target_type`の許可値は、`site`、`region`、`organization`、`source`、`evidence`、`section`、`card`、`disaster`、`event`、`card-source-link`、`disaster-source-link`、`event-source-link`です。
 
-確認種別の候補は、`destination`、`official-information`、`official-name`、`organizational-relationship`、`content-purpose`、`locale-content`、`temporary-guidance`、`publication-readiness`、`full-site-review`、`other`です。
+`check_type`の許可値は、`destination`、`official-information`、`official-name`、`organizational-relationship`、`content-purpose`、`locale-content`、`temporary-guidance`、`publication-readiness`、`full-site-review`、`other`です。
 
-確認結果の候補は、`confirmed`、`changed`、`needs-review`、`unavailable`、`retired`、`invalid`、`ended`です。
+`result`の許可値は、`confirmed`、`changed`、`needs-review`、`unavailable`、`retired`、`invalid`、`ended`です。
 
 履歴は原則追記型とし、過去の記録を現在状態に合わせて書き換えません。誤記訂正では元記録を消さず、必要に応じて`supersedes_check_id`で関連付けます。個人情報、認証情報、非公開連絡先、問い合わせメール本文を保存しません。
 
@@ -345,7 +368,7 @@ localeレコードは、少なくとも次を持ちます。
 
 利用者に必要な変更だけを掲載し、すべての内部確認作業を公開しません。一つの公開更新履歴が複数の内部確認履歴をまとめても構いません。
 
-更新種別の候補は、`initial-release`、`routine-check`、`source-added`、`source-updated`、`source-removed`、`temporary-guidance-started`、`temporary-guidance-ended`、`policy-updated`、`translation-updated`、`accessibility-updated`、`other`です。
+`update_type`の許可値は、`initial-release`、`routine-check`、`source-added`、`source-updated`、`source-removed`、`temporary-guidance-started`、`temporary-guidance-ended`、`policy-updated`、`translation-updated`、`accessibility-updated`、`other`です。
 
 内部メモや調査途中の推測を公開更新履歴へ流用しません。
 
@@ -370,15 +393,17 @@ localeレコードは、少なくとも次を持ちます。
 
 - 各JSONファイルと最小サンプルデータ
 - JSON Schema Draft 2020-12による具体的なスキーマ
-- 条件付き必須項目と各列挙値の最終的なフィールド定義
 - JSON Schema検証とファイル間の意味検証
 - 公開対象の抽出と日英成果物の生成
 - 改訂番号を増やす変更の詳細運用
+
+フィールド名、型、必須条件、列挙値は[データフィールド定義](DATA_FIELDS.md)で確定済みであり、後続工程の未確定事項として扱いません。
 
 この文書は、`operator_name`の具体値、本番URL、URLパス構成、英語版を`/en/`へ置くか、ホスティング方式、実際の掲載団体・URLを決定しません。
 
 ## 関連文書
 
+- [データフィールド定義](DATA_FIELDS.md)
 - [日英対応方針](LOCALIZATION_POLICY.md)
 - [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md)
 - [情報掲載方針](INFORMATION_LISTING_POLICY.md)
