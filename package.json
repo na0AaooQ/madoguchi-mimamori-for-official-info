@@ -1,0 +1,30 @@
+{
+  "name": "madoguchi-mimamori-for-official-info",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.18.0 <25",
+    "npm": ">=11.16.0 <12"
+  },
+  "packageManager": "npm@11.16.0",
+  "scripts": {
+    "test": "node --test",
+    "lint": "eslint .",
+    "format": "node scripts/formatting/prettier-runner.js --write",
+    "format:check": "node scripts/formatting/prettier-runner.js --check",
+    "validate:fixtures": "node scripts/validation/cli.js --fixtures",
+    "validate:docs": "node scripts/validation/docs-validator.js",
+    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@eslint/json": "2.0.1",
+    "@eslint/markdown": "8.0.3",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "eslint": "10.7.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.7.0",
+    "prettier": "3.9.6"
+  }
+}

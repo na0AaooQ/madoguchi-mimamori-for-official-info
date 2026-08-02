@@ -1,0 +1,40 @@
+{
+  "core": [
+    {
+      "id": "test-item-1",
+      "display_locales": ["ja", "en"],
+      "related_ids": ["test-missing-reference"]
+    },
+    {
+      "id": "test-item-2",
+      "display_locales": ["ja", "en"],
+      "related_ids": []
+    }
+  ],
+  "locales": {
+    "ja": [
+      {
+        "id": "test-item-1",
+        "content_revision": 2,
+        "locale_status": "published"
+      },
+      {
+        "id": "test-item-2",
+        "content_revision": 1,
+        "locale_status": "published"
+      }
+    ],
+    "en": [
+      {
+        "id": "test-item-1",
+        "based_on_ja_revision": 1,
+        "locale_status": "under-review"
+      }
+    ]
+  },
+  "references": [
+    {
+      "id": "test-reference-1"
+    }
+  ]
+}
