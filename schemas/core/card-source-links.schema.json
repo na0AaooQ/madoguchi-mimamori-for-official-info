@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:core:card-source-links:1.0.0",
   "title": "Core カードと案内先の関連",
-  "description": "カードと案内先の関連の未実装データを空配列として管理するSchemaです。",
+  "description": "カードと案内先の関連、表示場面、表示期間、公開状態を管理するSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,74 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^card-source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "card_id": {
+            "type": "string",
+            "pattern": "^card-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "source_id": {
+            "type": "string",
+            "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "display_order": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "display_locales": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ja", "en"]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "site_display_start_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "site_display_end_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "publication_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "hidden", "archived"]
+          },
+          "role": {
+            "type": "string",
+            "enum": ["primary", "secondary", "temporary-highlight"]
+          },
+          "visibility_context": {
+            "type": "string",
+            "enum": ["always", "normal", "disaster"]
+          },
+          "internal_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "card_id",
+          "source_id",
+          "display_order",
+          "display_locales",
+          "publication_status",
+          "role",
+          "visibility_context"
+        ],
+        "dependentRequired": {
+          "site_display_end_on": ["site_display_start_on"]
+        },
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],

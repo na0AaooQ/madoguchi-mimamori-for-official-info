@@ -28,8 +28,8 @@ test('defines the required data and Schema inventory once', () => {
   assert.equal(SCHEMA_LAYOUT.filter(({ scope }) => scope === 'locale').length, 13);
   assert.equal(SCHEMA_LAYOUT.length, 27);
   assert.equal(SITE_DATA_LAYOUT.length, 3);
-  assert.equal(IMPLEMENTED_ARRAY_DATA_LAYOUT.length, 12);
-  assert.equal(EMPTY_DATA_LAYOUT.length, 25);
+  assert.equal(IMPLEMENTED_ARRAY_DATA_LAYOUT.length, 21);
+  assert.equal(EMPTY_DATA_LAYOUT.length, 16);
 });
 
 test('maps every data file to one required Schema', () => {
@@ -75,15 +75,23 @@ test('separates site, implemented array, and empty data layouts', async () => {
     assert.equal(schema.properties.items.items.type, 'object', schemaPath);
   }
   const emptySchemaPaths = new Set(EMPTY_DATA_LAYOUT.map(({ schemaPath }) => schemaPath));
-  assert.equal(emptySchemaPaths.size, 17);
+  assert.equal(emptySchemaPaths.size, 11);
   for (const schemaPath of emptySchemaPaths) {
     const schema = JSON.parse(await readFile(path.join(repoRoot, schemaPath), 'utf8'));
     assert.equal(schema.properties.items.maxItems, 0, schemaPath);
   }
 });
 
-test('loads the expected fictional records from all 12 implemented array files', async () => {
-  const expectedCounts = { regions: 2, organizations: 1, sources: 1, evidence: 3 };
+test('loads the expected fictional records from all 21 implemented array files', async () => {
+  const expectedCounts = {
+    regions: 2,
+    organizations: 1,
+    sources: 1,
+    evidence: 3,
+    sections: 5,
+    cards: 1,
+    'card-source-links': 1
+  };
   for (const { dataPath, managementUnit } of IMPLEMENTED_ARRAY_DATA_LAYOUT) {
     const value = JSON.parse(await readFile(path.join(repoRoot, dataPath), 'utf8'));
     assert.equal(value.schema_version, '1.0.0', dataPath);
@@ -102,6 +110,25 @@ test('loads the expected fictional records from all 12 implemented array files',
     ...evidenceData.items.map(({ evidence_url: url }) => url)
   ];
   assert.ok(urls.every((url) => new URL(url).hostname === 'example.invalid'));
+
+  const sectionData = JSON.parse(
+    await readFile(path.join(repoRoot, 'data/core/sections.json'), 'utf8')
+  );
+  assert.deepEqual(
+    sectionData.items.map(({ id }) => id),
+    [
+      'section-public-institutions-disaster',
+      'section-life-safety-medical',
+      'section-lifelines',
+      'section-roads-transportation',
+      'section-support-recovery'
+    ]
+  );
+  assert.equal(new Set(sectionData.items.map(({ anchor_id: anchorId }) => anchorId)).size, 5);
+  assert.deepEqual(
+    sectionData.items.map(({ display_order: displayOrder }) => displayOrder),
+    [1, 2, 3, 4, 5]
+  );
 });
 
 test('locale check-history files and Schema are not part of the layout', () => {

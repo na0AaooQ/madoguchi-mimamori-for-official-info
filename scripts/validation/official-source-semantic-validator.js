@@ -746,6 +746,129 @@ function createContext(input, files) {
   };
 }
 
+function hasPublishedLocale(context, unit, locale, id) {
+  return context.indexes.locales[locale][unit].get(id)?.locale_status === 'published';
+}
+
+function isPublishedRegionChain(context, regionId, visited = new Set()) {
+  if (visited.has(regionId)) return false;
+  const region = context.indexes.core.regions.get(regionId);
+  if (
+    !region ||
+    region.publication_status !== 'published' ||
+    !hasPublishedLocale(context, 'regions', 'ja', regionId) ||
+    !hasPublishedLocale(context, 'regions', 'en', regionId)
+  ) {
+    return false;
+  }
+  if (typeof region.parent_region_id !== 'string') return true;
+  const nextVisited = new Set(visited);
+  nextVisited.add(regionId);
+  return isPublishedRegionChain(context, region.parent_region_id, nextVisited);
+}
+
+function isPublishedOrganization(context, organization) {
+  const id = recordId(organization);
+  if (
+    !id ||
+    organization.publication_status !== 'published' ||
+    !hasPublishedLocale(context, 'organizations', 'ja', id) ||
+    !hasPublishedLocale(context, 'organizations', 'en', id) ||
+    !stringArray(organization.region_ids).every((regionId) =>
+      isPublishedRegionChain(context, regionId)
+    )
+  ) {
+    return false;
+  }
+
+  const japanese = context.indexes.locales.ja.organizations.get(id);
+  const english = context.indexes.locales.en.organizations.get(id);
+  if (
+    japanese?.name_kind !== 'official-ja' ||
+    !hasValidEvidence(context, {
+      targetType: 'organization',
+      targetId: id,
+      targetAspect: 'official-organization'
+    }) ||
+    !hasValidEvidence(context, {
+      targetType: 'organization',
+      targetId: id,
+      targetAspect: 'official-name',
+      targetLocale: 'ja'
+    })
+  ) {
+    return false;
+  }
+
+  if (english?.name_kind === 'official-en') {
+    return hasValidEvidence(context, {
+      targetType: 'organization',
+      targetId: id,
+      targetAspect: 'official-name',
+      targetLocale: 'en'
+    });
+  }
+  return (
+    english?.name_kind === 'official-ja-fallback' &&
+    english.official_name === japanese.official_name
+  );
+}
+
+export function isStructurallyPublishableOfficialSource(
+  input,
+  { sourceId, displayLocales = [] } = {}
+) {
+  if (typeof sourceId !== 'string' || !Array.isArray(displayLocales)) return false;
+  const context = createContext(input, mergeFiles());
+  const source = context.indexes.core.sources.get(sourceId);
+  if (
+    !source ||
+    source.publication_status !== 'published' ||
+    source.destination_status !== 'confirmed' ||
+    source.official_information_status !== 'confirmed' ||
+    typeof source.destination_checked_on !== 'string' ||
+    source.destination_checked_on === '' ||
+    typeof source.official_information_checked_on !== 'string' ||
+    source.official_information_checked_on === ''
+  ) {
+    return false;
+  }
+
+  const publisher = context.indexes.core.organizations.get(source.publisher_organization_id);
+  if (!publisher || !isPublishedOrganization(context, publisher)) return false;
+  if (
+    !hasPublishedLocale(context, 'sources', 'ja', sourceId) ||
+    !hasPublishedLocale(context, 'sources', 'en', sourceId)
+  ) {
+    return false;
+  }
+  if (
+    !hasValidEvidence(context, {
+      targetType: 'source',
+      targetId: sourceId,
+      targetAspect: 'official-page'
+    }) &&
+    !hasValidEvidence(context, {
+      targetType: 'source',
+      targetId: sourceId,
+      targetAspect: 'official-account'
+    })
+  ) {
+    return false;
+  }
+
+  if (displayLocales.includes('en') && !stringArray(source.destination_locales).includes('en')) {
+    const english = context.indexes.locales.en.sources.get(sourceId);
+    if (
+      typeof english?.destination_language_note !== 'string' ||
+      english.destination_language_note === ''
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function validateOfficialSourceData(input, { files: fileOverrides } = {}) {
   const results = [];
   const context = createContext(input, mergeFiles(fileOverrides));

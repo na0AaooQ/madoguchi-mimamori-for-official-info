@@ -84,6 +84,24 @@ test('runs the official-source semantic validator for production data files', as
   );
 });
 
+test('runs the navigation-card semantic validator for production data files', async (t) => {
+  const root = await createRepositoryCopy(t);
+  await updateJson(root, 'data/core/cards.json', (value) => {
+    value.items[0].section_id = 'section-missing';
+  });
+  const execution = await validateDataRepository(root);
+  assert.deepEqual(execution.runtimeResults, []);
+  assert.ok(
+    execution.results.some(
+      ({ code, file, item_id: itemId, field }) =>
+        code === 'E005' &&
+        file === 'data/core/cards.json' &&
+        itemId === 'card-example-disaster-information' &&
+        field === 'section_id'
+    )
+  );
+});
+
 test('detects required and unexpected data layout problems', async (t) => {
   const cases = [
     {

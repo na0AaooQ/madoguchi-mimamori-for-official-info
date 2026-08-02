@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:core:cards:1.0.0",
   "title": "Core 案内カード",
-  "description": "案内カードの未実装データを空配列として管理するSchemaです。",
+  "description": "案内カードの所属分野、対象地域、表示順、公開状態を管理するSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,42 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^card-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "section_id": {
+            "type": "string",
+            "pattern": "^section-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "region_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^region-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "display_order": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "publication_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "hidden", "archived"]
+          },
+          "internal_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["id", "section_id", "display_order", "publication_status"],
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],
