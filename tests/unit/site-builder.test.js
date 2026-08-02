@@ -28,7 +28,7 @@ test('builds the complete deterministic Japanese and English preview site', () =
   }
 });
 
-test('generated HTML contains semantic structure and no external anchors', () => {
+test('generated HTML contains semantic structure and only approved operator profile anchors', () => {
   const artifacts = buildSiteArtifacts(inputs);
   for (const [file, source] of artifacts) {
     if (!file.endsWith('.html')) continue;
@@ -38,9 +38,21 @@ test('generated HTML contains semantic structure and no external anchors', () =>
     assert.match(source, /<main id="main-content">/);
     assert.match(source, /<footer/);
     assert.match(source, /noindex, nofollow, noarchive/);
-    assert.doesNotMatch(source, /<a\b[^>]*href="https?:\/\//i);
     assert.doesNotMatch(source, /<details\s+open/);
-    assert.doesNotMatch(source, /target="_blank"/);
+    if (file === 'ja/privacy/index.html') {
+      assert.match(
+        source,
+        /個人事業主\(屋号: こころみまもり\)&#x3000;<a href="https:\/\/portfolio\.na0aaooq\.com\/about\.html" target="_blank" rel="noopener noreferrer"[^>]*>青木 直之 \(あおき なおひさ\)<\/a>/
+      );
+    } else if (file === 'en/privacy/index.html') {
+      assert.match(
+        source,
+        /Sole Proprietor \(Business name: Kokoro Mimamori\)&#x3000;<a href="https:\/\/portfolio\.na0aaooq\.com\/en\/about\.html" target="_blank" rel="noopener noreferrer"[^>]*>Naohisa Aoki<\/a>/
+      );
+    } else {
+      assert.doesNotMatch(source, /<a\b[^>]*href="https?:\/\//i);
+      assert.doesNotMatch(source, /target="_blank"/);
+    }
   }
 });
 

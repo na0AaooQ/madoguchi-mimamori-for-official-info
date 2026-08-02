@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { createResult, sortResults } from '../validation/result.js';
-import { buildSiteArtifacts, expectedSiteArtifactPaths } from './site-builder.js';
+import { buildSiteArtifacts, escapeHtml, expectedSiteArtifactPaths } from './site-builder.js';
 import { SITE_GENERATOR_NAME, SITE_OUTPUT_ROOT, SiteRuntimeError } from './site-constants.js';
 import { loadSiteInputs } from './site-input-loader.js';
 
@@ -66,15 +66,34 @@ function htmlContractResults(source, file, inputs) {
   }
   if (count(source, /<h1(?:\s|>)/g) !== 1)
     results.push(siteError('SITE-E005', `${SITE_OUTPUT_ROOT}/${file}`, 'h1は1つ必要です。'));
-  if (/<a\b[^>]*href="https?:\/\//i.test(source))
+  const externalAnchors = [...source.matchAll(/<a\b[^>]*href="https?:\/\/[^"]+"[^>]*>/gi)].map(
+    (match) => match[0]
+  );
+  const expectedOperatorAnchor =
+    file === `${locale}/privacy/index.html`
+      ? `<a href="${escapeHtml(ui.privacy.operator_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(ui.privacy.operator_link_label)}">`
+      : undefined;
+  if (
+    expectedOperatorAnchor
+      ? externalAnchors.length !== 1 || externalAnchors[0] !== expectedOperatorAnchor
+      : externalAnchors.length !== 0
+  )
     results.push(
-      siteError('SITE-E005', `${SITE_OUTPUT_ROOT}/${file}`, 'previewに外部URLのa[href]があります。')
+      siteError(
+        'SITE-E005',
+        `${SITE_OUTPUT_ROOT}/${file}`,
+        'previewに許可されていない外部URLのa[href]があります。'
+      )
     );
   if (/tabindex="[1-9][0-9]*"/.test(source))
     results.push(siteError('SITE-E005', `${SITE_OUTPUT_ROOT}/${file}`, '正のtabindexがあります。'));
-  if (/target="_blank"/.test(source))
+  if (count(source, /target="_blank"/g) !== (expectedOperatorAnchor ? 1 : 0))
     results.push(
-      siteError('SITE-E005', `${SITE_OUTPUT_ROOT}/${file}`, 'target="_blank"があります。')
+      siteError(
+        'SITE-E005',
+        `${SITE_OUTPUT_ROOT}/${file}`,
+        '許可されていないtarget="_blank"があります。'
+      )
     );
   if (/<details\s+open/.test(source))
     results.push(

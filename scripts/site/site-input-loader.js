@@ -74,7 +74,10 @@ const UI_LOCALE_SHAPE = Object.freeze({
   privacy: {
     established: string,
     operator_heading: string,
-    operator: string,
+    operator_prefix: string,
+    operator_name: string,
+    operator_url: string,
+    operator_link_label: string,
     input_heading: string,
     input_items: strings,
     unused_heading: string,
@@ -201,6 +204,22 @@ function isSafeAnchor(value) {
     !value.includes('/') &&
     !value.includes('\\')
   );
+}
+
+function isSafeOperatorUrl(value) {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'portfolio.na0aaooq.com' &&
+      url.username === '' &&
+      url.password === '' &&
+      url.search === '' &&
+      url.hash === ''
+    );
+  } catch {
+    return false;
+  }
 }
 
 function walkDestinations(navigation, callback) {
@@ -384,6 +403,15 @@ export async function loadSiteInputs(repoRoot) {
             SITE_UI_LOCALE_PATHS[locale],
             '入力パスと画面用localeが一致しません。',
             'locale'
+          )
+        );
+      if (!isSafeOperatorUrl(uiLocale.privacy?.operator_url))
+        results.push(
+          siteError(
+            'SITE-E001',
+            SITE_UI_LOCALE_PATHS[locale],
+            '運営者プロフィールURLは許可されたホストのHTTPS URLにしてください。',
+            'privacy.operator_url'
           )
         );
     }

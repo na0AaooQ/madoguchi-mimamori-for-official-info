@@ -66,6 +66,18 @@ test('rejects unsafe anchors and missing destination language notes', async (t) 
   );
 });
 
+test('rejects an unsafe operator profile URL', async (t) => {
+  const root = await createSiteRepositoryCopy(t);
+  const japanese = await readJson(root, 'site/locales/ja.json');
+  japanese.privacy.operator_url = 'javascript:alert(1)';
+  await writeJson(root, 'site/locales/ja.json', japanese);
+  assert.ok(
+    (await validateSiteRepository(root)).some(
+      ({ code, field }) => code === 'SITE-E001' && field === 'privacy.operator_url'
+    )
+  );
+});
+
 test('CLI returns 0, 1, and 2 by result class', async (t) => {
   const root = await createSiteRepositoryCopy(t);
   assert.equal(await runSiteCli(['validate'], { cwd: root, stdout: () => {} }), 0);

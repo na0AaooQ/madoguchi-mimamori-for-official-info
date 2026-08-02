@@ -79,7 +79,10 @@
   "privacy": {
     "established": "Established: August 3, 2026",
     "operator_heading": "1. Operator",
-    "operator": "青木直之",
+    "operator_prefix": "Sole Proprietor (Business name: Kokoro Mimamori)",
+    "operator_name": "Naohisa Aoki",
+    "operator_url": "https://portfolio.na0aaooq.com/en/about.html",
+    "operator_link_label": "Open Naohisa Aoki's profile in a new tab",
     "input_heading": "2. Input and registration on this site",
     "input_items": [
       "The site does not provide an input form.",
@@ -103,7 +106,7 @@
     "external_items": [
       "The future production version will lead to external sites of public institutions, related organizations, and the contact destination.",
       "The destination's privacy policy and other terms apply after leaving this site. This site does not control information collected or stored by an external site.",
-      "External URLs are not links in this fictional preview."
+      "Fictional destination and contact URLs are not links in this preview. Only the operator name opens the specified profile in a new tab."
     ],
     "contact_heading": "6. Contact",
     "contact_items": [

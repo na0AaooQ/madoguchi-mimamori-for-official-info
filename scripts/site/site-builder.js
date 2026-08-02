@@ -388,13 +388,12 @@ ${list(items)}
 
 function privacyPage(navigation, ui) {
   const locale = navigation.locale;
-  const operatorLang = locale === 'en' ? ' lang="ja"' : '';
   const privacy = ui.privacy;
   const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
       <p>${escapeHtml(privacy.established)}</p>
       <section>
         <h2>${escapeHtml(privacy.operator_heading)}</h2>
-        <p${operatorLang}>${escapeHtml(privacy.operator)}</p>
+        <p>${escapeHtml(privacy.operator_prefix)}&#x3000;<a href="${escapeHtml(privacy.operator_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(privacy.operator_link_label)}">${escapeHtml(privacy.operator_name)}</a></p>
       </section>
 ${privacySection(privacy.input_heading, privacy.input_items)}
 ${privacySection(privacy.unused_heading, privacy.unused_items)}

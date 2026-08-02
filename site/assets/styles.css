@@ -86,7 +86,7 @@ summary:focus-visible {
 .header-inner {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem 1.5rem;
   padding-block: 1rem;
@@ -94,14 +94,16 @@ summary:focus-visible {
 
 .site-name {
   flex: 1 1 17rem;
+  min-inline-size: 0;
   font-size: 1.15em;
   font-weight: 750;
 }
 
 .header-actions {
   display: flex;
-  flex: 1 1 15rem;
-  flex-wrap: wrap;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 0.75rem 1rem;
 }
@@ -347,7 +349,13 @@ dl {
 }
 
 @media (max-width: 34rem) {
+  .header-inner {
+    align-items: flex-start;
+  }
+
   .header-actions {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
     justify-content: flex-start;
   }
 

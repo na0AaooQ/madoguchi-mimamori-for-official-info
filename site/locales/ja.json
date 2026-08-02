@@ -75,7 +75,10 @@
   "privacy": {
     "established": "制定日: 2026年8月3日",
     "operator_heading": "1. 運営者",
-    "operator": "青木直之",
+    "operator_prefix": "個人事業主(屋号: こころみまもり)",
+    "operator_name": "青木 直之 (あおき なおひさ)",
+    "operator_url": "https://portfolio.na0aaooq.com/about.html",
+    "operator_link_label": "青木 直之 (あおき なおひさ)のプロフィールを新しいタブで開く",
     "input_heading": "2. サイト内での入力・登録",
     "input_items": [
       "サイト内に入力フォームを設けません。",
@@ -99,7 +102,7 @@
     "external_items": [
       "将来の本番画面では、公的機関・関係団体や問い合わせ先の外部サイトへ移動します。",
       "移動後は移動先のプライバシーポリシーなどが適用され、本サイトは外部サイト側の情報取得・保存を管理しません。",
-      "架空previewでは外部URLをリンク化しません。"
+      "架空previewの架空案内先URLと問い合わせURLはリンク化しません。運営者名のリンクだけが指定プロフィールを別タブで開きます。"
     ],
     "contact_heading": "6. 問い合わせ",
     "contact_items": [
