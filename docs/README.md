@@ -1,6 +1,6 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の初期設計文書をまとめています。第一版は未実装であり、掲載先や機能が公開済みであることを示す文書ではありません。
+「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の初期設計文書をまとめています。工程3-1の空データ基盤とSchema枠組みは実装済みですが、実在情報、公開生成、画面は未実装であり、掲載先や機能が公開済みであることを示す文書ではありません。
 
 ## 基本文書
 
@@ -42,6 +42,7 @@
 | [0016](decisions/0016-develop-and-test-in-incremental-phases.md)            | 小さな縦切りから段階的に開発・検証する   |
 | [0017](decisions/0017-adopt-node-quality-toolchain.md)                      | Node.js品質管理ツールチェーンを採用する  |
 | [0018](decisions/0018-adopt-per-file-json-schemas.md)                       | 管理単位ごとのJSON Schemaを採用する      |
+| [0019](decisions/0019-require-contact-url-for-published-site.md)            | 問い合わせURLをサイト公開時に必須とする  |
 
 ## 文書の読み方
 

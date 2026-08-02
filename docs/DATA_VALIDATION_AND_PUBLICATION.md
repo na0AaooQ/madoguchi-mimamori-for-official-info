@@ -4,7 +4,7 @@
 
 この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-1では本番用データファイルの空の枠組みとSchemaを実装していますが、実在情報と公開生成は未実装です。
 
-品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用します。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、siteの最小意味検証を実装します。公開生成処理と全意味検証は後続工程です。
+品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、siteの最小意味検証を実装済みです。公開生成処理と全意味検証は後続工程です。
 
 ## 基本原則
 
@@ -19,7 +19,7 @@
 
 ## 品質管理基盤で実装する範囲
 
-品質管理基盤で実装済みの意味検証は、fixture用の英語locale欠落、日本語と英語の改訂番号不一致、存在しないID参照です。工程3-1では、siteに限定して英語改訂元の存在と一致、日本語への改訂元混入禁止、core・日本語・英語の3つのsiteファイルの整合を追加します。Error、Warning、Infoの共通形式、Ajvエラーの正規化、正常・異常fixtureの期待値確認も実装しています。
+品質管理基盤で実装済みの意味検証は、fixture用の英語locale欠落、日本語と英語の改訂番号不一致、存在しないID参照です。工程3-1では、siteに限定して英語改訂元の存在と一致、日本語への改訂元混入禁止、core・日本語・英語の3つのsiteファイルの整合を追加済みです。Error、Warning、Infoの共通形式、Ajvエラーの正規化、正常・異常fixtureの期待値確認も実装しています。
 
 本節は、後続工程で必要な全規則が実装済みであることを意味しません。37空ファイル間のID参照、ID・URL重複、循環参照、公式性根拠、災害名称根拠、表示期間、確認期限、公開可能件数、内部項目除外などは未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
 
@@ -56,9 +56,11 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 
 工程3-1では、site以外の25 Schemaに`maxItems: 0`を指定し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
 
+coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では`site_last_checked_on`と`contact_url`の両方を必須とし、それ以外の公開状態では未確定の`contact_url`を省略できます。
+
 ## 本番用データ検証
 
-`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteの最小意味整合性を検証します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
+`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteの最小意味整合性を検証します。正本である`data/`と`schemas/`の配下はディレクトリ名にかかわらず再帰走査し、配置対応表にないJSONをすべて検出します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
 
 ## 意味検証の責務
 
@@ -295,3 +297,4 @@ Warningがある場合は、対象ごとの確認結果を残してから公開�
 - [データを検証してから公開生成する決定](decisions/0015-validate-data-before-public-generation.md)
 - [Node.js品質管理ツールチェーンを採用する決定](decisions/0017-adopt-node-quality-toolchain.md)
 - [管理単位ごとのJSON Schemaを採用する決定](decisions/0018-adopt-per-file-json-schemas.md)
+- [問い合わせURLをサイト公開時に必須とする決定](decisions/0019-require-contact-url-for-published-site.md)

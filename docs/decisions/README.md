@@ -22,5 +22,6 @@
 | [0016](0016-develop-and-test-in-incremental-phases.md)            | 採用 | 2026年8月2日 | 小さな縦切りから段階的に開発・検証する   |
 | [0017](0017-adopt-node-quality-toolchain.md)                      | 採用 | 2026年8月2日 | Node.js品質管理ツールチェーンを採用する  |
 | [0018](0018-adopt-per-file-json-schemas.md)                       | 採用 | 2026年8月2日 | 管理単位ごとのJSON Schemaを採用する      |
+| [0019](0019-require-contact-url-for-published-site.md)            | 採用 | 2026年8月2日 | 問い合わせURLをサイト公開時に必須とする  |
 
 設計判断を変更する場合は、元の記録を消去せず、変更理由と影響範囲が追跡できる記録を追加します。

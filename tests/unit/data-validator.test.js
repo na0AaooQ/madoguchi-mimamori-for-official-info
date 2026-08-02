@@ -259,6 +259,72 @@ test('detects malformed JSON and common Schema violations', async (t) => {
   }
 });
 
+test('enforces published contact requirements and HTTPS-only contact URLs', async (t) => {
+  const cases = [
+    {
+      name: 'draft without contact URL succeeds',
+      expectedError: false,
+      mutate: () => undefined
+    },
+    {
+      name: 'published without contact URL fails',
+      expectedError: true,
+      mutate: (value) => {
+        value.site_publication_status = 'published';
+      }
+    },
+    {
+      name: 'HTTP contact URL fails',
+      expectedError: true,
+      mutate: (value) => {
+        value.contact_url = 'http://example.invalid/contact';
+      }
+    },
+    {
+      name: 'FTP contact URL fails',
+      expectedError: true,
+      mutate: (value) => {
+        value.contact_url = 'ftp://example.invalid/contact';
+      }
+    },
+    {
+      name: 'mailto contact URI fails',
+      expectedError: true,
+      mutate: (value) => {
+        value.contact_url = 'mailto:contact@example.invalid';
+      }
+    },
+    {
+      name: 'HTTPS contact URL succeeds',
+      expectedError: false,
+      mutate: (value) => {
+        value.contact_url = 'https://example.invalid/contact';
+      }
+    },
+    {
+      name: 'published with HTTPS contact URL and review date succeeds',
+      expectedError: false,
+      mutate: (value) => {
+        value.site_publication_status = 'published';
+        value.site_last_checked_on = '2026-08-02';
+        value.contact_url = 'https://example.invalid/contact';
+      }
+    }
+  ];
+
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (t) => {
+      const root = await createRepositoryCopy(t);
+      await updateJson(root, 'data/core/site.json', fixture.mutate);
+      const execution = await validateDataRepository(root);
+      const hasSiteSchemaError = execution.results.some(
+        ({ code, file }) => code === 'E002' && file === 'data/core/site.json'
+      );
+      assert.equal(hasSiteSchemaError, fixture.expectedError);
+    });
+  }
+});
+
 test('detects duplicate Schema identifiers and Schema compilation failures', async (t) => {
   await t.test('duplicate $id', async (t) => {
     const root = await createRepositoryCopy(t);
@@ -298,21 +364,43 @@ test('collects multiple Errors in deterministic order', async (t) => {
   assert.deepEqual(first, second);
 });
 
-test('does not scan ignored temporary or generated JSON directories', async (t) => {
-  const root = await createRepositoryCopy(t);
-  await mkdir(path.join(root, 'data/tmp'));
-  await mkdir(path.join(root, 'schemas/coverage'));
-  await writeJson(root, 'data/tmp/ignored.json', {});
-  await writeJson(root, 'schemas/coverage/ignored.json', {});
-  const execution = await validateDataRepository(root);
-  assert.equal(
-    execution.results.some(({ code }) => code === 'E007'),
-    false
-  );
-  assert.equal(
-    execution.runtimeResults.some(({ code }) => code === 'RUN-E001'),
-    false
-  );
+test('detects nested unexpected JSON regardless of directory name', async (t) => {
+  const cases = [
+    {
+      name: 'temporary directory under data',
+      relativePath: 'data/core/tmp/unexpected.json',
+      resultGroup: 'validation',
+      expected: 'E007'
+    },
+    {
+      name: 'generated directory under data',
+      relativePath: 'data/core/dist/unexpected.json',
+      resultGroup: 'validation',
+      expected: 'E007'
+    },
+    {
+      name: 'temporary directory under schemas',
+      relativePath: 'schemas/core/tmp/unexpected.json',
+      resultGroup: 'runtime',
+      expected: 'RUN-E001'
+    },
+    {
+      name: 'deeply nested unexpected JSON',
+      relativePath: 'data/core/nested/deeper/unexpected.json',
+      resultGroup: 'validation',
+      expected: 'E007'
+    }
+  ];
+
+  for (const fixture of cases) {
+    await t.test(fixture.name, async (t) => {
+      const root = await createRepositoryCopy(t);
+      await mkdir(path.dirname(path.join(root, fixture.relativePath)), { recursive: true });
+      await writeJson(root, fixture.relativePath, {});
+      const execution = await validateDataRepository(root);
+      assert.ok(codes(execution)[fixture.resultGroup].includes(fixture.expected));
+    });
+  }
 });
 
 test('does not mutate data or Schema files and does not access the network', async (t) => {

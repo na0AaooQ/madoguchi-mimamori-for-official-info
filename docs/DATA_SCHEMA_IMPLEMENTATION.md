@@ -8,7 +8,7 @@
 
 `data/core/`には言語共通の14ファイル、`data/locales/ja/`と`data/locales/en/`にはそれぞれ13ファイルを置きます。合計は40ファイルです。内部確認履歴である`check-history.json`はcoreだけに置き、locale版は作りません。
 
-3つの`site.json`だけは単一オブジェクトです。coreはサイトID、対応locale、公開状態、災害別案内の有効状態を持ち、日本語・英語はサイト表示文言と文面改訂情報を持ちます。初期状態はいずれも`draft`です。
+3つの`site.json`だけは単一オブジェクトです。coreはサイトID、対応locale、公開状態、災害別案内の有効状態を持ち、日本語・英語はサイト表示文言と文面改訂情報を持ちます。初期状態はいずれも`draft`です。確定済みの問い合わせURLはないため、coreの初期データに`contact_url`は登録しません。
 
 `site.json`以外の37ファイルは、次の配列エンベロープで開始します。
 
@@ -35,6 +35,8 @@ Schemaは管理単位ごとに分け、変更範囲と責務を追跡しやす�
 
 `site.json`以外の25 Schemaは、未実装の`items`へデータが入らないよう`maxItems: 0`を指定します。正式なitem Schemaは工程3-2以降で、実装対象となる管理単位から段階的に追加します。
 
+coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では、`site_last_checked_on`と`contact_url`の両方を必須とします。その他の公開状態では、未確定URLを推測して登録せず省略できます。
+
 ## dataとSchemaの対応
 
 `scripts/validation/data-layout.js`がcore管理単位、locale管理単位、対応locale、データパス、Schemaパス、siteか配列エンベロープかを一元管理します。CLI、検証処理、テストはこの一覧を参照し、同じファイル一覧を重複定義しません。
@@ -52,7 +54,7 @@ npm run validate:data
 検証内容は次のとおりです。
 
 - 必須40データファイルと27 Schemaの存在
-- 配置対応表にないJSONファイル、未対応locale、locale版check-historyの検出
+- `data/`と`schemas/`配下の全JSONの走査と、配置対応表にないJSONファイル、未対応locale、locale版check-historyの検出
 - JSON構文
 - Schemaの`$id`重複
 - Ajv strictモードでのSchemaコンパイル
@@ -63,7 +65,7 @@ npm run validate:data
 - `default_locale`と`supported_locales`の整合
 - localeファイル自身の`locale`との一致
 
-データの不備は既存の`E001`から`E004`と、新規の`E006`から`E010`で報告し、終了コード`1`とします。Schema配置、Schema JSON、`$id`、コンパイル、配置対応表、読込環境の異常は`RUN-E001`から`RUN-E005`で区別し、終了コード`2`とします。複数の問題は可能な範囲で収集し、結果を決定論的に並べます。
+データの不備は既存の`E001`から`E004`と、新規の`E006`から`E010`で報告し、終了コード`1`とします。Schema配置、Schema JSON、`$id`、コンパイル、配置対応表、読込環境の異常は`RUN-E001`から`RUN-E005`で区別し、終了コード`2`とします。`data/`または`schemas/`の正本配下では、`tmp`や`dist`などのディレクトリ名を理由にJSONを除外しません。複数の問題は可能な範囲で収集し、結果を決定論的に並べます。
 
 `npm run check`には`validate:data`が含まれます。データを更新した場合は、コミット前に`npm run check`を実行します。
 

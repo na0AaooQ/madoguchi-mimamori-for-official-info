@@ -19,23 +19,6 @@ const FORBIDDEN_DATA_PATHS = new Set([
   'data/locales/en/check-history.json'
 ]);
 const FORBIDDEN_SCHEMA_PATH = 'schemas/locales/check-history.schema.json';
-const SKIPPED_JSON_DIRECTORIES = new Set([
-  '.cache',
-  '.git',
-  '.next',
-  '.nuxt',
-  '.nyc_output',
-  '.output',
-  '.parcel-cache',
-  '.svelte-kit',
-  '.vite',
-  'coverage',
-  'dist',
-  'node_modules',
-  'out',
-  'temp',
-  'tmp'
-]);
 
 function normalizePath(filePath) {
   return filePath.split(path.sep).join('/');
@@ -126,9 +109,7 @@ async function collectJsonFiles(directory, repoRoot, runtimeResults) {
   for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name, 'en'))) {
     const absolutePath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      if (!SKIPPED_JSON_DIRECTORIES.has(entry.name)) {
-        files.push(...(await collectJsonFiles(absolutePath, repoRoot, runtimeResults)));
-      }
+      files.push(...(await collectJsonFiles(absolutePath, repoRoot, runtimeResults)));
     } else if (entry.isFile() && entry.name.endsWith('.json')) {
       files.push(normalizePath(path.relative(repoRoot, absolutePath)));
     }

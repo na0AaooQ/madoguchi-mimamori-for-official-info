@@ -37,7 +37,8 @@
     },
     "contact_url": {
       "type": "string",
-      "format": "uri"
+      "format": "uri",
+      "pattern": "^https://"
     },
     "disaster_guidance_enabled": {
       "type": "boolean"
