@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "name": "schema-valid",
+      "type": "schema",
+      "schema": "schemas/item.schema.json",
+      "data": "valid/item.json",
+      "expected_counts": {}
+    },
+    {
+      "name": "schema-invalid",
+      "type": "schema",
+      "schema": "schemas/item.schema.json",
+      "data": "invalid/item.json",
+      "expected_counts": {
+        "E002": 5
+      }
+    },
+    {
+      "name": "semantic-valid",
+      "type": "semantic",
+      "data": "valid/semantic.json",
+      "expected_counts": {}
+    },
+    {
+      "name": "semantic-invalid",
+      "type": "semantic",
+      "data": "invalid/semantic.json",
+      "expected_counts": {
+        "E003": 1,
+        "E004": 1,
+        "E005": 1,
+        "W001": 1
+      }
+    }
+  ]
+}

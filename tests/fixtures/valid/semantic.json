@@ -1,0 +1,30 @@
+{
+  "core": [
+    {
+      "id": "test-item-1",
+      "display_locales": ["ja", "en"],
+      "related_ids": ["test-reference-1"]
+    }
+  ],
+  "locales": {
+    "ja": [
+      {
+        "id": "test-item-1",
+        "content_revision": 2,
+        "locale_status": "published"
+      }
+    ],
+    "en": [
+      {
+        "id": "test-item-1",
+        "based_on_ja_revision": 2,
+        "locale_status": "published"
+      }
+    ]
+  },
+  "references": [
+    {
+      "id": "test-reference-1"
+    }
+  ]
+}

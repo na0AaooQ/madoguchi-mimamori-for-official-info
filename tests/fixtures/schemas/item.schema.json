@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/item.schema.json",
+  "type": "object",
+  "required": ["id", "name", "status", "published_on", "count"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^test-[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": ["draft", "published"]
+    },
+    "published_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}
