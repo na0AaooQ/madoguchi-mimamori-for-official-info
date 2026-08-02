@@ -195,15 +195,35 @@ npm run generate:public -- --as-of 2026-08-02
 
 前提環境と`npm ci`は上記と同じです。公開案内情報は`dist/public-data/preview/{ja,en}/navigation.json`、画面生成元は`site/`、生成成果物は`dist/site/preview/`にあります。
 
+### ローカルで画面を表示する
+
+リポジトリのルートディレクトリで、画面を生成してローカルHTTPサーバーを起動します。
+
 ```sh
 npm run generate:site:preview
-npm run validate:site
-npm run verify:site
-npm run check
 npm run serve:site:preview
 ```
 
-ブラウザで`http://127.0.0.1:4173/preview/ja/`または`/preview/en/`を開きます。320pxから1280px以上、標準・大文字、文字200%・ページ400%、CSS・JavaScript無効、キーボード、日英切替、カードあり・なし、全団体一覧、プライバシーポリシー、長いURLを確認してください。詳細は[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)に記載しています。
+`Preview site: http://127.0.0.1:4173/preview/ja/`と表示されたら、サーバーを起動したターミナルはそのままにして、ブラウザで次のURLを開きます。
+
+- 日本語：<http://127.0.0.1:4173/preview/ja/>
+- 英語：<http://127.0.0.1:4173/preview/en/>
+
+確認を終了するときは、サーバーを起動したターミナルで`Control+C`を押します。
+
+生成HTMLは`/preview/`から始まるルート相対パスでCSSとJavaScriptを参照します。そのため、`dist/site/preview/ja/index.html`などを`file://`で直接開かず、必ず上記のローカルHTTPサーバー経由で確認してください。
+
+### 生成成果物を検証する
+
+別のターミナルをリポジトリのルートディレクトリで開き、次を実行します。
+
+```sh
+npm run validate:site
+npm run verify:site
+npm run check
+```
+
+ブラウザでは、320pxから1280px以上、標準・大文字、文字200%・ページ400%、CSS・JavaScript無効、キーボード、日英切替、カードあり・なし、全団体一覧、プライバシーポリシー、長いURLを確認してください。詳細は[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)に記載しています。
 
 生成HTMLを直接編集してはいけません。画面変更時は、公開データの正本、`site/locales/`、テンプレート、`site/assets/`を修正し、生成・差分確認・validate・verifyを行います。生成元と`dist/site/preview/`を同じPRでGit管理します。実在情報、production、AWS、デプロイはこのMVPの対象外です。
 
