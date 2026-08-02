@@ -1,0 +1,130 @@
+{
+  "locale": "en",
+  "language_name": "English",
+  "alternate_language_name": "日本語",
+  "skip_link": "Skip to main content",
+  "navigation_label": "Common navigation",
+  "language_switch_label": "Switch the display language to Japanese",
+  "font_size": { "label": "Text size", "standard": "Standard", "large": "Large" },
+  "preview_notice": {
+    "title": "This is a preview under development",
+    "body": "This screen uses fictional data. It does not contain real organizations, programs, official websites, social media accounts, or disaster information."
+  },
+  "pages": {
+    "home_title": "Home",
+    "home_heading": "Find official information to check",
+    "sections_heading": "Find information by topic",
+    "sections_intro": "Choose the topic closest to the information you want to check.",
+    "organizations_title": "All Organizations and Destinations",
+    "organizations_intro": "Review the fictional organizations and destinations in this preview's public data by organization name. You can also use your browser's find-in-page feature.",
+    "privacy_title": "Privacy Policy",
+    "section_back": "Return to the home page",
+    "empty_section": "There is currently no guidance to display in this topic. Return to the home page to check another topic.",
+    "organizations_link": "Find information in the full organization and destination list",
+    "situation_notice": "This site does not determine whether a disaster is currently occurring."
+  },
+  "roles": {
+    "primary": "Main destinations",
+    "temporary-highlight": "Temporarily listed destinations",
+    "secondary": "Related destinations"
+  },
+  "visibility": {
+    "always": "Normal and disaster situations",
+    "normal": "Normal situations",
+    "disaster": "Disaster situations"
+  },
+  "destination_categories": {
+    "official_site": "Official websites",
+    "official_information": "Official information pages",
+    "official_channel": "Official information channels"
+  },
+  "fields": {
+    "region": "Area",
+    "organization": "Organization",
+    "destination_name": "Destination name",
+    "purpose": "Purpose",
+    "usage": "When to use",
+    "language_note": "Destination language",
+    "public_note": "Note",
+    "destination_checked_on": "Destination checked on",
+    "official_information_checked_on": "Official-information status checked on",
+    "platform": "Platform",
+    "account_id": "Account ID",
+    "url": "URL"
+  },
+  "destination": {
+    "fictional_url_note": "This fictional URL cannot be opened from the preview.",
+    "external_notice": "The future production version will take you to an external site. Review the destination site's policies after leaving this site.",
+    "official_name_fallback": "This guide has not confirmed an official English name, so the official Japanese name is displayed."
+  },
+  "about": {
+    "summary": "About this site",
+    "items": [
+      "This guide helps you find the responsible public institution or related organization by topic and continue to that organization's own official announcement.",
+      "It is not an official government website.",
+      "It is not a breaking-news service, news site, or fact-checking service.",
+      "It is not a rating service for organizations or sources, or an AI summary or decision service."
+    ]
+  },
+  "usage": {
+    "summary": "Before using this site",
+    "items": [
+      "Listing does not guarantee an organization's overall reliability or recommend all of its activities.",
+      "This site does not guarantee the accuracy, completeness, or currency of destination information. Check the organization's own official announcements for current information.",
+      "For evacuation and safety decisions during a disaster, follow the latest information from the relevant authorities. This site does not determine current disaster conditions.",
+      "In the future production version, destinations will be external sites and their policies will apply after you leave this site.",
+      "Display order does not represent importance, reliability, accuracy, or recommendation. Destination groups and usage situations do not represent importance or urgency."
+    ]
+  },
+  "privacy": {
+    "established": "Established: August 3, 2026",
+    "operator_heading": "1. Operator",
+    "operator": "青木直之",
+    "input_heading": "2. Input and registration on this site",
+    "input_items": [
+      "The site does not provide an input form.",
+      "The site does not provide sign-in or account registration.",
+      "The site does not ask you to enter or submit a name, email address, street address, or similar information."
+    ],
+    "unused_heading": "3. Features and services not used",
+    "unused_items": [
+      "The site does not use AI, external APIs, web search, automated collection, RSS, crawling, or scraping.",
+      "The site does not use advertising, affiliate marketing, or analytics tools.",
+      "The site does not use cookies or localStorage."
+    ],
+    "session_heading": "4. sessionStorage",
+    "session_items": [
+      "The site stores only standard or large to keep your selected text size while you move between pages in the same tab.",
+      "It does not store organization names, browsing history, URLs, search terms, or personal information.",
+      "It does not send the saved value to a server or external service, and does not retain it after the tab is closed.",
+      "If sessionStorage is unavailable, the site displays the standard text size."
+    ],
+    "external_heading": "5. External sites",
+    "external_items": [
+      "The future production version will lead to external sites of public institutions, related organizations, and the contact destination.",
+      "The destination's privacy policy and other terms apply after leaving this site. This site does not control information collected or stored by an external site.",
+      "External URLs are not links in this fictional preview."
+    ],
+    "contact_heading": "6. Contact",
+    "contact_items": [
+      "This site does not provide a contact form and instead points to an external contact page.",
+      "In this preview, the fictional contact URL is shown as text and is not a link."
+    ],
+    "logs_heading": "7. Hosting and access logs",
+    "logs_items": [
+      "Hosting, CDN, and the production environment have not been decided, so this policy does not claim that no access logs will be recorded.",
+      "Before production launch, the operator will review IP addresses, user agents, access times, CDN, WAF and hosting logs, purposes of use, retention periods, and who can access the logs, and will reflect the results in the production policy."
+    ],
+    "revision_heading": "8. Revisions",
+    "revision_items": ["Changes to this policy will be announced on this page."]
+  },
+  "footer": {
+    "home": "Home",
+    "organizations": "All Organizations and Destinations",
+    "privacy": "Privacy Policy",
+    "contact": "Contact information",
+    "contact_prefix": "Contact destination (fictional URL; cannot be opened):",
+    "free_notice": "Free, no ads, and no sign-in required",
+    "copyright": "© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved."
+  }
+}

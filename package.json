@@ -19,7 +19,11 @@
     "generate:public:preview": "node scripts/publication/cli.js generate --mode preview",
     "validate:public": "node scripts/publication/cli.js validate",
     "verify:public": "node scripts/publication/cli.js verify",
-    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs && npm run validate:data && npm run validate:public && npm run verify:public"
+    "generate:site:preview": "node scripts/site/cli.js generate",
+    "validate:site": "node scripts/site/cli.js validate",
+    "verify:site": "node scripts/site/cli.js verify",
+    "serve:site:preview": "node scripts/site/serve.js",
+    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs && npm run validate:data && npm run validate:public && npm run verify:public && npm run validate:site && npm run verify:site"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

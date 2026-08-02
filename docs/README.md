@@ -1,6 +1,6 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。工程3-2A・3-2Bの管理データ縦切りと、published架空fixtureによる公開用データ生成MVPを実装しています。実在情報、画面、災害・出来事、AWSは未実装であり、サイトが公開済みであることを示す文書ではありません。
+「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。管理データ縦切り、公開用データ生成MVP、架空preview Web画面MVPを実装しています。実在情報、production画面、災害・出来事、AWSは未実装であり、サイトが公開済みであることを示す文書ではありません。
 
 ## 基本文書
 
@@ -18,6 +18,7 @@
 | [公開データ契約](PUBLIC_DATA_CONTRACT.md)                      | navigation.jsonの公開フィールド、抽出、検証、Git管理            |
 | [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)              | データ・Schema配置、工程3-2Aの実装範囲、責務分担                |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
+| [Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)                    | 静的HTML生成、画面用locale、安全性、手動確認                    |
 | [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |
 | [設計判断記録](decisions/README.md)                            | 採用した重要な設計判断と再検討条件                              |
 
@@ -47,6 +48,7 @@
 | [0020](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md) | 工程3-2Aの最小縦切りを架空データで実装する |
 | [0021](decisions/0021-implement-navigation-card-minimum-slice-with-fictional-data.md) | 工程3-2Bの案内カード最小縦切りを実装する   |
 | [0022](decisions/0022-generate-and-track-public-navigation-artifacts.md)              | 公開用navigation成果物を生成・管理する     |
+| [0023](decisions/0023-generate-preview-site-as-static-html.md)                        | preview画面を静的HTMLとして生成する        |
 
 ## 文書の読み方
 
