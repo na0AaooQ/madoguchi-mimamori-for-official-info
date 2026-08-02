@@ -9,10 +9,6 @@
     {
       "path": "docs/OPERATIONS_POLICY.md",
       "sha256": "df21276c3262b4f484c70d22a21bee4d5a3f773e236de95a86e77d5b24b6927f"
-    },
-    {
-      "path": "docs/SITE_STRUCTURE.md",
-      "sha256": "b8d598bc46ee055f187fb499c39d265cfa417fb595ce6d571bb76e197e043f91"
     }
   ]
 }

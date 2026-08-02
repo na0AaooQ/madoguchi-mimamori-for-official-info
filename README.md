@@ -4,13 +4,13 @@
 
 ## 現在の開発状況
 
-| 項目             | 状況                        |
-| ---------------- | --------------------------- |
-| 開発段階         | 公開用データ生成MVP実装済み |
-| 第一版           | 未実装                      |
-| 対応言語         | 日本語・英語                |
-| 公開サイト       | まだ存在しない              |
-| ホスティング構成 | 未確定                      |
+| 項目             | 状況                           |
+| ---------------- | ------------------------------ |
+| 開発段階         | 架空preview Web画面MVP実装済み |
+| 第一版           | 本番画面・実在情報は未実装     |
+| 対応言語         | 日本語・英語                   |
+| 公開サイト       | まだ存在しない                 |
+| ホスティング構成 | 未確定                         |
 
 本リポジトリには、初期設計文書、ローカル品質管理基盤、本番用データとSchemaの枠組みを整備しています。掲載候補は設計上の対象であり、実在情報を含む本番データ・画面として実装済みまたは公開済みではありません。
 
@@ -93,11 +93,11 @@
 
 第一版は静的HTML・CSS中心を想定し、JavaScriptへの依存を最小限にします。JavaScriptなしでも主要リンクを利用可能とし、AI、外部API、自動取得、新サイト内の入力フォームは使用しません。第一版から日本語・英語へ対応し、管理データの正本にはJSONを採用します。言語共通のcoreと日英localeを分離し、検証済みの公開対象だけから成果物を生成します。
 
-工程3-2Aと工程3-2Bでは、地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応する14 Schemaと意味検証を実装しました。公開用データ生成MVPでは、published架空fixtureから日英の`navigation.json`を決定論的に生成し、公開Schema、禁止項目、URL安全条件、productionライフサイクル、Git管理成果物とのバイト一致を検証します。本番用`data/`は引き続きすべてdraftで、画面、実在情報、災害・出来事、AWS、デプロイは未実装です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)と[データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
+工程3-2Aと工程3-2Bでは、地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応する14 Schemaと意味検証を実装しました。公開用データ生成MVPでは、published架空fixtureから日英の`navigation.json`を決定論的に生成します。Web画面preview MVPでは、その公開JSONだけからJavaScriptなしでも主要情報を利用できる日英静的HTMLを生成します。本番用`data/`は引き続きすべてdraftで、production画面、実在情報、災害・出来事、AWS、デプロイは未実装です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)と[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)を参照してください。
 
 ## 品質管理
 
-Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書、管理データ、公開成果物、再現性をまとめて確認できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
+Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書、管理データ、公開データ、previewサイト、再現性をまとめて確認できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
 
 ## 公開用ナビゲーションデータ生成MVPの確認手順
 
@@ -191,6 +191,42 @@ npm run generate:public -- --as-of 2026-08-02
 
 `dist/public-data/`内では正式な日英`navigation.json`だけをGit管理し、履歴、透明性、画面へ渡る内容のレビューに利用します。previewとproductionは分離し、その他の一般的な`dist`成果物、一時生成物、ログ、バックアップは管理しません。差分が不正な場合は、成果物を手編集せず正本・fixture・生成処理を修正して再生成してください。
 
+## 架空preview Web画面MVPの確認手順
+
+前提環境と`npm ci`は上記と同じです。公開案内情報は`dist/public-data/preview/{ja,en}/navigation.json`、画面生成元は`site/`、生成成果物は`dist/site/preview/`にあります。
+
+### ローカルで画面を表示する
+
+リポジトリのルートディレクトリで、画面を生成してローカルHTTPサーバーを起動します。
+
+```sh
+npm run generate:site:preview
+npm run serve:site:preview
+```
+
+`Preview site: http://127.0.0.1:4173/preview/ja/`と表示されたら、サーバーを起動したターミナルはそのままにして、ブラウザで次のURLを開きます。
+
+- 日本語：<http://127.0.0.1:4173/preview/ja/>
+- 英語：<http://127.0.0.1:4173/preview/en/>
+
+確認を終了するときは、サーバーを起動したターミナルで`Control+C`を押します。
+
+生成HTMLは`/preview/`から始まるルート相対パスでCSSとJavaScriptを参照します。そのため、`dist/site/preview/ja/index.html`などを`file://`で直接開かず、必ず上記のローカルHTTPサーバー経由で確認してください。
+
+### 生成成果物を検証する
+
+別のターミナルをリポジトリのルートディレクトリで開き、次を実行します。
+
+```sh
+npm run validate:site
+npm run verify:site
+npm run check
+```
+
+ブラウザでは、320pxから1280px以上、標準・大文字、文字200%・ページ400%、CSS・JavaScript無効、キーボード、日英切替、カードあり・なし、全団体一覧、プライバシーポリシー、長いURLを確認してください。詳細は[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)に記載しています。
+
+生成HTMLを直接編集してはいけません。画面変更時は、公開データの正本、`site/locales/`、テンプレート、`site/assets/`を修正し、生成・差分確認・validate・verifyを行います。生成元と`dist/site/preview/`を同じPRでGit管理します。実在情報、production、AWS、デプロイはこのMVPの対象外です。
+
 ## 運用方針
 
 常設主リンクは原則週1回、補助リンクは原則月1回、表示中の期間限定リンクは原則週1回確認します。「案内先確認日」はURL、公式性、案内目的などを確認した日であり、リンク先の全内容や現在状況の正確性を保証する日ではありません。詳しくは[運用方針](docs/OPERATIONS_POLICY.md)を参照してください。
@@ -214,6 +250,7 @@ npm run generate:public -- --as-of 2026-08-02
 - [日英対応方針](docs/LOCALIZATION_POLICY.md)
 - [データ検証・公開生成方針](docs/DATA_VALIDATION_AND_PUBLICATION.md)
 - [公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)
+- [Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)
 - [データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)
 - [品質管理基盤](docs/QUALITY_TOOLING.md)
 - [開発工程](docs/DEVELOPMENT_PHASES.md)

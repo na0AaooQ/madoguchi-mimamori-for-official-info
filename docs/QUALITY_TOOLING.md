@@ -2,7 +2,7 @@
 
 ## 目的
 
-本基盤は、JavaScript・JSON・Markdown、JSON Schema、ファイル間意味検証、公開成果物、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。工程3-2Aと工程3-2Bの管理Schema・意味検証に加え、published架空fixtureによる公開生成MVPを実装しています。本番サイトと画面は実装しません。
+本基盤は、JavaScript・JSON・Markdown、JSON Schema、ファイル間意味検証、公開成果物、架空preview静的サイト、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。production画面と実在情報は実装しません。
 
 ## 採用ツールと責務
 
@@ -64,6 +64,9 @@ npm run validate:data
 npm run generate:public:preview
 npm run validate:public
 npm run verify:public
+npm run generate:site:preview
+npm run validate:site
+npm run verify:site
 npm run check
 ```
 
@@ -77,7 +80,10 @@ npm run check
 - `npm run generate:public:preview`はpublished架空fixtureから日英preview成果物を書き込みます。
 - `npm run validate:public`はtracked artifactの構造、禁止項目、URL、日英ペア、productionライフサイクルを読取専用で検証します。
 - `npm run verify:public`は一時領域へ再生成し、tracked artifactとのバイト一致を読取専用で検証します。
-- `npm run check`は`lint`、`format:check`、`test`、`validate:fixtures`、`validate:docs`、`validate:data`、`validate:public`、`verify:public`の順に実行します。生成コマンドは含めません。
+- `npm run generate:site:preview`は日英preview公開JSONから静的サイトを一組として生成します。
+- `npm run validate:site`はGit管理中の静的サイトを読取専用で検証します。
+- `npm run verify:site`はOS一時領域へ再生成し、Git管理成果物とのバイト一致を確認します。
+- `npm run check`は既存検証後に`validate:site`と`verify:site`を実行します。書込を伴う生成コマンドは含めません。
 
 ## 段階的Prettierベースライン
 
@@ -147,6 +153,8 @@ Schema違反は`E002`、ファイル間の意味違反は主に`E003`から`E005
 | `PUB-RUN-E003` | 固定出力先への安全な書込・置換異常                 |
 | `PUB-RUN-E004` | 想定外の内部例外                                   |
 
+サイト生成固有コードは、入力・locale違反`SITE-E001`、パス安全性`SITE-E002`、未対応変換`SITE-E003`、成果物集合`SITE-E004`、HTML契約`SITE-E005`、バイト不一致`SITE-E006`です。実行異常は`SITE-RUN-E001`から`SITE-RUN-E004`を使用します。
+
 ## 終了コード
 
 | 終了コード | 意味                                                         |
@@ -198,4 +206,4 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 ## 外部接続と未実装範囲
 
-テスト、生成、検証は外部ネットワーク、DNS、AWS、GitHub API、実在する公式サイトへ接続しません。管理データとpreviewは分類データ、架空名称、`example.invalid`だけを使い、URLへの疎通確認も行いません。実在情報、災害・出来事・履歴のitemおよびそれらの公開生成、画面、CI、Gitフック、デプロイは後続工程です。
+テスト、生成、検証は外部ネットワーク、DNS、AWS、GitHub API、実在する公式サイトへ接続しません。管理データとpreviewは分類データ、架空名称、`example.invalid`だけを使い、URLへの疎通確認も行いません。実在情報、production画面、災害・出来事・履歴、CI、Gitフック、デプロイは後続工程です。
