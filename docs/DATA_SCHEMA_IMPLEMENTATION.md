@@ -2,7 +2,7 @@
 
 ## 目的
 
-本番用`data/`と`schemas/`の配置、正式なitem Schemaの実装範囲、意味検証との責務分担を記録します。工程3-2Aと工程3-2Bでは、実在情報を登録せず、地域から公式性確認根拠、分野、案内カード、カード関連までの最小縦切りを検証可能にします。画面と公開成果物はこの工程に含めません。
+本番用`data/`と`schemas/`の配置、正式なitem Schema、意味検証、公開成果物Schemaの責務分担を記録します。工程3-2Aと工程3-2Bの管理データ縦切りを維持し、公開生成MVPでは実在情報を登録せずに日英`navigation.json`を検証・生成します。画面はこの工程に含めません。
 
 ## 配置件数
 
@@ -36,6 +36,12 @@
 これらは空配列も受け入れます。本番用架空データの件数は配置・統合テストで別に保証します。
 
 対象外の11 Schemaは引き続き`items.maxItems: 0`を持ちます。
+
+## 公開成果物Schema
+
+`contracts/public/navigation.schema.json`は、管理用27 Schemaとは分離したDraft 2020-12の公開契約です。日本語・英語で同じSchemaを使い、全階層の想定外項目、ID、日付、URL、enum、SNS条件、日本語だけの案内先に対する英語注意文、cardのprimaryを検証します。`SCHEMA_LAYOUT`へ追加せず、管理用Schema件数27は変更しません。
+
+`tests/fixtures/public-generation/preview/input.json`は既存管理Schemaの封筒構造を保ち、工程3-2A・3-2Bの意味検証も再利用します。生成側で管理契約を別実装せず、正規化後の共通内部形式だけを本番用`data/`と共有します。
 
 - core: `disasters`、`events`、`disaster-source-links`、`event-source-links`、`check-history`、`update-history`
 - locale: `disasters`、`events`、`disaster-source-links`、`event-source-links`、`update-history`
@@ -83,7 +89,7 @@ JSON Schema Draft 2020-12とAjv strictモードを使い、各Schemaは一意の
 
 ## 未実装範囲
 
-災害・出来事・関連・履歴の正式Schemaと意味検証、URL正規化後の重複、確認期限の検証は後続工程で実装します。現在日時による表示期間判定、公開対象抽出、公開成果物生成、内部項目の生成物再検証、画面も未実装です。主案内先の最大件数、文字数制限、アイコン、色、レイアウトは固定していません。
+災害・出来事・関連・履歴の正式Schemaと意味検証、URL正規化後の重複、確認期限の検証は後続工程で実装します。公開生成MVPは通常カードのnavigationだけを対象とし、災害・出来事、公式案内先一覧、画面は未実装です。主案内先の最大件数、文字数制限、アイコン、色、レイアウトは固定していません。
 
 ## 関連文書
 
@@ -92,3 +98,4 @@ JSON Schema Draft 2020-12とAjv strictモードを使い、各Schemaは一意の
 - [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md)
 - [工程3-2Aの最小縦切りを架空データで実装する決定](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md)
 - [工程3-2Bの案内カード最小縦切りを実装する決定](decisions/0021-implement-navigation-card-minimum-slice-with-fictional-data.md)
+- [公開用navigation成果物を生成してGit管理する決定](decisions/0022-generate-and-track-public-navigation-artifacts.md)

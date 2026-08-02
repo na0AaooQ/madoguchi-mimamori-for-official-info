@@ -80,7 +80,30 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+dist/*
+!dist/public-data/
+dist/public-data/*
+!dist/public-data/preview/
+!dist/public-data/production/
+dist/public-data/preview/*
+dist/public-data/production/*
+!dist/public-data/preview/ja/
+!dist/public-data/preview/en/
+!dist/public-data/production/ja/
+!dist/public-data/production/en/
+dist/public-data/preview/ja/*
+dist/public-data/preview/en/*
+dist/public-data/production/ja/*
+dist/public-data/production/en/*
+!dist/public-data/preview/ja/navigation.json
+!dist/public-data/preview/en/navigation.json
+!dist/public-data/production/ja/navigation.json
+!dist/public-data/production/en/navigation.json
+dist/public-data/**/.tmp-*
+dist/public-data/**/*.tmp
+dist/public-data/**/*.partial
+dist/public-data/**/*.bak
+dist/public-data/**/*.log
 .output
 
 # Gatsby files

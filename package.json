@@ -15,7 +15,11 @@
     "validate:fixtures": "node scripts/validation/cli.js --fixtures",
     "validate:docs": "node scripts/validation/docs-validator.js",
     "validate:data": "node scripts/validation/cli.js --data",
-    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs && npm run validate:data"
+    "generate:public": "node scripts/publication/cli.js generate --mode production",
+    "generate:public:preview": "node scripts/publication/cli.js generate --mode preview",
+    "validate:public": "node scripts/publication/cli.js validate",
+    "verify:public": "node scripts/publication/cli.js verify",
+    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs && npm run validate:data && npm run validate:public && npm run verify:public"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

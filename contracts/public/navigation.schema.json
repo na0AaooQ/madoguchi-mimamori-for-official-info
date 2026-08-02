@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:madoguchi-mimamori:contract:public:navigation:1.0.0",
+  "title": "公開用ナビゲーションデータ",
+  "type": "object",
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "artifact_type": {
+      "type": "string",
+      "enum": ["fictional-preview", "production"]
+    },
+    "locale": { "type": "string", "enum": ["ja", "en"] },
+    "generated_for_date": { "type": "string", "format": "date" },
+    "site": { "$ref": "#/$defs/site" },
+    "sections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/section" }
+    }
+  },
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "locale",
+    "generated_for_date",
+    "site",
+    "sections"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "locale": { "const": "en" } },
+        "required": ["locale"]
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cards": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "destination": {
+                              "type": "object",
+                              "if": {
+                                "type": "object",
+                                "properties": {
+                                  "destination_locales": {
+                                    "type": "array",
+                                    "not": { "contains": { "const": "en" } }
+                                  }
+                                },
+                                "required": ["destination_locales"]
+                              },
+                              "then": {
+                                "properties": { "destination_language_note": true },
+                                "required": ["destination_language_note"]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "site_id": { "type": "string", "const": "madoguchi-mimamori" },
+        "default_locale": { "type": "string", "const": "ja" },
+        "supported_locales": {
+          "type": "array",
+          "prefixItems": [{ "const": "ja" }, { "const": "en" }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "site_name": { "$ref": "#/$defs/nonEmptyString" },
+        "subtitle": { "$ref": "#/$defs/nonEmptyString" },
+        "short_description": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "free_use_notice": { "$ref": "#/$defs/nonEmptyString" },
+        "external_site_notice": { "$ref": "#/$defs/nonEmptyString" },
+        "disclaimer_summary": { "$ref": "#/$defs/nonEmptyString" },
+        "contact_url": { "$ref": "#/$defs/httpsUrl" }
+      },
+      "required": [
+        "site_id",
+        "default_locale",
+        "supported_locales",
+        "site_name",
+        "subtitle",
+        "short_description",
+        "purpose",
+        "free_use_notice",
+        "external_site_notice",
+        "disclaimer_summary",
+        "contact_url"
+      ],
+      "additionalProperties": false
+    },
+    "section": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^section-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "anchor_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "short_description": { "$ref": "#/$defs/nonEmptyString" },
+        "cards": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/card" }
+        }
+      },
+      "required": ["id", "anchor_id", "title", "cards"],
+      "additionalProperties": false
+    },
+    "card": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^card-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "summary": { "$ref": "#/$defs/nonEmptyString" },
+        "region_label": { "$ref": "#/$defs/nonEmptyString" },
+        "emergency_note": { "$ref": "#/$defs/nonEmptyString" },
+        "details_label": { "$ref": "#/$defs/nonEmptyString" },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "contains": {
+            "type": "object",
+            "properties": { "role": { "const": "primary" } },
+            "required": ["role"]
+          },
+          "minContains": 1,
+          "items": { "$ref": "#/$defs/link" }
+        }
+      },
+      "required": ["id", "title", "summary", "links"],
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^card-source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["primary", "secondary", "temporary-highlight"]
+        },
+        "visibility_context": {
+          "type": "string",
+          "enum": ["always", "normal", "disaster"]
+        },
+        "button_label": { "$ref": "#/$defs/nonEmptyString" },
+        "public_note": { "$ref": "#/$defs/nonEmptyString" },
+        "destination": { "$ref": "#/$defs/destination" }
+      },
+      "required": ["id", "role", "visibility_context", "button_label", "destination"],
+      "additionalProperties": false
+    },
+    "destination": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "official-homepage",
+            "information-page",
+            "disaster-page",
+            "service-page",
+            "social-account",
+            "messaging-service",
+            "email-service",
+            "search-service",
+            "consultation-guide"
+          ]
+        },
+        "content_format": {
+          "type": "string",
+          "enum": ["html", "pdf", "social-profile", "external-service", "other"]
+        },
+        "url": { "$ref": "#/$defs/httpsUrl" },
+        "destination_locales": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["ja", "en"] },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["x", "line", "facebook", "youtube", "other"]
+        },
+        "account_id": { "$ref": "#/$defs/nonEmptyString" },
+        "display_title": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "public_note": { "$ref": "#/$defs/nonEmptyString" },
+        "destination_language_note": { "$ref": "#/$defs/nonEmptyString" },
+        "destination_checked_on": { "type": "string", "format": "date" },
+        "official_information_checked_on": { "type": "string", "format": "date" },
+        "organization": { "$ref": "#/$defs/organization" }
+      },
+      "required": [
+        "id",
+        "source_type",
+        "content_format",
+        "url",
+        "destination_locales",
+        "display_title",
+        "purpose",
+        "destination_checked_on",
+        "official_information_checked_on",
+        "organization"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": { "source_type": { "const": "social-account" } },
+            "required": ["source_type"]
+          },
+          "then": {
+            "properties": {
+              "content_format": { "const": "social-profile" },
+              "platform": true,
+              "account_id": true
+            },
+            "required": ["platform", "account_id"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "source_type": { "const": "messaging-service" } },
+            "required": ["source_type"]
+          },
+          "then": {
+            "properties": { "platform": true },
+            "required": ["platform"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "organization": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^org-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "official_name": { "$ref": "#/$defs/nonEmptyString" },
+        "name_kind": {
+          "type": "string",
+          "enum": ["official-ja", "official-en", "official-ja-fallback"]
+        },
+        "summary": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "required": ["id", "official_name", "name_kind"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
