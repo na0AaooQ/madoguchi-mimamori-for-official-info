@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:madoguchi-mimamori:schema:core:site:1.0.0",
+  "title": "Core サイト設定",
+  "description": "言語共通のサイト設定を管理するSchemaです。",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "site_id": {
+      "type": "string",
+      "const": "madoguchi-mimamori"
+    },
+    "default_locale": {
+      "type": "string",
+      "const": "ja"
+    },
+    "supported_locales": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["ja", "en"]
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true
+    },
+    "site_publication_status": {
+      "type": "string",
+      "enum": ["draft", "under-review", "published", "hidden", "archived"]
+    },
+    "site_last_checked_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "contact_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "disaster_guidance_enabled": {
+      "type": "boolean"
+    },
+    "data_updated_on": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "schema_version",
+    "site_id",
+    "default_locale",
+    "supported_locales",
+    "site_publication_status",
+    "disaster_guidance_enabled",
+    "data_updated_on"
+  ],
+  "if": {
+    "properties": {
+      "site_publication_status": {
+        "const": "published"
+      }
+    },
+    "required": ["site_publication_status"]
+  },
+  "then": {
+    "properties": {
+      "site_last_checked_on": true,
+      "contact_url": true
+    },
+    "required": ["site_last_checked_on", "contact_url"]
+  },
+  "additionalProperties": false
+}

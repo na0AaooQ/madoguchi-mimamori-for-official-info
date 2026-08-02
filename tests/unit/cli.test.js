@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -62,6 +62,40 @@ test('--fixtures exits 0 when expected failures match', () => {
   const result = runCli(['--fixtures']);
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Error 0/);
+});
+
+test('--data validates the production data foundation with exit 0', () => {
+  const result = runCli(['--data']);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Error 0/);
+});
+
+test('--data cannot be combined with --fixtures', () => {
+  const result = runCli(['--data', '--fixtures']);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /Usage/);
+});
+
+test('--data exits 1 for a missing required data file', async (t) => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'madoguchi-cli-data-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  await cp(path.join(repoRoot, 'data'), path.join(directory, 'data'), { recursive: true });
+  await cp(path.join(repoRoot, 'schemas'), path.join(directory, 'schemas'), { recursive: true });
+  await rm(path.join(directory, 'data/core/regions.json'));
+  const result = runCli(['--data'], directory);
+  assert.equal(result.status, 1, result.stderr);
+  assert.match(result.stdout, /E006/);
+});
+
+test('--data exits 2 for a missing required Schema', async (t) => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'madoguchi-cli-schema-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  await cp(path.join(repoRoot, 'data'), path.join(directory, 'data'), { recursive: true });
+  await cp(path.join(repoRoot, 'schemas'), path.join(directory, 'schemas'), { recursive: true });
+  await rm(path.join(directory, 'schemas/core/regions.schema.json'));
+  const result = runCli(['--data'], directory);
+  assert.equal(result.status, 2, result.stderr);
+  assert.match(result.stdout, /RUN-E001/);
 });
 
 test('invalid CLI arguments exit 2 with useful output', () => {

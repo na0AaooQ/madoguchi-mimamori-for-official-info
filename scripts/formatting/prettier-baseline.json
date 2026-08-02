@@ -3,14 +3,6 @@
   "generated_from": "f9ea011",
   "files": [
     {
-      "path": "docs/DATA_FIELDS.md",
-      "sha256": "faa5dee673610e4d98a8906d5779d47a5296e50a0a3cb986d06766316bfdf6e0"
-    },
-    {
-      "path": "docs/DATA_MODEL.md",
-      "sha256": "eb290e523b0781942c5b83b7d4bf1ee43ca307b93c7033bb8236c3200e5b342e"
-    },
-    {
       "path": "docs/LOCALIZATION_POLICY.md",
       "sha256": "b590ce93fae84d8d18cd48d615f91f88914631f837b1f51403fa75d0f9831532"
     },

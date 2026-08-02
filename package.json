@@ -14,7 +14,8 @@
     "format:check": "node scripts/formatting/prettier-runner.js --check",
     "validate:fixtures": "node scripts/validation/cli.js --fixtures",
     "validate:docs": "node scripts/validation/docs-validator.js",
-    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs"
+    "validate:data": "node scripts/validation/cli.js --data",
+    "check": "npm run lint && npm run format:check && npm test && npm run validate:fixtures && npm run validate:docs && npm run validate:data"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

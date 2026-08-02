@@ -2,7 +2,7 @@
 
 ## 目的
 
-本基盤は、JavaScript・JSON・Markdown、テスト用JSON Schema、最小のファイル間意味検証、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。本番サイト、本番用`data/`、本番用`schemas/`、公開生成処理は実装しません。
+本基盤は、JavaScript・JSON・Markdown、JSON Schema、最小のファイル間意味検証、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。工程3-1で本番用`data/`と`schemas/`の空の枠組みを追加しました。本番サイトと公開生成処理は実装しません。
 
 ## 採用ツールと責務
 
@@ -60,6 +60,7 @@ npm run format:check
 npm test
 npm run validate:fixtures
 npm run validate:docs
+npm run validate:data
 npm run check
 ```
 
@@ -69,7 +70,8 @@ npm run check
 - `npm test`は`node:test`の全テストを実行します。
 - `npm run validate:fixtures`は正常・異常fixtureの実結果と期待値を比較します。
 - `npm run validate:docs`は全Markdownへ文書固有検証を実行します。
-- `npm run check`は上記の読取専用検証を順に実行し、ファイルを書き換えません。
+- `npm run validate:data`は本番用の40データファイル、27 Schema、配置、構造、siteの最小意味検証を実行します。
+- `npm run check`は上記の読取専用検証を順に実行し、最後に`validate:data`も実行します。いずれも`data/`や`schemas/`を書き換えません。
 
 ## 段階的Prettierベースライン
 
@@ -94,7 +96,7 @@ JavaScriptとJSON、新規Markdown、このPR以降に変更したMarkdownは常
 - Warningは処理を停止しませんが、人による確認が必要です。
 - Infoは対応必須ではない処理情報です。
 
-今回のデータ検証コードは、JSON構文`E001`、Schema違反`E002`、英語locale不足`E003`、改訂不一致`E004`、存在しない参照`E005`、確認中locale`W001`、下書きlocale`I001`です。文書固有検証はデータ検証と区別する`DOC-E`系を使用します。
+データ検証コードは、JSON構文`E001`、Schema違反`E002`、英語locale不足`E003`、改訂不一致`E004`、存在しない参照`E005`、必須データ欠落`E006`、未定義データ`E007`、未対応locale`E008`、禁止localeファイル`E009`、site整合性`E010`、確認中locale`W001`、下書きlocale`I001`です。Schemaや検証基盤の実行異常は`RUN-E001`から`RUN-E005`、文書固有検証は`DOC-E`系を使用します。
 
 ## 終了コード
 
@@ -112,14 +114,17 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 異常fixtureもJSON構文としては正常に保ちます。壊れたJSONやMarkdownはテスト中に一時ディレクトリへ作成し、終了後に削除します。実在する団体、災害、個人、公式URLは使用せず、URLが必要な場合は`example.invalid`を使用します。
 
-## 今回実装する意味検証
+## 実装済みの最小意味検証
 
-- 日本語localeがあり、表示に必要な英語localeがないこと
-- 英語の`based_on_ja_revision`と日本語の`content_revision`の不一致
-- 存在しないID参照
+- テストfixture内で、日本語localeがあり、表示に必要な英語localeがないこと
+- テストfixture内で、英語の`based_on_ja_revision`と日本語の`content_revision`が一致しないこと
+- テストfixture内で、存在しないIDを参照すること
 - `under-review`をWarning、`draft`をInfoとして分類する最小機構
+- 英語siteの`based_on_ja_revision`の存在と、日本語siteの`content_revision`との一致
+- 日本語siteへの`based_on_ja_revision`混入禁止
+- core・日本語・英語siteの`site_id`、対応locale設定の整合
 
-ID重複、URL重複、循環参照、公式性根拠、期限、公開可能件数、内部項目除外などの全意味検証は未実装です。本番データ基盤とともに後続工程で実装します。
+ID重複、URL重複、循環参照、公式性根拠、期限、公開可能件数、内部項目除外などの全意味検証は未実装です。site以外の正式なitem定義は工程3-2以降に実装します。
 
 ## 文書固有検証
 
@@ -134,4 +139,4 @@ ADR 0001から0016に共通する最小見出しとして「状況」「決定�
 
 ## 外部接続と未実装範囲
 
-テストと検証は外部ネットワーク、AWS、GitHub API、実在する公式サイトへ接続しません。本番用`data/`、本番用`schemas/`、全意味検証、画面、公開生成、CI、Gitフック、デプロイは後続工程です。存在しない本番対象を成功扱いする`validate:data`は追加しません。
+テストと検証は外部ネットワーク、AWS、GitHub API、実在する公式サイトへ接続しません。工程3-1では本番用`data/`と`schemas/`の空の枠組みだけを実装しました。実在情報、site以外のitem、全意味検証、画面、公開生成、CI、Gitフック、デプロイは後続工程です。

@@ -71,7 +71,9 @@ ls -la
 
 ## データと重複管理
 
-同じ団体、URL、公式アカウント、相談先を、ページや分野ごとに別データとして重複管理しない。複数の導線から同じ情報を参照できる設計とする。管理単位、coreとlocale、参照関係は[データモデル](docs/DATA_MODEL.md)に従い、具体的なJSON Schemaは後続工程で実装する。
+同じ団体、URL、公式アカウント、相談先を、ページや分野ごとに別データとして重複管理しない。複数の導線から同じ情報を参照できる設計とする。管理単位、coreとlocale、参照関係は[データモデル](docs/DATA_MODEL.md)に従う。
+
+`data/`は本番用管理データ、`schemas/`は管理単位ごとの構造制約です。日本語と英語は同じlocale Schemaを使います。工程3-2の依頼までは、site以外の`items`へデータや正式なitem Schemaを追加しません。実在情報を追加せず、検証回避のために共通Schemaを作らず、外部Schemaを参照しません。詳細は[データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)に従います。
 
 ## UI・アクセシビリティ
 
@@ -105,7 +107,10 @@ ls -la
 - 指定されていない依存パッケージを独断で追加しない。
 - `package-lock.json`を手作業で編集しない。
 - テストから外部ネットワーク、AWS、実在する公式サイトへ接続しない。
-- 品質管理工程で本番用`data/`、本番用`schemas/`、公開生成処理を追加しない。
+- 本番用`data/`と`schemas/`を変更した場合は`npm run validate:data`を実行する。
+- 工程3-2の依頼まではsite以外へデータや正式なitem Schemaを追加しない。
+- 実在する団体、URL、災害情報を工程3-1の空データ基盤へ追加しない。
+- 複数Schemaから参照する共通Schemaや外部Schema参照を無断で追加しない。
 - `npm run format`は対象ファイルを書き換える。`npm run check`はファイルを書き換えない。
 - 既存MarkdownのPrettierベースラインを検査回避目的で追加・更新しない。変更した文書は整形し、登録があれば削除する。
 
@@ -116,6 +121,7 @@ git diff --check
 git status -s
 git diff --stat
 git diff
+npm run validate:data
 npm run check
 ```
 

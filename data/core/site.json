@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "site_id": "madoguchi-mimamori",
+  "default_locale": "ja",
+  "supported_locales": ["ja", "en"],
+  "site_publication_status": "draft",
+  "disaster_guidance_enabled": false,
+  "data_updated_on": "2026-08-02"
+}

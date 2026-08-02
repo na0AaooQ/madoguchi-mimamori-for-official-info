@@ -4,18 +4,18 @@
 
 この文書は、第一版の管理用JSONについて、項目名、型、必須条件、許可値、意味、主な整合性ルールを定めます。[データモデル](DATA_MODEL.md)が管理単位・責務・参照関係を定め、この文書が各ファイルのフィールド仕様を定めます。
 
-実際の`data/`ファイルとJSON Schemaは後続工程で実装します。後続のJSON Schemaは、この文書で確定したフィールド名、型、必須条件、列挙値を変更せずに表現します。変更が必要になった場合は、実装上の都合だけで変更せず、設計文書と必要なADRを先に更新します。
+工程3-1では本番用`data/`ファイルとJSON Schemaの枠組みを実装済みです。`site.json`以外の正式なitem Schemaは後続工程で実装します。JSON Schemaは、この文書で確定したフィールド名、型、必須条件、列挙値を表現します。変更が必要になった場合は、実装上の都合だけで変更せず、設計文書と必要なADRを先に更新します。
 
 ## 型の表記
 
-| 表記 | 意味 |
-| --- | --- |
-| `string` | 文字列 |
-| `integer` | 整数 |
-| `boolean` | 真偽値 |
-| `array` | 配列 |
+| 表記       | 意味               |
+| ---------- | ------------------ |
+| `string`   | 文字列             |
+| `integer`  | 整数               |
+| `boolean`  | 真偽値             |
+| `array`    | 配列               |
 | `object[]` | オブジェクトの配列 |
-| `string[]` | 文字列の配列 |
+| `string[]` | 文字列の配列       |
 
 日付を表す`string`は`YYYY-MM-DD`形式、URLを表す`string`は原則HTTPSとします。
 
@@ -25,11 +25,11 @@
 
 `site.json`以外のcore・localeファイルは、次の外枠を持つ配列ファイルとします。
 
-| 項目 | 型 | 必須 | 意味 |
-| --- | --- | --- | --- |
-| `schema_version` | string | 必須 | データスキーマの版 |
+| 項目              | 型     | 必須 | 意味                               |
+| ----------------- | ------ | ---- | ---------------------------------- |
+| `schema_version`  | string | 必須 | データスキーマの版                 |
 | `data_updated_on` | string | 必須 | `YYYY-MM-DD`形式の管理データ更新日 |
-| `items` | array | 必須 | 対象レコード |
+| `items`           | array  | 必須 | 対象レコード                       |
 
 coreとlocaleの`site.json`は`items`を持たない単一オブジェクトとします。
 
@@ -93,36 +93,37 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 単一オブジェクトです。
 
-| 項目 | 型 | 必須条件 | 意味・許可値 |
-| --- | --- | --- | --- |
-| `schema_version` | string | 必須 | データスキーマの版 |
-| `site_id` | string | 必須 | `madoguchi-mimamori` |
-| `default_locale` | string | 必須 | `ja` |
-| `supported_locales` | string[] | 必須 | `ja`、`en`の2件 |
-| `site_publication_status` | string | 必須 | `publication_status`と同じ許可値 |
-| `site_last_checked_on` | string | サイト公開時に必須 | サイト全体の最終点検日 |
-| `contact_url` | string | 必須 | HTTPSの問い合わせ案内先 |
-| `disaster_guidance_enabled` | boolean | 必須 | 災害別案内機能を公開成果物へ含めるか |
-| `data_updated_on` | string | 必須 | 管理データ更新日 |
+| 項目                        | 型       | 必須条件           | 意味・許可値                         |
+| --------------------------- | -------- | ------------------ | ------------------------------------ |
+| `schema_version`            | string   | 必須               | データスキーマの版                   |
+| `site_id`                   | string   | 必須               | `madoguchi-mimamori`                 |
+| `default_locale`            | string   | 必須               | `ja`                                 |
+| `supported_locales`         | string[] | 必須               | `ja`、`en`の2件                      |
+| `site_publication_status`   | string   | 必須               | `publication_status`と同じ許可値     |
+| `site_last_checked_on`      | string   | サイト公開時に必須 | サイト全体の最終点検日               |
+| `contact_url`               | string   | サイト公開時に必須 | HTTPSの問い合わせ案内先              |
+| `disaster_guidance_enabled` | boolean  | 必須               | 災害別案内機能を公開成果物へ含めるか |
+| `data_updated_on`           | string   | 必須               | 管理データ更新日                     |
 
 整合性ルール：
 
 - `site_id`は`madoguchi-mimamori`から変更しない
 - 第一版の`default_locale`は`ja`、`supported_locales`は`ja`と`en`に固定する
-- `contact_url`はHTTPSとする
-- `site_publication_status: published`では`site_last_checked_on`を必須とする
+- `contact_url`が存在する場合は、公開状態にかかわらずHTTPS URLだけを許可する
+- `site_publication_status: published`では`site_last_checked_on`と`contact_url`を必須とする
+- `draft`、`under-review`、`hidden`、`archived`では、未確定の`contact_url`を省略できる
 - `operator_name`の具体値は未確定であるため、第一版の必須項目にしない
 
 ### `data/core/regions.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `region-`で始まる不変ID |
-| `region_type` | string | 必須 | 地域区分 |
-| `parent_region_id` | string | 地域階層上必要な場合 | 親地域ID |
-| `official_code` | string | 任意 | 公的な地域コード |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                 | 型     | 必須条件             | 意味                    |
+| -------------------- | ------ | -------------------- | ----------------------- |
+| `id`                 | string | 必須                 | `region-`で始まる不変ID |
+| `region_type`        | string | 必須                 | 地域区分                |
+| `parent_region_id`   | string | 地域階層上必要な場合 | 親地域ID                |
+| `official_code`      | string | 任意                 | 公的な地域コード        |
+| `publication_status` | string | 必須                 | 公開状態                |
+| `internal_note`      | string | 任意・内部専用       | 運用メモ                |
 
 `region_type`：
 
@@ -141,14 +142,14 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/organizations.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `org-`で始まる不変ID |
-| `organization_type` | string | 必須 | 団体区分 |
-| `region_ids` | string[] | 必須 | 対象地域ID |
-| `parent_organization_id` | string | 任意 | 親組織ID |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                     | 型       | 必須条件       | 意味                 |
+| ------------------------ | -------- | -------------- | -------------------- |
+| `id`                     | string   | 必須           | `org-`で始まる不変ID |
+| `organization_type`      | string   | 必須           | 団体区分             |
+| `region_ids`             | string[] | 必須           | 対象地域ID           |
+| `parent_organization_id` | string   | 任意           | 親組織ID             |
+| `publication_status`     | string   | 必須           | 公開状態             |
+| `internal_note`          | string   | 任意・内部専用 | 運用メモ             |
 
 `organization_type`：
 
@@ -171,27 +172,27 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/sources.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `src-`で始まる不変ID |
-| `publisher_organization_id` | string | 必須 | 発信団体ID |
-| `related_organization_ids` | string[] | 任意 | 関係団体ID |
-| `source_type` | string | 必須 | 案内先種別 |
-| `content_format` | string | 必須 | コンテンツ形式 |
-| `url` | string | 必須 | 公式案内先URL |
-| `destination_locales` | string[] | 必須 | リンク先で利用可能な言語 |
-| `equivalent_source_group_id` | string | 任意 | 言語違いなど同等案内先のグループID |
-| `platform` | string | SNS・メッセージサービス等で条件付き必須 | プラットフォーム |
-| `account_id` | string | アカウント識別子がある場合に条件付き必須 | アカウントID |
-| `primary_official_home_for_locales` | string[] | 公式ホームページの場合に条件付き | 主公式ホームとして扱う言語 |
-| `lifecycle_type` | string | 必須 | 常設・期間限定の区分 |
-| `destination_status` | string | 必須 | 案内先確認状態 |
-| `destination_checked_on` | string | 公開時必須 | 案内先確認日 |
-| `official_information_status` | string | 必須 | 公式情報確認状態 |
-| `official_information_checked_on` | string | 公開時必須 | 公式情報確認日 |
-| `show_in_official_source_list` | boolean | 必須 | 公式情報源一覧へ表示するか |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                                | 型       | 必須条件                                 | 意味                               |
+| ----------------------------------- | -------- | ---------------------------------------- | ---------------------------------- |
+| `id`                                | string   | 必須                                     | `src-`で始まる不変ID               |
+| `publisher_organization_id`         | string   | 必須                                     | 発信団体ID                         |
+| `related_organization_ids`          | string[] | 任意                                     | 関係団体ID                         |
+| `source_type`                       | string   | 必須                                     | 案内先種別                         |
+| `content_format`                    | string   | 必須                                     | コンテンツ形式                     |
+| `url`                               | string   | 必須                                     | 公式案内先URL                      |
+| `destination_locales`               | string[] | 必須                                     | リンク先で利用可能な言語           |
+| `equivalent_source_group_id`        | string   | 任意                                     | 言語違いなど同等案内先のグループID |
+| `platform`                          | string   | SNS・メッセージサービス等で条件付き必須  | プラットフォーム                   |
+| `account_id`                        | string   | アカウント識別子がある場合に条件付き必須 | アカウントID                       |
+| `primary_official_home_for_locales` | string[] | 公式ホームページの場合に条件付き         | 主公式ホームとして扱う言語         |
+| `lifecycle_type`                    | string   | 必須                                     | 常設・期間限定の区分               |
+| `destination_status`                | string   | 必須                                     | 案内先確認状態                     |
+| `destination_checked_on`            | string   | 公開時必須                               | 案内先確認日                       |
+| `official_information_status`       | string   | 必須                                     | 公式情報確認状態                   |
+| `official_information_checked_on`   | string   | 公開時必須                               | 公式情報確認日                     |
+| `show_in_official_source_list`      | boolean  | 必須                                     | 公式情報源一覧へ表示するか         |
+| `publication_status`                | string   | 必須                                     | 公開状態                           |
+| `internal_note`                     | string   | 任意・内部専用                           | 運用メモ                           |
 
 `source_type`：
 
@@ -239,20 +240,20 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/evidence.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `evidence-`で始まる不変ID |
-| `target_type` | string | 必須 | 確認対象種別 |
-| `target_id` | string | 必須 | 確認対象ID |
-| `target_aspect` | string | 必須 | 確認する側面 |
-| `target_locale` | string | 言語固有名称の確認時に必須 | `ja`または`en` |
-| `evidence_type` | string | 必須 | 根拠種別 |
-| `evidence_source_id` | string | 条件付き | 根拠となる案内先ID |
-| `evidence_url` | string | 条件付き | 根拠URL |
-| `checked_on` | string | 必須 | 根拠確認日 |
-| `status` | string | 必須 | 根拠の確認状態 |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                 | 型     | 必須条件                   | 意味                      |
+| -------------------- | ------ | -------------------------- | ------------------------- |
+| `id`                 | string | 必須                       | `evidence-`で始まる不変ID |
+| `target_type`        | string | 必須                       | 確認対象種別              |
+| `target_id`          | string | 必須                       | 確認対象ID                |
+| `target_aspect`      | string | 必須                       | 確認する側面              |
+| `target_locale`      | string | 言語固有名称の確認時に必須 | `ja`または`en`            |
+| `evidence_type`      | string | 必須                       | 根拠種別                  |
+| `evidence_source_id` | string | 条件付き                   | 根拠となる案内先ID        |
+| `evidence_url`       | string | 条件付き                   | 根拠URL                   |
+| `checked_on`         | string | 必須                       | 根拠確認日                |
+| `status`             | string | 必須                       | 根拠の確認状態            |
+| `publication_status` | string | 必須                       | 公開状態                  |
+| `internal_note`      | string | 任意・内部専用             | 運用メモ                  |
 
 `target_type`：
 
@@ -302,18 +303,18 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 災害の公式名称を確認する`evidence.json`レコードでは、既存フィールドを次のように使用します。
 
-| 項目 | 値・意味 |
-| --- | --- |
-| `target_type` | `disaster` |
-| `target_id` | 対象となる`disaster-`始まりの災害ID |
-| `target_aspect` | `official-name` |
-| `target_locale` | `ja`または`en` |
-| `evidence_type` | 既存の許可値から選択 |
-| `evidence_source_id` | 根拠となる公式案内先ID |
-| `evidence_url` | 必要に応じて根拠となる公式URL |
-| `checked_on` | 根拠を確認した日 |
-| `status` | `confirmed`、`needs-review`、`invalid` |
-| `publication_status` | 根拠レコードの公開状態 |
+| 項目                 | 値・意味                               |
+| -------------------- | -------------------------------------- |
+| `target_type`        | `disaster`                             |
+| `target_id`          | 対象となる`disaster-`始まりの災害ID    |
+| `target_aspect`      | `official-name`                        |
+| `target_locale`      | `ja`または`en`                         |
+| `evidence_type`      | 既存の許可値から選択                   |
+| `evidence_source_id` | 根拠となる公式案内先ID                 |
+| `evidence_url`       | 必要に応じて根拠となる公式URL          |
+| `checked_on`         | 根拠を確認した日                       |
+| `status`             | `confirmed`、`needs-review`、`invalid` |
+| `publication_status` | 根拠レコードの公開状態                 |
 
 公開する災害名称の根拠条件は次のとおりです。
 
@@ -327,13 +328,13 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/sections.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `section-`で始まる不変ID |
-| `anchor_id` | string | 必須 | ページ内アンカーID |
-| `display_order` | integer | 必須・1以上 | 表示順 |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                 | 型      | 必須条件       | 意味                     |
+| -------------------- | ------- | -------------- | ------------------------ |
+| `id`                 | string  | 必須           | `section-`で始まる不変ID |
+| `anchor_id`          | string  | 必須           | ページ内アンカーID       |
+| `display_order`      | integer | 必須・1以上    | 表示順                   |
+| `publication_status` | string  | 必須           | 公開状態                 |
+| `internal_note`      | string  | 任意・内部専用 | 運用メモ                 |
 
 整合性ルール：
 
@@ -344,29 +345,29 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/cards.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `card-`で始まる不変ID |
-| `section_id` | string | 必須 | 所属分野ID |
-| `region_ids` | string[] | 任意 | 対象地域ID |
-| `display_order` | integer | 必須・1以上 | 分野内の表示順 |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                 | 型       | 必須条件       | 意味                  |
+| -------------------- | -------- | -------------- | --------------------- |
+| `id`                 | string   | 必須           | `card-`で始まる不変ID |
+| `section_id`         | string   | 必須           | 所属分野ID            |
+| `region_ids`         | string[] | 任意           | 対象地域ID            |
+| `display_order`      | integer  | 必須・1以上    | 分野内の表示順        |
+| `publication_status` | string   | 必須           | 公開状態              |
+| `internal_note`      | string   | 任意・内部専用 | 運用メモ              |
 
 カードには、URL、団体名、案内先確認日、ボタン文言を直接持たせません。
 
 ### `data/core/disasters.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `disaster-`で始まる不変ID |
-| `disaster_type` | string | 必須 | 災害種別 |
-| `occurred_on` | string | 公式情報から確認できる場合のみ任意 | 発生日 |
-| `target_region_ids` | string[] | 必須 | 対象地域ID |
-| `display_order` | integer | 必須・1以上 | 災害案内の表示順 |
-| `site_guidance_status` | string | 必須 | 本サイト上の災害案内状態 |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                   | 型       | 必須条件                           | 意味                      |
+| ---------------------- | -------- | ---------------------------------- | ------------------------- |
+| `id`                   | string   | 必須                               | `disaster-`で始まる不変ID |
+| `disaster_type`        | string   | 必須                               | 災害種別                  |
+| `occurred_on`          | string   | 公式情報から確認できる場合のみ任意 | 発生日                    |
+| `target_region_ids`    | string[] | 必須                               | 対象地域ID                |
+| `display_order`        | integer  | 必須・1以上                        | 災害案内の表示順          |
+| `site_guidance_status` | string   | 必須                               | 本サイト上の災害案内状態  |
+| `publication_status`   | string   | 必須                               | 公開状態                  |
+| `internal_note`        | string   | 任意・内部専用                     | 運用メモ                  |
 
 `disaster_type`：
 
@@ -391,16 +392,16 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/events.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `event-`で始まる不変ID |
-| `disaster_id` | string | 必須 | 所属災害ID |
-| `event_type` | string | 必須 | 案内目的種別 |
-| `target_region_ids` | string[] | 任意 | 対象地域ID |
-| `display_order` | integer | 必須・1以上 | 災害内の表示順 |
-| `site_guidance_status` | string | 必須 | 本サイト上の出来事案内状態 |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                   | 型       | 必須条件       | 意味                       |
+| ---------------------- | -------- | -------------- | -------------------------- |
+| `id`                   | string   | 必須           | `event-`で始まる不変ID     |
+| `disaster_id`          | string   | 必須           | 所属災害ID                 |
+| `event_type`           | string   | 必須           | 案内目的種別               |
+| `target_region_ids`    | string[] | 任意           | 対象地域ID                 |
+| `display_order`        | integer  | 必須・1以上    | 災害内の表示順             |
+| `site_guidance_status` | string   | 必須           | 本サイト上の出来事案内状態 |
+| `publication_status`   | string   | 必須           | 公開状態                   |
+| `internal_note`        | string   | 任意・内部専用 | 運用メモ                   |
 
 `event_type`：
 
@@ -443,16 +444,16 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `data/core/disaster-source-links.json`
 - `data/core/event-source-links.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 関連レコードの不変ID |
-| `source_id` | string | 必須 | 案内先ID |
-| `display_order` | integer | 必須・1以上 | 参照元内の表示順 |
-| `display_locales` | string[] | 必須・1件以上 | 本サイトで表示する言語 |
-| `site_display_start_on` | string | 期間限定表示では必須 | 本サイトでの表示開始日 |
-| `site_display_end_on` | string | 任意 | 本サイトでの表示終了日 |
-| `publication_status` | string | 必須 | 個々の関連・リンクの公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                    | 型       | 必須条件             | 意味                         |
+| ----------------------- | -------- | -------------------- | ---------------------------- |
+| `id`                    | string   | 必須                 | 関連レコードの不変ID         |
+| `source_id`             | string   | 必須                 | 案内先ID                     |
+| `display_order`         | integer  | 必須・1以上          | 参照元内の表示順             |
+| `display_locales`       | string[] | 必須・1件以上        | 本サイトで表示する言語       |
+| `site_display_start_on` | string   | 期間限定表示では必須 | 本サイトでの表示開始日       |
+| `site_display_end_on`   | string   | 任意                 | 本サイトでの表示終了日       |
+| `publication_status`    | string   | 必須                 | 個々の関連・リンクの公開状態 |
+| `internal_note`         | string   | 任意・内部専用       | 運用メモ                     |
 
 整合性ルール：
 
@@ -480,11 +481,11 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 #### `card-source-links.json`の固有項目
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `card_id` | string | 必須 | カードID |
-| `role` | string | 必須 | カード内での役割 |
-| `visibility_context` | string | 必須 | 表示場面 |
+| 項目                 | 型     | 必須条件 | 意味             |
+| -------------------- | ------ | -------- | ---------------- |
+| `card_id`            | string | 必須     | カードID         |
+| `role`               | string | 必須     | カード内での役割 |
+| `visibility_context` | string | 必須     | 表示場面         |
 
 `role`：
 
@@ -494,11 +495,11 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 `visibility_context`：
 
-| 値 | 意味 |
-| --- | --- |
-| `always` | 通常時・災害対応時の両方で表示する |
-| `normal` | 通常時に表示する |
-| `disaster` | 災害対応時に表示する |
+| 値         | 意味                               |
+| ---------- | ---------------------------------- |
+| `always`   | 通常時・災害対応時の両方で表示する |
+| `normal`   | 通常時に表示する                   |
+| `disaster` | 災害対応時に表示する               |
 
 整合性ルール：
 
@@ -508,12 +509,12 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 #### `disaster-source-links.json`の固有項目
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `disaster_id` | string | 必須 | 災害ID |
-| `role` | string | 必須 | 災害案内内での役割 |
-| `show_in_top_guidance` | boolean | 必須 | トップ案内へ表示するか |
-| `top_display_order` | integer | `show_in_top_guidance: true`の場合に必須・1以上 | トップ案内の表示順 |
+| 項目                   | 型      | 必須条件                                        | 意味                   |
+| ---------------------- | ------- | ----------------------------------------------- | ---------------------- |
+| `disaster_id`          | string  | 必須                                            | 災害ID                 |
+| `role`                 | string  | 必須                                            | 災害案内内での役割     |
+| `show_in_top_guidance` | boolean | 必須                                            | トップ案内へ表示するか |
+| `top_display_order`    | integer | `show_in_top_guidance: true`の場合に必須・1以上 | トップ案内の表示順     |
 
 `role`：
 
@@ -533,10 +534,10 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 #### `event-source-links.json`の固有項目
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `event_id` | string | 必須 | 出来事ID |
-| `role` | string | 必須 | 出来事案内内での役割 |
+| 項目       | 型     | 必須条件 | 意味                 |
+| ---------- | ------ | -------- | -------------------- |
+| `event_id` | string | 必須     | 出来事ID             |
+| `role`     | string | 必須     | 出来事案内内での役割 |
 
 `role`：
 
@@ -555,22 +556,22 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/check-history.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `check-`で始まる不変ID |
-| `target_type` | string | 必須 | 確認対象種別 |
-| `target_id` | string | 必須 | 確認対象ID |
-| `target_locale` | string | 言語別文面の確認時に条件付き必須 | `ja`または`en` |
-| `check_type` | string | 必須 | 確認種別 |
-| `checked_on` | string | 必須 | 確認日 |
-| `result` | string | 必須 | 確認結果 |
-| `summary` | string | 必須・内部専用 | 確認内容の要約 |
-| `changed_fields` | string[] | 任意 | 変更を確認した項目名 |
-| `follow_up_required` | boolean | 必須 | 再確認が必要か |
-| `follow_up_due_on` | string | `follow_up_required: true`の場合に必須 | 再確認期限 |
-| `checked_by` | string | 任意・内部専用 | 確認者識別子 |
-| `supersedes_check_id` | string | 任意 | 訂正対象の確認履歴ID |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                  | 型       | 必須条件                               | 意味                   |
+| --------------------- | -------- | -------------------------------------- | ---------------------- |
+| `id`                  | string   | 必須                                   | `check-`で始まる不変ID |
+| `target_type`         | string   | 必須                                   | 確認対象種別           |
+| `target_id`           | string   | 必須                                   | 確認対象ID             |
+| `target_locale`       | string   | 言語別文面の確認時に条件付き必須       | `ja`または`en`         |
+| `check_type`          | string   | 必須                                   | 確認種別               |
+| `checked_on`          | string   | 必須                                   | 確認日                 |
+| `result`              | string   | 必須                                   | 確認結果               |
+| `summary`             | string   | 必須・内部専用                         | 確認内容の要約         |
+| `changed_fields`      | string[] | 任意                                   | 変更を確認した項目名   |
+| `follow_up_required`  | boolean  | 必須                                   | 再確認が必要か         |
+| `follow_up_due_on`    | string   | `follow_up_required: true`の場合に必須 | 再確認期限             |
+| `checked_by`          | string   | 任意・内部専用                         | 確認者識別子           |
+| `supersedes_check_id` | string   | 任意                                   | 訂正対象の確認履歴ID   |
+| `internal_note`       | string   | 任意・内部専用                         | 運用メモ               |
 
 `target_type`：
 
@@ -619,16 +620,16 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/update-history.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | `update-`で始まる不変ID |
-| `published_on` | string | 必須 | 利用者向け公開日 |
-| `sequence` | integer | 必須・1以上 | 同一日内などの表示順 |
-| `update_type` | string | 必須 | 更新種別 |
-| `related_targets` | object[] | 任意 | 関連対象 |
-| `related_check_history_ids` | string[] | 任意 | 対応する内部確認履歴ID |
-| `publication_status` | string | 必須 | 公開状態 |
-| `internal_note` | string | 任意・内部専用 | 運用メモ |
+| 項目                        | 型       | 必須条件       | 意味                    |
+| --------------------------- | -------- | -------------- | ----------------------- |
+| `id`                        | string   | 必須           | `update-`で始まる不変ID |
+| `published_on`              | string   | 必須           | 利用者向け公開日        |
+| `sequence`                  | integer  | 必須・1以上    | 同一日内などの表示順    |
+| `update_type`               | string   | 必須           | 更新種別                |
+| `related_targets`           | object[] | 任意           | 関連対象                |
+| `related_check_history_ids` | string[] | 任意           | 対応する内部確認履歴ID  |
+| `publication_status`        | string   | 必須           | 公開状態                |
+| `internal_note`             | string   | 任意・内部専用 | 運用メモ                |
 
 `update_type`：
 
@@ -646,10 +647,10 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 `related_targets`の各要素：
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `target_type` | string | 必須 | `check-history.json`の`target_type`と同じ許可値 |
-| `target_id` | string | 必須 | 対象ID |
+| 項目          | 型     | 必須条件 | 意味                                            |
+| ------------- | ------ | -------- | ----------------------------------------------- |
+| `target_type` | string | 必須     | `check-history.json`の`target_type`と同じ許可値 |
+| `target_id`   | string | 必須     | 対象ID                                          |
 
 内部メモや調査途中の推測を、公開更新履歴の文面へ流用しません。
 
@@ -659,13 +660,13 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 `site.json`以外の全localeレコードは、ファイル固有項目に加えて次を持ちます。
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応するcoreと同じID |
-| `locale_status` | string | 必須 | 言語別文面状態 |
-| `content_revision` | integer | 必須・1以上 | 文面改訂番号 |
+| 項目                   | 型      | 必須条件            | 意味                   |
+| ---------------------- | ------- | ------------------- | ---------------------- |
+| `id`                   | string  | 必須                | 対応するcoreと同じID   |
+| `locale_status`        | string  | 必須                | 言語別文面状態         |
+| `content_revision`     | integer | 必須・1以上         | 文面改訂番号           |
 | `based_on_ja_revision` | integer | 英語では必須・1以上 | 基にした日本語改訂番号 |
-| `content_reviewed_on` | string | 公開時必須 | 文面確認日 |
+| `content_reviewed_on`  | string  | 公開時必須          | 文面確認日             |
 
 日本語レコードには`based_on_ja_revision`を持たせません。英語の`based_on_ja_revision`が対応する日本語の`content_revision`と一致しない場合は公開できません。
 
@@ -673,118 +674,118 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 日本語・英語それぞれの単一オブジェクトです。
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `schema_version` | string | 必須 | データスキーマの版 |
-| `data_updated_on` | string | 必須 | 管理データ更新日 |
-| `locale` | string | 必須 | 対象ファイルに応じて`ja`または`en` |
-| `site_id` | string | 必須 | `madoguchi-mimamori` |
-| `site_name` | string | 必須 | サイト名 |
-| `subtitle` | string | 必須 | 副題 |
-| `short_description` | string | 必須 | 短い説明 |
-| `purpose` | string | 必須 | サイトの目的 |
-| `free_use_notice` | string | 必須 | 無料・広告なし等の案内 |
-| `external_site_notice` | string | 必須 | 外部公式サイトへ移動する案内 |
-| `disclaimer_summary` | string | 必須 | 役割と非保証事項の要約 |
-| `locale_status` | string | 必須 | 言語別文面状態 |
-| `content_revision` | integer | 必須・1以上 | 文面改訂番号 |
-| `based_on_ja_revision` | integer | 英語のみ必須・1以上 | 基にした日本語改訂番号 |
-| `content_reviewed_on` | string | 公開時必須 | 文面確認日 |
+| 項目                   | 型      | 必須条件            | 意味                               |
+| ---------------------- | ------- | ------------------- | ---------------------------------- |
+| `schema_version`       | string  | 必須                | データスキーマの版                 |
+| `data_updated_on`      | string  | 必須                | 管理データ更新日                   |
+| `locale`               | string  | 必須                | 対象ファイルに応じて`ja`または`en` |
+| `site_id`              | string  | 必須                | `madoguchi-mimamori`               |
+| `site_name`            | string  | 必須                | サイト名                           |
+| `subtitle`             | string  | 必須                | 副題                               |
+| `short_description`    | string  | 必須                | 短い説明                           |
+| `purpose`              | string  | 必須                | サイトの目的                       |
+| `free_use_notice`      | string  | 必須                | 無料・広告なし等の案内             |
+| `external_site_notice` | string  | 必須                | 外部公式サイトへ移動する案内       |
+| `disclaimer_summary`   | string  | 必須                | 役割と非保証事項の要約             |
+| `locale_status`        | string  | 必須                | 言語別文面状態                     |
+| `content_revision`     | integer | 必須・1以上         | 文面改訂番号                       |
+| `based_on_ja_revision` | integer | 英語のみ必須・1以上 | 基にした日本語改訂番号             |
+| `content_reviewed_on`  | string  | 公開時必須          | 文面確認日                         |
 
 日本語の`site.json`に`based_on_ja_revision`を持たせません。
 
 ### 言語別`regions.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する地域ID |
-| `name` | string | 必須 | 表示名称 |
-| `short_name` | string | 任意 | 短縮表示名 |
-| `scope_note` | string | 任意 | 範囲の公開用補足 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型     | 必須条件                 | 意味                            |
+| -------------- | ------ | ------------------------ | ------------------------------- |
+| `id`           | string | 必須                     | 対応する地域ID                  |
+| `name`         | string | 必須                     | 表示名称                        |
+| `short_name`   | string | 任意                     | 短縮表示名                      |
+| `scope_note`   | string | 任意                     | 範囲の公開用補足                |
+| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 ### 言語別`organizations.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する団体ID |
-| `official_name` | string | 必須 | 表示する正式名称 |
-| `display_name` | string | 任意 | 補助的な表示名 |
-| `name_kind` | string | 必須 | 団体名称種別 |
-| `summary` | string | 任意 | 団体の役割説明 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目            | 型     | 必須条件                 | 意味                            |
+| --------------- | ------ | ------------------------ | ------------------------------- |
+| `id`            | string | 必須                     | 対応する団体ID                  |
+| `official_name` | string | 必須                     | 表示する正式名称                |
+| `display_name`  | string | 任意                     | 補助的な表示名                  |
+| `name_kind`     | string | 必須                     | 団体名称種別                    |
+| `summary`       | string | 任意                     | 団体の役割説明                  |
+| locale共通項目  | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 団体の`name_kind`：
 
-| 値 | 意味 |
-| --- | --- |
-| `official-ja` | 日本語の公式名称 |
-| `official-en` | 根拠を確認できた団体自身の公式英語名称 |
+| 値                     | 意味                                                             |
+| ---------------------- | ---------------------------------------------------------------- |
+| `official-ja`          | 日本語の公式名称                                                 |
+| `official-en`          | 根拠を確認できた団体自身の公式英語名称                           |
 | `official-ja-fallback` | 公式英語名称を確認できないため、英語版でも使用する日本語正式名称 |
 
 団体名称に`descriptive`を使用してはいけません。
 
 ### 言語別`sources.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する案内先ID |
-| `display_title` | string | 必須 | 案内先の表示名 |
-| `purpose` | string | 必須 | 案内目的 |
-| `target_audience_note` | string | 任意 | 対象利用者の補足 |
-| `destination_language_note` | string | 英語版から日本語のみのページへ案内する場合に必須 | リンク先言語の注意 |
-| `public_note` | string | 任意 | 公開用補足 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目                        | 型     | 必須条件                                         | 意味                            |
+| --------------------------- | ------ | ------------------------------------------------ | ------------------------------- |
+| `id`                        | string | 必須                                             | 対応する案内先ID                |
+| `display_title`             | string | 必須                                             | 案内先の表示名                  |
+| `purpose`                   | string | 必須                                             | 案内目的                        |
+| `target_audience_note`      | string | 任意                                             | 対象利用者の補足                |
+| `destination_language_note` | string | 英語版から日本語のみのページへ案内する場合に必須 | リンク先言語の注意              |
+| `public_note`               | string | 任意                                             | 公開用補足                      |
+| locale共通項目              | -      | 必須条件は共通定義に従う                         | `locale_status`、改訂・確認情報 |
 
 `destination_language_note`は言語別の関連データへ重複させず、言語別`sources.json`だけで管理します。
 
 ### 言語別`evidence.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する根拠ID |
-| `description` | string | 必須 | 利用者向けの根拠説明 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型     | 必須条件                 | 意味                            |
+| -------------- | ------ | ------------------------ | ------------------------------- |
+| `id`           | string | 必須                     | 対応する根拠ID                  |
+| `description`  | string | 必須                     | 利用者向けの根拠説明            |
+| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 ### 言語別`sections.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する分野ID |
-| `title` | string | 必須 | 分野名 |
-| `short_description` | string | 任意 | 分野の短い説明 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目                | 型     | 必須条件                 | 意味                            |
+| ------------------- | ------ | ------------------------ | ------------------------------- |
+| `id`                | string | 必須                     | 対応する分野ID                  |
+| `title`             | string | 必須                     | 分野名                          |
+| `short_description` | string | 任意                     | 分野の短い説明                  |
+| locale共通項目      | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 ### 言語別`cards.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応するカードID |
-| `title` | string | 必須 | カード名 |
-| `summary` | string | 必須 | 短い説明 |
-| `region_label` | string | 任意 | 対象地域表示 |
-| `emergency_note` | string | 任意 | 緊急時の注意 |
-| `details_label` | string | 任意 | 詳細表示の文言 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目             | 型     | 必須条件                 | 意味                            |
+| ---------------- | ------ | ------------------------ | ------------------------------- |
+| `id`             | string | 必須                     | 対応するカードID                |
+| `title`          | string | 必須                     | カード名                        |
+| `summary`        | string | 必須                     | 短い説明                        |
+| `region_label`   | string | 任意                     | 対象地域表示                    |
+| `emergency_note` | string | 任意                     | 緊急時の注意                    |
+| `details_label`  | string | 任意                     | 詳細表示の文言                  |
+| locale共通項目   | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 ### 言語別`disasters.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する災害ID |
-| `display_name` | string | 必須 | 災害の表示名称 |
-| `name_kind` | string | 必須 | 災害名称種別 |
-| `summary` | string | 公開時必須 | 災害案内の説明 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型     | 必須条件                 | 意味                            |
+| -------------- | ------ | ------------------------ | ------------------------------- |
+| `id`           | string | 必須                     | 対応する災害ID                  |
+| `display_name` | string | 必須                     | 災害の表示名称                  |
+| `name_kind`    | string | 必須                     | 災害名称種別                    |
+| `summary`      | string | 公開時必須               | 災害案内の説明                  |
+| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 災害の`name_kind`：
 
-| 値 | 意味 |
-| --- | --- |
-| `official-ja` | 日本語の公式災害名称 |
-| `official-en` | 公的機関が使用する公式英語名称 |
+| 値                     | 意味                                                           |
+| ---------------------- | -------------------------------------------------------------- |
+| `official-ja`          | 日本語の公式災害名称                                           |
+| `official-en`          | 公的機関が使用する公式英語名称                                 |
 | `official-ja-fallback` | 公式英語名称を確認できないため英語版でも使用する日本語公式名称 |
-| `descriptive` | 公式名称が確認できない災害を識別するための説明的名称 |
+| `descriptive`          | 公式名称が確認できない災害を識別するための説明的名称           |
 
 整合性ルール：
 
@@ -797,13 +798,13 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### 言語別`events.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する出来事ID |
-| `title` | string | 必須 | 案内目的の名称 |
-| `purpose` | string | 公開時必須 | 案内目的 |
-| `public_note` | string | 任意 | 公開用補足 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型     | 必須条件                 | 意味                            |
+| -------------- | ------ | ------------------------ | ------------------------------- |
+| `id`           | string | 必須                     | 対応する出来事ID                |
+| `title`        | string | 必須                     | 案内目的の名称                  |
+| `purpose`      | string | 公開時必須               | 案内目的                        |
+| `public_note`  | string | 任意                     | 公開用補足                      |
+| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 ### 言語別の3種類の関連データ
 
@@ -813,24 +814,24 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `disaster-source-links.json`
 - `event-source-links.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する関連ID |
-| `button_label` | string | 公開時必須 | ボタン文言 |
-| `public_note` | string | 任意 | 公開用補足 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型     | 必須条件                 | 意味                            |
+| -------------- | ------ | ------------------------ | ------------------------------- |
+| `id`           | string | 必須                     | 対応する関連ID                  |
+| `button_label` | string | 公開時必須               | ボタン文言                      |
+| `public_note`  | string | 任意                     | 公開用補足                      |
+| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 `destination_language_note`は関連localeへ置かず、言語別`sources.json`へ置きます。
 
 ### 言語別`update-history.json`
 
-| 項目 | 型 | 必須条件 | 意味 |
-| --- | --- | --- | --- |
-| `id` | string | 必須 | 対応する公開更新履歴ID |
-| `title` | string | 必須 | 更新見出し |
-| `summary` | string | 必須 | 更新内容の要約 |
-| `details` | string[] | 任意 | 更新内容の詳細 |
-| locale共通項目 | - | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目           | 型       | 必須条件                 | 意味                            |
+| -------------- | -------- | ------------------------ | ------------------------------- |
+| `id`           | string   | 必須                     | 対応する公開更新履歴ID          |
+| `title`        | string   | 必須                     | 更新見出し                      |
+| `summary`      | string   | 必須                     | 更新内容の要約                  |
+| `details`      | string[] | 任意                     | 更新内容の詳細                  |
+| locale共通項目 | -        | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
 
 `check-history.json`のlocaleファイルは作りません。
 
