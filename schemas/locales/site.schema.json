@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:madoguchi-mimamori:schema:locale:site:1.0.0",
+  "title": "Locale サイト表示文言",
+  "description": "日本語と英語で共有するサイト表示文言のSchemaです。",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "data_updated_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "locale": {
+      "type": "string",
+      "enum": ["ja", "en"]
+    },
+    "site_id": {
+      "type": "string",
+      "const": "madoguchi-mimamori"
+    },
+    "site_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subtitle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "short_description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "free_use_notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "external_site_notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "disclaimer_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale_status": {
+      "type": "string",
+      "enum": ["draft", "under-review", "published", "needs-update", "archived"]
+    },
+    "content_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "based_on_ja_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "content_reviewed_on": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "schema_version",
+    "data_updated_on",
+    "locale",
+    "site_id",
+    "site_name",
+    "subtitle",
+    "short_description",
+    "purpose",
+    "free_use_notice",
+    "external_site_notice",
+    "disclaimer_summary",
+    "locale_status",
+    "content_revision"
+  ],
+  "if": {
+    "properties": {
+      "locale_status": {
+        "const": "published"
+      }
+    },
+    "required": ["locale_status"]
+  },
+  "then": {
+    "properties": {
+      "content_reviewed_on": true
+    },
+    "required": ["content_reviewed_on"]
+  },
+  "additionalProperties": false
+}

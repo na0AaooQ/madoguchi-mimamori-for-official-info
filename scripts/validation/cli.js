@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { validateDataRepository } from './data-validator.js';
 import { createResult, exitCodeForResults, formatResults, sortResults } from './result.js';
 import { SchemaCompilationError, validateWithSchema } from './schema-validator.js';
 import { validateSemanticData } from './semantic-validator.js';
@@ -11,11 +12,14 @@ class RuntimeValidationError extends Error {}
 
 function parseArguments(args) {
   if (args.length === 1 && args[0] === '--fixtures') return { mode: 'fixtures' };
+  if (args.length === 1 && args[0] === '--data') return { mode: 'data' };
   if (args.length === 4) {
     const values = new Map();
     for (let index = 0; index < args.length; index += 2) {
       if (!['--schema', '--data'].includes(args[index]) || !args[index + 1]) {
-        throw new CliUsageError('Usage: cli.js --fixtures | --schema <path> --data <path>');
+        throw new CliUsageError(
+          'Usage: cli.js --fixtures | --data | --schema <path> --data <path>'
+        );
       }
       if (values.has(args[index])) throw new CliUsageError(`Duplicate argument: ${args[index]}`);
       values.set(args[index], args[index + 1]);
@@ -24,7 +28,7 @@ function parseArguments(args) {
       return { mode: 'schema', schemaPath: values.get('--schema'), dataPath: values.get('--data') };
     }
   }
-  throw new CliUsageError('Usage: cli.js --fixtures | --schema <path> --data <path>');
+  throw new CliUsageError('Usage: cli.js --fixtures | --data | --schema <path> --data <path>');
 }
 
 async function readJsonTarget(filePath, displayPath) {
@@ -141,6 +145,11 @@ export async function runCli(
 ) {
   try {
     const options = parseArguments(args);
+    if (options.mode === 'data') {
+      const { results, runtimeResults } = await validateDataRepository(cwd);
+      stdout(formatResults([...results, ...runtimeResults]));
+      return runtimeResults.length > 0 ? 2 : exitCodeForResults(results);
+    }
     const results =
       options.mode === 'fixtures'
         ? await runFixtures(cwd)

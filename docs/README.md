@@ -15,6 +15,7 @@
 | [データフィールド定義](DATA_FIELDS.md)                         | 各core・locale JSONの項目名、型、必須条件、許可値、整合性ルール |
 | [日英対応方針](LOCALIZATION_POLICY.md)                         | 第一版の日英対応、公式名称、リンク先言語、翻訳改訂              |
 | [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md) | JSON Schema、意味検証、公開停止条件、内部項目除外               |
+| [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)              | 工程3-1のデータ・Schema配置、対応規則、検証範囲                 |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
 | [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |
 | [設計判断記録](decisions/README.md)                            | 採用した重要な設計判断と再検討条件                              |
@@ -40,6 +41,7 @@
 | [0015](decisions/0015-validate-data-before-public-generation.md)            | データを検証してから公開成果物を生成する |
 | [0016](decisions/0016-develop-and-test-in-incremental-phases.md)            | 小さな縦切りから段階的に開発・検証する   |
 | [0017](decisions/0017-adopt-node-quality-toolchain.md)                      | Node.js品質管理ツールチェーンを採用する  |
+| [0018](decisions/0018-adopt-per-file-json-schemas.md)                       | 管理単位ごとのJSON Schemaを採用する      |
 
 ## 文書の読み方
 

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "data_updated_on": "2026-08-02",
+  "locale": "en",
+  "site_id": "madoguchi-mimamori",
+  "site_name": "Madoguchi Mimamori",
+  "subtitle": "Official Information Guide for Kumamoto Prefecture and Kumamoto City",
+  "short_description": "A guide that helps users find the responsible public institution or related organization and proceed to that organization's own official information during disasters and other situations.",
+  "purpose": "Helps users reach official information from public institutions and related organizations quickly.",
+  "free_use_notice": "Free to use. No sign-in is required.",
+  "external_site_notice": "Destinations are external official websites. Check the linked site for the latest information.",
+  "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service. Listing does not guarantee the overall reliability of an organization or the accuracy of information at a destination.",
+  "locale_status": "draft",
+  "content_revision": 1,
+  "based_on_ja_revision": 1
+}

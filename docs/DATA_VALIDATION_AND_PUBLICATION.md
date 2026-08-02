@@ -2,9 +2,9 @@
 
 ## 文書の位置付け
 
-この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。第一版の本番データと公開生成は未実装です。
+この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-1では本番用データファイルの空の枠組みとSchemaを実装していますが、実在情報と公開生成は未実装です。
 
-品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用します。テスト専用Schemaとfixtureにより検証経路を実装しますが、本番用Schema、実データ、公開生成処理、全意味検証は後続工程です。
+品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用します。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、siteの最小意味検証を実装します。公開生成処理と全意味検証は後続工程です。
 
 ## 基本原則
 
@@ -19,28 +19,17 @@
 
 ## 品質管理基盤で実装する範囲
 
-今回実装する意味検証は、必要な英語localeの欠落、日本語と英語の改訂番号不一致、存在しないID参照です。Error、Warning、Infoの共通形式、Ajvエラーの正規化、正常・異常fixtureの期待値確認も実装します。
+品質管理基盤で実装済みの意味検証は、fixture用の英語locale欠落、日本語と英語の改訂番号不一致、存在しないID参照です。工程3-1では、siteに限定して英語改訂元の存在と一致、日本語への改訂元混入禁止、core・日本語・英語の3つのsiteファイルの整合を追加します。Error、Warning、Infoの共通形式、Ajvエラーの正規化、正常・異常fixtureの期待値確認も実装しています。
 
-本節は、後続工程で必要な全規則が実装済みであることを意味しません。ID・URL重複、循環参照、公式性根拠、期限、公開可能件数、内部項目除外などは本番データ基盤とともに実装します。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)を参照してください。
+本節は、後続工程で必要な全規則が実装済みであることを意味しません。37空ファイル間のID参照、ID・URL重複、循環参照、公式性根拠、災害名称根拠、表示期間、確認期限、公開可能件数、内部項目除外などは未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
 
 ## JSON Schemaの基準
 
 第一版ではJSON Schema Draft 2020-12を使用します。これは常に最新のDraftへ追従するという意味ではなく、第一版の実装基準を固定する判断です。
 
-想定する構成は次のとおりです。
+工程3-1では、`schemas/core/`に14 Schema、`schemas/locales/`に13 Schemaを配置します。日本語と英語は同じlocale Schemaを利用します。対応関係は`scripts/validation/data-layout.js`で一元管理します。
 
-- `schemas/manifest.json`
-- `schemas/common/`
-  - `definitions.schema.json`
-  - `file-envelope.schema.json`
-  - `locale-record.schema.json`
-  - `relation-record.schema.json`
-- `schemas/core/`
-  - 各`data/core/` JSONに対応するスキーマ
-- `schemas/locales/`
-  - 各`data/locales/ja/`・`data/locales/en/` JSONに対応するスキーマ
-
-`manifest.json`は、検証対象ファイル、適用するスキーマ、言語、公開生成時の扱いを一元的に関連付けます。共通スキーマはID、日付、URL、ファイル外枠、locale共通項目、関連データ共通項目などを再利用可能にします。
+Schemaは管理単位ごとに独立させ、初期段階では`schemas/common/`などの共通Schemaや外部Schema参照を導入しません。重複より理解しやすさを優先し、共通部分が安定した後に再検討します。
 
 各スキーマは`additionalProperties: false`を基本とし、想定外の項目を見逃さない設計とします。
 
@@ -64,6 +53,12 @@ JSON Schemaでは、主として次を確認します。
 - 想定外の項目
 
 JSON Schemaは、一つのレコードまたはファイル内部で宣言的に確認できる制約を担当します。ファイルをまたぐ参照や運用上の意味は独自の意味検証へ分離します。
+
+工程3-1では、site以外の25 Schemaに`maxItems: 0`を指定し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
+
+## 本番用データ検証
+
+`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteの最小意味整合性を検証します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
 
 ## 意味検証の責務
 
@@ -202,6 +197,8 @@ Errorは、一部レコードだけを黙って除外して処理を続ける理
 
 Warningの存在だけでは終了コードを`1`にしません。JSON構文エラーは検証対象の不正として`1`、設定不足、読込失敗、Schemaコンパイル失敗、内部例外は`2`とします。
 
+必須データ欠落、余分なデータ、未対応locale、禁止localeファイル、Schema違反、site整合性違反はデータ検証Errorとして終了コード`1`です。必須・余分なSchema、Schema JSON構文、`$id`重複、Schemaコンパイル、配置対応表、読込環境の異常は検証基盤側の実行異常として終了コード`2`です。
+
 ## 公開生成手順
 
 将来の公開生成処理は、次の順序を基本とします。
@@ -294,5 +291,7 @@ Warningがある場合は、対象ごとの確認結果を残してから公開�
 - [日英対応方針](LOCALIZATION_POLICY.md)
 - [開発工程](DEVELOPMENT_PHASES.md)
 - [品質管理基盤](QUALITY_TOOLING.md)
+- [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)
 - [データを検証してから公開生成する決定](decisions/0015-validate-data-before-public-generation.md)
 - [Node.js品質管理ツールチェーンを採用する決定](decisions/0017-adopt-node-quality-toolchain.md)
+- [管理単位ごとのJSON Schemaを採用する決定](decisions/0018-adopt-per-file-json-schemas.md)

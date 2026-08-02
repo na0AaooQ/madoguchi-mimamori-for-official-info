@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { validateSemanticData } from '../../scripts/validation/semantic-validator.js';
+import {
+  validateSemanticData,
+  validateSiteData
+} from '../../scripts/validation/semantic-validator.js';
 
 function validInput() {
   return {
@@ -88,4 +91,75 @@ test('does not mutate the input', () => {
   const before = structuredClone(input);
   validateSemanticData(input);
   assert.deepEqual(input, before);
+});
+
+function validSiteInput() {
+  return {
+    core: {
+      site_id: 'madoguchi-mimamori',
+      default_locale: 'ja',
+      supported_locales: ['ja', 'en']
+    },
+    ja: {
+      locale: 'ja',
+      site_id: 'madoguchi-mimamori',
+      locale_status: 'published',
+      content_revision: 1
+    },
+    en: {
+      locale: 'en',
+      site_id: 'madoguchi-mimamori',
+      locale_status: 'published',
+      content_revision: 1,
+      based_on_ja_revision: 1
+    }
+  };
+}
+
+test('accepts consistent site data', () => {
+  assert.deepEqual(validateSiteData(validSiteInput()), []);
+});
+
+test('requires an English based_on_ja_revision', () => {
+  const input = validSiteInput();
+  delete input.en.based_on_ja_revision;
+  assert.ok(validateSiteData(input).some(({ code }) => code === 'E003'));
+});
+
+test('detects a site revision mismatch', () => {
+  const input = validSiteInput();
+  input.en.based_on_ja_revision = 2;
+  assert.ok(validateSiteData(input).some(({ code }) => code === 'E004'));
+});
+
+test('rejects based_on_ja_revision in the Japanese site', () => {
+  const input = validSiteInput();
+  input.ja.based_on_ja_revision = 1;
+  assert.ok(validateSiteData(input).some(({ code }) => code === 'E010'));
+});
+
+test('detects site identifier and locale setting inconsistencies', () => {
+  const input = validSiteInput();
+  input.en.site_id = 'different-site';
+  input.core.default_locale = 'en';
+  input.core.supported_locales = ['ja', 'ja'];
+  input.ja.locale = 'en';
+  const fields = validateSiteData(input).map(({ field }) => field);
+  assert.ok(fields.includes('site_id'));
+  assert.ok(fields.includes('default_locale'));
+  assert.ok(fields.includes('supported_locales'));
+  assert.ok(fields.includes('locale'));
+});
+
+test('site semantic validation does not mutate input', () => {
+  const input = validSiteInput();
+  const before = structuredClone(input);
+  validateSiteData(input);
+  assert.deepEqual(input, before);
+});
+
+test('site semantic validation leaves invalid site_id types to Schema validation', () => {
+  const input = validSiteInput();
+  input.ja.site_id = 1;
+  assert.doesNotThrow(() => validateSiteData(input));
 });

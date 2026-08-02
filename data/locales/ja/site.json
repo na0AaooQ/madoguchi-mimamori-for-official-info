@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "data_updated_on": "2026-08-02",
+  "locale": "ja",
+  "site_id": "madoguchi-mimamori",
+  "site_name": "まどぐちみまもり",
+  "subtitle": "熊本県・熊本市の公式情報案内",
+  "short_description": "災害時などに確認したい内容から担当する公的機関・関係団体を見つけ、その団体自身の公式発表へ進むための案内サイトです。",
+  "purpose": "公的機関・関係団体の公式情報へ短時間で到達できるよう案内します。",
+  "free_use_notice": "無料で利用でき、ログインは不要です。",
+  "external_site_notice": "案内先は外部の公式サイトです。最新情報はリンク先で確認してください。",
+  "disclaimer_summary": "行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。掲載は団体全体の信頼性や、案内先の情報の正しさを保証するものではありません。",
+  "locale_status": "draft",
+  "content_revision": 1
+}

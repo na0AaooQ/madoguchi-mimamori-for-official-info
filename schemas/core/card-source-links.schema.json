@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:madoguchi-mimamori:schema:core:card-source-links:1.0.0",
+  "title": "Core カードと案内先の関連",
+  "description": "カードと案内先の関連の未実装データを空配列として管理するSchemaです。",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "data_updated_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 0
+    }
+  },
+  "required": ["schema_version", "data_updated_on", "items"],
+  "additionalProperties": false
+}
