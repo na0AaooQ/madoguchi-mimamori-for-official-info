@@ -2,7 +2,7 @@
 
 ## 目的
 
-本基盤は、JavaScript・JSON・Markdown、JSON Schema、ファイル間意味検証、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。工程3-2Aと工程3-2Bで地域・団体・案内先・確認根拠・分野・案内カード・カード関連のSchemaと意味検証を追加しました。本番サイトと公開生成処理は実装しません。
+本基盤は、JavaScript・JSON・Markdown、JSON Schema、ファイル間意味検証、公開成果物、リポジトリ固有の文書規則をローカルで再現可能に確認するための土台です。工程3-2Aと工程3-2Bの管理Schema・意味検証に加え、published架空fixtureによる公開生成MVPを実装しています。本番サイトと画面は実装しません。
 
 ## 採用ツールと責務
 
@@ -61,6 +61,9 @@ npm test
 npm run validate:fixtures
 npm run validate:docs
 npm run validate:data
+npm run generate:public:preview
+npm run validate:public
+npm run verify:public
 npm run check
 ```
 
@@ -71,7 +74,10 @@ npm run check
 - `npm run validate:fixtures`は正常・異常fixtureの実結果と期待値を比較します。
 - `npm run validate:docs`は全Markdownへ文書固有検証を実行します。
 - `npm run validate:data`は本番用の40データファイル、27 Schema、配置、構造、siteと工程3-2A・3-2Bデータの意味検証を実行します。
-- `npm run check`は上記の読取専用検証を順に実行し、最後に`validate:data`も実行します。いずれも`data/`や`schemas/`を書き換えません。
+- `npm run generate:public:preview`はpublished架空fixtureから日英preview成果物を書き込みます。
+- `npm run validate:public`はtracked artifactの構造、禁止項目、URL、日英ペア、productionライフサイクルを読取専用で検証します。
+- `npm run verify:public`は一時領域へ再生成し、tracked artifactとのバイト一致を読取専用で検証します。
+- `npm run check`は`lint`、`format:check`、`test`、`validate:fixtures`、`validate:docs`、`validate:data`、`validate:public`、`verify:public`の順に実行します。生成コマンドは含めません。
 
 ## 段階的Prettierベースライン
 
@@ -124,6 +130,23 @@ JavaScriptとJSON、新規Markdown、このPR以降に変更したMarkdownは常
 
 Schema違反は`E002`、ファイル間の意味違反は主に`E003`から`E005`および`E010`から`E019`で分けて報告します。Schemaや検証基盤の実行異常は`RUN-E001`から`RUN-E005`、文書固有検証は`DOC-E`系を使用します。
 
+公開生成固有コードは次のとおりです。
+
+| コード         | 意味                                               |
+| -------------- | -------------------------------------------------- |
+| `PUB-E001`     | siteまたは対象localeが公開可能でない               |
+| `PUB-E002`     | 必要な公開フィールド、locale、参照先を解決できない |
+| `PUB-E003`     | 言語・期間判定後に公開カードのprimaryが0件         |
+| `PUB-E004`     | 公開Schema、公開意味規則、URL安全条件への違反      |
+| `PUB-E005`     | 内部項目または禁止項目の混入                       |
+| `PUB-E006`     | 再生成結果とGit管理中成果物のバイト不一致          |
+| `PUB-E007`     | 正本の公開状態とproduction成果物の有無が不整合     |
+| `PUB-E008`     | 必須成果物の欠落、片言語だけの存在、想定外ファイル |
+| `PUB-RUN-E001` | CLI引数、基準日、modeの異常                        |
+| `PUB-RUN-E002` | 入力、fixture、公開Schemaの読込異常                |
+| `PUB-RUN-E003` | 固定出力先への安全な書込・置換異常                 |
+| `PUB-RUN-E004` | 想定外の内部例外                                   |
+
 ## 終了コード
 
 | 終了コード | 意味                                                         |
@@ -158,7 +181,7 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 - カードと案内先の関連組み合わせ、表示開始日と終了日の矛盾
 - 公開カードに必要な構造上公開可能な`role: primary`の関連
 
-`IMPLEMENTED_ARRAY_DATA_LAYOUT`は21件、`EMPTY_DATA_LAYOUT`は16件です。災害・出来事・履歴のID・参照、URL正規化後の重複、確認期限、現在日時による表示期間判定、公開生成後の内部項目除外などは未実装です。
+`IMPLEMENTED_ARRAY_DATA_LAYOUT`は21件、`EMPTY_DATA_LAYOUT`は16件です。管理用`SCHEMA_LAYOUT`は27件を維持し、公開成果物Schemaは`contracts/public/`へ分離します。通常カードの基準日による期間判定と公開後検証は実装済みです。災害・出来事・履歴のID・参照、URL正規化後の重複、確認期限は未実装です。
 
 本番用の架空itemは`draft`であることを正常状態とし、レコードごとの`I001`を出力しません。`npm run validate:data`の正常時はError 0、Warning 0、Info 2を想定します。2件のInfoは日本語・英語siteが下書きであることを示します。
 
@@ -175,4 +198,4 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 ## 外部接続と未実装範囲
 
-テストと検証は外部ネットワーク、AWS、GitHub API、実在する公式サイトへ接続しません。工程3-2A・3-2Bのデータは分類データ、架空名称、`example.invalid`だけを使い、URLへの疎通確認も行いません。実在情報、災害・出来事・履歴のitem、画面、公開生成、現在日時判定、CI、Gitフック、デプロイは後続工程です。
+テスト、生成、検証は外部ネットワーク、DNS、AWS、GitHub API、実在する公式サイトへ接続しません。管理データとpreviewは分類データ、架空名称、`example.invalid`だけを使い、URLへの疎通確認も行いません。実在情報、災害・出来事・履歴のitemおよびそれらの公開生成、画面、CI、Gitフック、デプロイは後続工程です。

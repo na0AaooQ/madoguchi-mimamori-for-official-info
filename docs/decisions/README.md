@@ -25,5 +25,6 @@
 | [0019](0019-require-contact-url-for-published-site.md)                      | 採用 | 2026年8月2日 | 問い合わせURLをサイト公開時に必須とする    |
 | [0020](0020-implement-official-source-minimum-slice-with-fictional-data.md) | 採用 | 2026年8月2日 | 工程3-2Aの最小縦切りを架空データで実装する |
 | [0021](0021-implement-navigation-card-minimum-slice-with-fictional-data.md) | 採用 | 2026年8月2日 | 工程3-2Bの案内カード最小縦切りを実装する   |
+| [0022](0022-generate-and-track-public-navigation-artifacts.md)              | 採用 | 2026年8月2日 | 公開用navigation成果物を生成・管理する     |
 
 設計判断を変更する場合は、元の記録を消去せず、変更理由と影響範囲が追跡できる記録を追加します。

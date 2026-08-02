@@ -4,13 +4,13 @@
 
 ## 現在の開発状況
 
-| 項目             | 状況           |
-| ---------------- | -------------- |
-| 開発段階         | 工程3-2B完了   |
-| 第一版           | 未実装         |
-| 対応言語         | 日本語・英語   |
-| 公開サイト       | まだ存在しない |
-| ホスティング構成 | 未確定         |
+| 項目             | 状況                        |
+| ---------------- | --------------------------- |
+| 開発段階         | 公開用データ生成MVP実装済み |
+| 第一版           | 未実装                      |
+| 対応言語         | 日本語・英語                |
+| 公開サイト       | まだ存在しない              |
+| ホスティング構成 | 未確定                      |
 
 本リポジトリには、初期設計文書、ローカル品質管理基盤、本番用データとSchemaの枠組みを整備しています。掲載候補は設計上の対象であり、実在情報を含む本番データ・画面として実装済みまたは公開済みではありません。
 
@@ -93,11 +93,103 @@
 
 第一版は静的HTML・CSS中心を想定し、JavaScriptへの依存を最小限にします。JavaScriptなしでも主要リンクを利用可能とし、AI、外部API、自動取得、新サイト内の入力フォームは使用しません。第一版から日本語・英語へ対応し、管理データの正本にはJSONを採用します。言語共通のcoreと日英localeを分離し、検証済みの公開対象だけから成果物を生成します。
 
-工程3-2Aと工程3-2Bでは、地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応する14 Schemaを正式化し、21データファイルに5分野と下書きの架空データを登録しています。配置検証、site検証、参照・locale・公開状態・公式性確認根拠・表示順・表示期間・公開カードの主案内先に関する意味検証を実装済みです。次は公開用データ生成MVPと、架空データによる画面MVPを予定しています。公開対象抽出、公開生成処理、画面、災害・出来事はまだ未実装です。詳しくは[データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。ホスティング方式、AWS構成、ドメイン、URLパス、英語版を`/en/`へ配置するか、CI/CD、JavaScriptの具体的範囲、アクセス解析、CDN・サーバーログ、Cookie、ライト・ダークモードの具体的実装、全国展開は後続工程で検討します。
+工程3-2Aと工程3-2Bでは、地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応する14 Schemaと意味検証を実装しました。公開用データ生成MVPでは、published架空fixtureから日英の`navigation.json`を決定論的に生成し、公開Schema、禁止項目、URL安全条件、productionライフサイクル、Git管理成果物とのバイト一致を検証します。本番用`data/`は引き続きすべてdraftで、画面、実在情報、災害・出来事、AWS、デプロイは未実装です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)と[データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
 
 ## 品質管理
 
-Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書固有検証、データ検証をまとめて実行できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
+Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書、管理データ、公開成果物、再現性をまとめて確認できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
+
+## 公開用ナビゲーションデータ生成MVPの確認手順
+
+### 前提環境
+
+対象環境はNode.js `24.18.0`、npm `11.16.0`です。nvmを利用できる場合は、リポジトリルートで次を実行します。
+
+```sh
+nvm use
+node --version
+npm --version
+npm ci
+```
+
+`.nvmrc`から対象Node.jsを選び、`node --version`が`v24.18.0`、`npm --version`が`11.16.0`であることを確認してください。対象外のバージョンでは`npm ci`などで`engines`警告が出る可能性があります。警告が出た場合は対象環境での検証済みとは扱わず、実使用バージョンを記録してください。
+
+### preview成果物を生成する
+
+```sh
+npm run generate:public:preview
+```
+
+このコマンドは`tests/fixtures/public-generation/preview/`のpublished架空fixtureだけを入力にし、manifestの基準日`2026-08-02`で次の2ファイルを生成します。
+
+- `dist/public-data/preview/ja/navigation.json`
+- `dist/public-data/preview/en/navigation.json`
+
+本番用`data/`は読み込みも変更もせず、日英2ファイルを一組として生成します。成果物は`fictional-preview`であり実在情報ではありません。`navigation.json`を直接編集してはいけません。
+
+### 生成内容を確認する
+
+macOSのFinderまたは任意のテキストエディタで日英JSONを開き、次を確認します。ターミナルでは次の差分確認も利用できます。
+
+```sh
+git status --short
+git diff -- dist/public-data/preview/ja/navigation.json
+git diff -- dist/public-data/preview/en/navigation.json
+```
+
+- `artifact_type`が`fictional-preview`である
+- `locale`がファイルの`ja`または`en`と一致する
+- `generated_for_date`が`2026-08-02`である
+- 5分野があり、最初の分野だけに架空カード1件がある
+- 残り4分野の`cards`が空配列である
+- `display_order`、`evidence`、`internal_note`、公開状態などの管理項目がない
+- `visibility_context`は存在するが、画面へそのまま表示する文言ではない
+- URLは予約ドメイン`example.invalid`の架空URLである
+
+### 公開成果物を検証する
+
+```sh
+npm run validate:public
+```
+
+正常時の最終行は`Summary: Error 0, Warning 0, Info 0, Total 0`です。Git管理中のpreview日英成果物が公開Schemaを満たし、禁止項目がなく、URL安全条件を満たし、現在はproduction成果物が存在しないことを読取専用で確認します。
+
+### 再現性を確認する
+
+```sh
+npm run verify:public
+```
+
+preview fixtureからOSの一時領域へ日英成果物を再生成し、Git管理中のpreviewとバイト単位で比較します。tracked artifactは変更しません。正常時は`Summary: Error 0, Warning 0, Info 0, Total 0`です。手編集やfixture変更後の生成忘れは`PUB-E006`で停止します。
+
+### 全体検証
+
+```sh
+npm run check
+```
+
+Lint、書式、全テスト、fixture、文書、管理データの検証に加え、`validate:public`と`verify:public`を順に実行します。生成系コマンドは書込処理のため`check`には含めません。
+
+### production生成の現在の期待動作
+
+```sh
+npm run generate:public -- --as-of 2026-08-02
+```
+
+現在の正本siteは`draft`なので、`PUB-E001`、終了コード`1`で停止し、`dist/public-data/production/`を作りません。これはdraftを誤公開しないための安全動作で、架空fixtureを使うpreview生成とは別のコマンドです。基準日は必須で、現在日時を自動採用しません。
+
+### 成果物を変更するときの基本手順
+
+1. 正本データ、fixture、生成処理の必要箇所を修正する
+2. `navigation.json`は直接編集しない
+3. `npm run generate:public:preview`を実行する
+4. `git diff`で日英成果物を確認する
+5. `npm run validate:public`を実行する
+6. `npm run verify:public`を実行する
+7. `npm run check`を実行する
+8. 正本と生成成果物を同じPRでレビューする
+
+`dist/public-data/`内では正式な日英`navigation.json`だけをGit管理し、履歴、透明性、画面へ渡る内容のレビューに利用します。previewとproductionは分離し、その他の一般的な`dist`成果物、一時生成物、ログ、バックアップは管理しません。差分が不正な場合は、成果物を手編集せず正本・fixture・生成処理を修正して再生成してください。
 
 ## 運用方針
 
@@ -121,6 +213,7 @@ Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています�
 - [データフィールド定義](docs/DATA_FIELDS.md)
 - [日英対応方針](docs/LOCALIZATION_POLICY.md)
 - [データ検証・公開生成方針](docs/DATA_VALIDATION_AND_PUBLICATION.md)
+- [公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)
 - [データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)
 - [品質管理基盤](docs/QUALITY_TOOLING.md)
 - [開発工程](docs/DEVELOPMENT_PHASES.md)

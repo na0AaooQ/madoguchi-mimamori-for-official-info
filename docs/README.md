@@ -1,6 +1,6 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の初期設計文書をまとめています。工程3-2Aで架空の地域・団体・案内先・確認根拠の最小縦切りを実装していますが、実在情報、公開生成、画面は未実装であり、掲載先や機能が公開済みであることを示す文書ではありません。
+「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。工程3-2A・3-2Bの管理データ縦切りと、published架空fixtureによる公開用データ生成MVPを実装しています。実在情報、画面、災害・出来事、AWSは未実装であり、サイトが公開済みであることを示す文書ではありません。
 
 ## 基本文書
 
@@ -15,6 +15,7 @@
 | [データフィールド定義](DATA_FIELDS.md)                         | 各core・locale JSONの項目名、型、必須条件、許可値、整合性ルール |
 | [日英対応方針](LOCALIZATION_POLICY.md)                         | 第一版の日英対応、公式名称、リンク先言語、翻訳改訂              |
 | [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md) | JSON Schema、意味検証、公開停止条件、内部項目除外               |
+| [公開データ契約](PUBLIC_DATA_CONTRACT.md)                      | navigation.jsonの公開フィールド、抽出、検証、Git管理            |
 | [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)              | データ・Schema配置、工程3-2Aの実装範囲、責務分担                |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
 | [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |
@@ -44,6 +45,8 @@
 | [0018](decisions/0018-adopt-per-file-json-schemas.md)                                 | 管理単位ごとのJSON Schemaを採用する        |
 | [0019](decisions/0019-require-contact-url-for-published-site.md)                      | 問い合わせURLをサイト公開時に必須とする    |
 | [0020](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md) | 工程3-2Aの最小縦切りを架空データで実装する |
+| [0021](decisions/0021-implement-navigation-card-minimum-slice-with-fictional-data.md) | 工程3-2Bの案内カード最小縦切りを実装する   |
+| [0022](decisions/0022-generate-and-track-public-navigation-artifacts.md)              | 公開用navigation成果物を生成・管理する     |
 
 ## 文書の読み方
 
