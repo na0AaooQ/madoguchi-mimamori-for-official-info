@@ -66,6 +66,24 @@ test('validates the production data foundation successfully', async () => {
   );
 });
 
+test('runs the official-source semantic validator for production data files', async (t) => {
+  const root = await createRepositoryCopy(t);
+  await updateJson(root, 'data/core/regions.json', (value) => {
+    value.items[1].parent_region_id = 'region-missing';
+  });
+  const execution = await validateDataRepository(root);
+  assert.deepEqual(execution.runtimeResults, []);
+  assert.ok(
+    execution.results.some(
+      ({ code, file, item_id: itemId, field }) =>
+        code === 'E005' &&
+        file === 'data/core/regions.json' &&
+        itemId === 'region-example-prefecture' &&
+        field === 'parent_region_id'
+    )
+  );
+});
+
 test('detects required and unexpected data layout problems', async (t) => {
   const cases = [
     {
@@ -184,7 +202,7 @@ test('detects malformed JSON and common Schema violations', async (t) => {
         })
     },
     {
-      name: 'non-empty items',
+      name: 'invalid region item',
       expected: 'E002',
       mutate: (root) =>
         updateJson(root, 'data/core/regions.json', (value) => {

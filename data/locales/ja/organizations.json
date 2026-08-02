@@ -1,5 +1,14 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "org-example-prefecture-disaster-office",
+      "official_name": "架空県防災情報窓口",
+      "name_kind": "official-ja",
+      "summary": "架空県の防災情報を案内する、データ構造確認用の架空団体です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    }
+  ]
 }

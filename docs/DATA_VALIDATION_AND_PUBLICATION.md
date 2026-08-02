@@ -2,9 +2,9 @@
 
 ## 文書の位置付け
 
-この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-1では本番用データファイルの空の枠組みとSchemaを実装していますが、実在情報と公開生成は未実装です。
+この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-2Aで地域・団体・案内先・確認根拠のSchemaと意味検証を追加していますが、実在情報と公開生成は未実装です。
 
-品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、siteの最小意味検証を実装済みです。公開生成処理と全意味検証は後続工程です。
+品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、site検証、工程3-2Aの意味検証を実装済みです。公開対象抽出と公開生成処理は後続工程です。
 
 ## 基本原則
 
@@ -19,15 +19,23 @@
 
 ## 品質管理基盤で実装する範囲
 
-品質管理基盤で実装済みの意味検証は、fixture用の英語locale欠落、日本語と英語の改訂番号不一致、存在しないID参照です。工程3-1では、siteに限定して英語改訂元の存在と一致、日本語への改訂元混入禁止、core・日本語・英語の3つのsiteファイルの整合を追加済みです。Error、Warning、Infoの共通形式、Ajvエラーの正規化、正常・異常fixtureの期待値確認も実装しています。
+品質管理基盤では、fixture用の最小検証とsite検証を維持した上で、工程3-2A専用モジュールに次を実装しています。
 
-本節は、後続工程で必要な全規則が実装済みであることを意味しません。37空ファイル間のID参照、ID・URL重複、循環参照、公式性根拠、災害名称根拠、表示期間、確認期限、公開可能件数、内部項目除外などは未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
+- `regions`、`organizations`、`sources`、`evidence`のID重複と参照整合性
+- 地域の自己参照・循環と団体の自己参照
+- coreと日英localeの対応、日英改訂番号、locale固有ルール
+- 団体名称の`official-ja-fallback`と公式名称根拠
+- 公開レコードと参照先の公開状態
+- 公開団体の公式組織・公式名称根拠と、公開案内先の公式ページ・公式アカウント根拠
+- 日本語のみの公開案内先を英語版で案内するときの`destination_language_note`
+
+工程3-2Bの分野・カード・関連データ、災害・出来事・履歴の意味検証、URL正規化後の重複、表示期間、確認期限、公開可能件数、公開成果物の内部項目除外と再検証は未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
 
 ## JSON Schemaの基準
 
 第一版ではJSON Schema Draft 2020-12を使用します。これは常に最新のDraftへ追従するという意味ではなく、第一版の実装基準を固定する判断です。
 
-工程3-1では、`schemas/core/`に14 Schema、`schemas/locales/`に13 Schemaを配置します。日本語と英語は同じlocale Schemaを利用します。対応関係は`scripts/validation/data-layout.js`で一元管理します。
+`schemas/core/`に14 Schema、`schemas/locales/`に13 Schemaを配置しています。日本語と英語は同じlocale Schemaを利用します。対応関係は`scripts/validation/data-layout.js`で一元管理します。
 
 Schemaは管理単位ごとに独立させ、初期段階では`schemas/common/`などの共通Schemaや外部Schema参照を導入しません。重複より理解しやすさを優先し、共通部分が安定した後に再検討します。
 
@@ -54,17 +62,19 @@ JSON Schemaでは、主として次を確認します。
 
 JSON Schemaは、一つのレコードまたはファイル内部で宣言的に確認できる制約を担当します。ファイルをまたぐ参照や運用上の意味は独自の意味検証へ分離します。
 
-工程3-1では、site以外の25 Schemaに`maxItems: 0`を指定し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
+工程3-2Aでは、`regions`、`organizations`、`sources`、`evidence`のcore・locale 8 Schemaを正式化しています。対象外の17 Schemaは`maxItems: 0`を維持し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
 
 coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では`site_last_checked_on`と`contact_url`の両方を必須とし、それ以外の公開状態では未確定の`contact_url`を省略できます。
 
 ## 本番用データ検証
 
-`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteの最小意味整合性を検証します。正本である`data/`と`schemas/`の配下はディレクトリ名にかかわらず再帰走査し、配置対応表にないJSONをすべて検出します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
+`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteと工程3-2Aデータの意味整合性を検証します。正本である`data/`と`schemas/`の配下はディレクトリ名にかかわらず再帰走査し、配置対応表にないJSONをすべて検出します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
 
 ## 意味検証の責務
 
 独自の意味検証では、主として次を確認します。
+
+次の一覧には後続工程の計画も含みます。工程3-2Aで実装済みの範囲は、地域・団体・案内先・確認根拠のID重複、参照、地域階層、core・locale、改訂、公式名称フォールバック、公開状態、公式性確認根拠、日本語のみの案内先の英語注意文です。
 
 - ファイル間のID参照がすべて存在する
 - 管理対象ごとにIDが重複していない
@@ -298,3 +308,4 @@ Warningがある場合は、対象ごとの確認結果を残してから公開�
 - [Node.js品質管理ツールチェーンを採用する決定](decisions/0017-adopt-node-quality-toolchain.md)
 - [管理単位ごとのJSON Schemaを採用する決定](decisions/0018-adopt-per-file-json-schemas.md)
 - [問い合わせURLをサイト公開時に必須とする決定](decisions/0019-require-contact-url-for-published-site.md)
+- [工程3-2Aの最小縦切りを架空データで実装する決定](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md)

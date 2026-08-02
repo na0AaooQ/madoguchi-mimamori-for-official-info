@@ -1,5 +1,22 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "region-example-country",
+      "name": "Example Country",
+      "scope_note": "A fictional country used to verify the data structure.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    },
+    {
+      "id": "region-example-prefecture",
+      "name": "Example Prefecture",
+      "scope_note": "A fictional prefecture used to verify the data structure.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    }
+  ]
 }

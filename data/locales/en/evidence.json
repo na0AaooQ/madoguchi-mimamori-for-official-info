@@ -1,5 +1,27 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "evidence-example-organization-official",
+      "description": "Fictional evidence used to verify the data structure for confirming that the organization is an official public organization.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    },
+    {
+      "id": "evidence-example-organization-name-ja",
+      "description": "Fictional evidence used to verify the data structure for confirming the organization's official Japanese name.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    },
+    {
+      "id": "evidence-example-source-official-page",
+      "description": "Fictional evidence used to verify the data structure for confirming that the destination is an official page published by the organization.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    }
+  ]
 }

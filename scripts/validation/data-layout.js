@@ -31,10 +31,18 @@ const LOCALE_MANAGEMENT_UNITS = Object.freeze([
   'update-history'
 ]);
 
+const IMPLEMENTED_ARRAY_MANAGEMENT_UNITS = new Set([
+  'regions',
+  'organizations',
+  'sources',
+  'evidence'
+]);
+
 export const SUPPORTED_LOCALES = Object.freeze(['ja', 'en']);
 
 function dataEntry({ scope, managementUnit, locale }) {
   const isSite = managementUnit === 'site';
+  const isImplementedArray = IMPLEMENTED_ARRAY_MANAGEMENT_UNITS.has(managementUnit);
   const dataPath =
     scope === 'core'
       ? `data/core/${managementUnit}.json`
@@ -43,7 +51,15 @@ function dataEntry({ scope, managementUnit, locale }) {
     scope === 'core'
       ? `schemas/core/${managementUnit}.schema.json`
       : `schemas/locales/${managementUnit}.schema.json`;
-  return Object.freeze({ scope, managementUnit, locale, dataPath, schemaPath, isSite });
+  return Object.freeze({
+    scope,
+    managementUnit,
+    locale,
+    dataPath,
+    schemaPath,
+    isSite,
+    isImplementedArray
+  });
 }
 
 export const CORE_DATA_LAYOUT = Object.freeze(
@@ -80,4 +96,9 @@ export const SCHEMA_LAYOUT = Object.freeze([
 ]);
 
 export const SITE_DATA_LAYOUT = Object.freeze(DATA_LAYOUT.filter(({ isSite }) => isSite));
-export const EMPTY_DATA_LAYOUT = Object.freeze(DATA_LAYOUT.filter(({ isSite }) => !isSite));
+export const IMPLEMENTED_ARRAY_DATA_LAYOUT = Object.freeze(
+  DATA_LAYOUT.filter(({ isImplementedArray }) => isImplementedArray)
+);
+export const EMPTY_DATA_LAYOUT = Object.freeze(
+  DATA_LAYOUT.filter(({ isSite, isImplementedArray }) => !isSite && !isImplementedArray)
+);

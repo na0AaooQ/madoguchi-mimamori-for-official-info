@@ -1,5 +1,20 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "region-example-country",
+      "name": "架空国",
+      "scope_note": "データ構造を確認するための架空の国です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    },
+    {
+      "id": "region-example-prefecture",
+      "name": "架空県",
+      "scope_note": "データ構造を確認するための架空の都道府県です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    }
+  ]
 }

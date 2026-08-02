@@ -1,5 +1,13 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "org-example-prefecture-disaster-office",
+      "organization_type": "local-government",
+      "region_ids": ["region-example-prefecture"],
+      "publication_status": "draft",
+      "internal_note": "工程3-2Aのデータ構造確認用の架空団体です。"
+    }
+  ]
 }

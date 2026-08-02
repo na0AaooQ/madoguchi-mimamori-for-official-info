@@ -1,5 +1,24 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "evidence-example-organization-official",
+      "description": "架空県防災情報窓口が架空の公的機関であることを確認するための、データ構造確認用の架空根拠です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    },
+    {
+      "id": "evidence-example-organization-name-ja",
+      "description": "架空県防災情報窓口の日本語名称を確認するための、データ構造確認用の架空根拠です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    },
+    {
+      "id": "evidence-example-source-official-page",
+      "description": "架空の案内先が団体自身の公式ページであることを確認するための、データ構造確認用の架空根拠です。",
+      "locale_status": "draft",
+      "content_revision": 1
+    }
+  ]
 }

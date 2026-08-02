@@ -5,6 +5,7 @@ import {
   CORE_DATA_LAYOUT,
   DATA_LAYOUT,
   EMPTY_DATA_LAYOUT,
+  IMPLEMENTED_ARRAY_DATA_LAYOUT,
   LOCALE_DATA_LAYOUT,
   SCHEMA_LAYOUT,
   SITE_DATA_LAYOUT,
@@ -12,6 +13,7 @@ import {
 } from './data-layout.js';
 import { createResult, sortResults } from './result.js';
 import { compileSchema, normalizeAjvErrors } from './schema-validator.js';
+import { validateOfficialSourceData } from './official-source-semantic-validator.js';
 import { validateSiteData } from './semantic-validator.js';
 
 const FORBIDDEN_DATA_PATHS = new Set([
@@ -49,7 +51,11 @@ function layoutRuntimeResults() {
     [DATA_LAYOUT.length === 40, 'データ配置対応表は40件である必要があります。'],
     [SCHEMA_LAYOUT.length === 27, 'Schema配置対応表は27件である必要があります。'],
     [SITE_DATA_LAYOUT.length === 3, 'siteデータ配置対応表は3件である必要があります。'],
-    [EMPTY_DATA_LAYOUT.length === 37, '空データ配置対応表は37件である必要があります。'],
+    [
+      IMPLEMENTED_ARRAY_DATA_LAYOUT.length === 12,
+      '実装済み配列データ配置対応表は12件である必要があります。'
+    ],
+    [EMPTY_DATA_LAYOUT.length === 25, '空データ配置対応表は25件である必要があります。'],
     [new Set(dataPaths).size === dataPaths.length, 'データファイル対応表に重複があります。'],
     [new Set(schemaPaths).size === schemaPaths.length, 'Schema対応表に重複があります。'],
     [
@@ -376,6 +382,36 @@ export async function validateDataRepository(repoRoot) {
       )
     );
   }
+
+  const items = (dataPath) => {
+    const value = data.get(dataPath);
+    return Array.isArray(value?.items) ? value.items : [];
+  };
+  results.push(
+    ...validateOfficialSourceData({
+      core: {
+        regions: items('data/core/regions.json'),
+        organizations: items('data/core/organizations.json'),
+        sources: items('data/core/sources.json'),
+        evidence: items('data/core/evidence.json'),
+        disasters: items('data/core/disasters.json')
+      },
+      locales: {
+        ja: {
+          regions: items('data/locales/ja/regions.json'),
+          organizations: items('data/locales/ja/organizations.json'),
+          sources: items('data/locales/ja/sources.json'),
+          evidence: items('data/locales/ja/evidence.json')
+        },
+        en: {
+          regions: items('data/locales/en/regions.json'),
+          organizations: items('data/locales/en/organizations.json'),
+          sources: items('data/locales/en/sources.json'),
+          evidence: items('data/locales/en/evidence.json')
+        }
+      }
+    })
+  );
 
   return {
     results: sortResults(results),

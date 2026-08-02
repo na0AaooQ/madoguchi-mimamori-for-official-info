@@ -1,5 +1,14 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "src-example-prefecture-official-home",
+      "display_title": "架空県 防災情報案内（架空データ）",
+      "purpose": "架空県の防災情報を確認するための、データ構造確認用の架空案内先です。",
+      "public_note": "この案内先は工程3-2Aの検証に使用する架空データです。",
+      "locale_status": "draft",
+      "content_revision": 1
+    }
+  ]
 }
