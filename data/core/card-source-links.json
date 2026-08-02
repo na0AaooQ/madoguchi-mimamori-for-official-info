@@ -1,5 +1,17 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "card-source-example-disaster-information-primary",
+      "card_id": "card-example-disaster-information",
+      "source_id": "src-example-prefecture-official-home",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "role": "primary",
+      "visibility_context": "always",
+      "publication_status": "draft",
+      "internal_note": "工程3-2Bの画面・データ構造確認に使用する架空のカード関連です。"
+    }
+  ]
 }

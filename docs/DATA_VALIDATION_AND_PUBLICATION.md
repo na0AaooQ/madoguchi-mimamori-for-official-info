@@ -2,9 +2,9 @@
 
 ## 文書の位置付け
 
-この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-2Aで地域・団体・案内先・確認根拠のSchemaと意味検証を追加していますが、実在情報と公開生成は未実装です。
+この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-2Aと工程3-2Bで地域・団体・案内先・確認根拠・分野・案内カード・カード関連のSchemaと意味検証を追加していますが、実在情報と公開生成は未実装です。
 
-品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、site検証、工程3-2Aの意味検証を実装済みです。公開対象抽出と公開生成処理は後続工程です。
+品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。テスト専用Schemaとfixtureに加え、本番用の40データファイル、27 Schema、配置検証、site検証、工程3-2A・3-2Bの意味検証を実装済みです。公開対象抽出と公開生成処理は後続工程です。
 
 ## 基本原則
 
@@ -29,7 +29,15 @@
 - 公開団体の公式組織・公式名称根拠と、公開案内先の公式ページ・公式アカウント根拠
 - 日本語のみの公開案内先を英語版で案内するときの`destination_language_note`
 
-工程3-2Bの分野・カード・関連データ、災害・出来事・履歴の意味検証、URL正規化後の重複、表示期間、確認期限、公開可能件数、公開成果物の内部項目除外と再検証は未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
+工程3-2B専用モジュールには次を実装しています。
+
+- `sections`、`cards`、`card-source-links`のID重複、参照、core・locale、改訂、公開状態
+- `anchor_id`と表示範囲ごとの`display_order`の重複
+- 同じカードと案内先の関連重複、表示開始日と終了日の矛盾
+- `display_locales`に従う関連localeと、公開時の`button_label`
+- 公開カードに必要な、構造上公開可能な`role: primary`の関連
+
+災害・出来事・履歴の意味検証、URL正規化後の重複、確認期限、現在日時による表示期間判定、公開成果物の内部項目除外と再検証は未実装です。詳細な実行方法は[品質管理基盤](QUALITY_TOOLING.md)と[データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)を参照してください。
 
 ## JSON Schemaの基準
 
@@ -62,19 +70,19 @@ JSON Schemaでは、主として次を確認します。
 
 JSON Schemaは、一つのレコードまたはファイル内部で宣言的に確認できる制約を担当します。ファイルをまたぐ参照や運用上の意味は独自の意味検証へ分離します。
 
-工程3-2Aでは、`regions`、`organizations`、`sources`、`evidence`のcore・locale 8 Schemaを正式化しています。対象外の17 Schemaは`maxItems: 0`を維持し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
+工程3-2Aと工程3-2Bでは、`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`のcore・locale 14 Schemaを正式化しています。対象外の11 Schemaは`maxItems: 0`を維持し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
 
 coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では`site_last_checked_on`と`contact_url`の両方を必須とし、それ以外の公開状態では未確定の`contact_url`を省略できます。
 
 ## 本番用データ検証
 
-`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteと工程3-2Aデータの意味整合性を検証します。正本である`data/`と`schemas/`の配下はディレクトリ名にかかわらず再帰走査し、配置対応表にないJSONをすべて検出します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
+`npm run validate:data`は、必須40データファイルと27 Schema、余分なJSON、未対応locale、locale版check-history、JSON構文、Schemaの`$id`、Ajv strictコンパイル、対応Schema、siteと工程3-2A・3-2Bデータの意味整合性を検証します。正本である`data/`と`schemas/`の配下はディレクトリ名にかかわらず再帰走査し、配置対応表にないJSONをすべて検出します。外部通信を行わず、`data/`と`schemas/`を書き換えません。
 
 ## 意味検証の責務
 
 独自の意味検証では、主として次を確認します。
 
-次の一覧には後続工程の計画も含みます。工程3-2Aで実装済みの範囲は、地域・団体・案内先・確認根拠のID重複、参照、地域階層、core・locale、改訂、公式名称フォールバック、公開状態、公式性確認根拠、日本語のみの案内先の英語注意文です。
+次の一覧には後続工程の計画も含みます。工程3-2A・3-2Bで実装済みの範囲は、地域・団体・案内先・確認根拠・分野・カード・カード関連のID重複、参照、地域階層、core・locale、改訂、公式名称フォールバック、公開状態、公式性確認根拠、日本語のみの案内先の英語注意文、アンカー・表示順、関連組み合わせ、表示期間の前後関係、公開カードの主案内先です。
 
 - ファイル間のID参照がすべて存在する
 - 管理対象ごとにIDが重複していない
@@ -110,6 +118,14 @@ coreの`contact_url`は、値が存在する場合は公開状態にかかわら
 - 親災害の`site_guidance_status: archived`に対して、子出来事が`active`として公開されていない
 - 出来事がトップ上部へ直接表示されていない
 - 未対応言語が指定されていない
+
+### 公開可能なカード主案内先
+
+`publication_status: published`のカードは、構造上公開可能な`role: primary`のカード関連を最低1件必要とします。secondaryまたはtemporary-highlightだけでは条件を満たしません。
+
+構造上公開可能な主案内先は、カード関連、案内先、発信団体、参照地域、必要なlocaleが公開状態であり、案内先の確認状態・確認日・公式性確認根拠、関連localeの`button_label`、必要な`destination_language_note`、表示期間の前後関係が揃ったものです。現在日時が表示開始前または終了後であるかは、この検証では判定しません。
+
+公開対象抽出と公開成果物生成は未実装です。災害・出来事関連の検証も未実装です。
 
 ### 公開可能な災害・出来事関連
 
@@ -309,3 +325,4 @@ Warningがある場合は、対象ごとの確認結果を残してから公開�
 - [管理単位ごとのJSON Schemaを採用する決定](decisions/0018-adopt-per-file-json-schemas.md)
 - [問い合わせURLをサイト公開時に必須とする決定](decisions/0019-require-contact-url-for-published-site.md)
 - [工程3-2Aの最小縦切りを架空データで実装する決定](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md)
+- [工程3-2Bの案内カード最小縦切りを実装する決定](decisions/0021-implement-navigation-card-minimum-slice-with-fictional-data.md)

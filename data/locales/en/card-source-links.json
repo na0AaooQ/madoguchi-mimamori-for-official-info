@@ -1,5 +1,14 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "card-source-example-disaster-information-primary",
+      "button_label": "View the Example Prefecture disaster information guide (fictional link)",
+      "public_note": "A fictional navigation link used to verify the screen and data structure for phase 3-2B.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    }
+  ]
 }

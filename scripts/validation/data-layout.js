@@ -35,7 +35,10 @@ const IMPLEMENTED_ARRAY_MANAGEMENT_UNITS = new Set([
   'regions',
   'organizations',
   'sources',
-  'evidence'
+  'evidence',
+  'sections',
+  'cards',
+  'card-source-links'
 ]);
 
 export const SUPPORTED_LOCALES = Object.freeze(['ja', 'en']);

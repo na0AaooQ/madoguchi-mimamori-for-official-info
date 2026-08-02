@@ -1,5 +1,41 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "display_order": 1,
+      "publication_status": "draft",
+      "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
+    },
+    {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "display_order": 2,
+      "publication_status": "draft",
+      "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
+    },
+    {
+      "id": "section-lifelines",
+      "anchor_id": "lifelines",
+      "display_order": 3,
+      "publication_status": "draft",
+      "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
+    },
+    {
+      "id": "section-roads-transportation",
+      "anchor_id": "roads-transportation",
+      "display_order": 4,
+      "publication_status": "draft",
+      "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
+    },
+    {
+      "id": "section-support-recovery",
+      "anchor_id": "support-recovery",
+      "display_order": 5,
+      "publication_status": "draft",
+      "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
+    }
+  ]
 }

@@ -1,5 +1,15 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "card-example-disaster-information",
+      "title": "防災情報を確認する（架空データ）",
+      "summary": "架空県の防災情報を確認する公式案内先へ進むための、画面・データ構造確認用の架空カードです。",
+      "region_label": "架空県",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "draft",
+      "content_revision": 1
+    }
+  ]
 }
