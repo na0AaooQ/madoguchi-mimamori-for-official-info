@@ -1,5 +1,16 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "src-example-prefecture-official-home",
+      "display_title": "Example Prefecture Disaster Information Guide (fictional data)",
+      "purpose": "A fictional official destination used to verify the data structure for disaster information guidance in Example Prefecture.",
+      "destination_language_note": "The linked page is available in Japanese only.",
+      "public_note": "This destination is fictional data used for phase 3-2A validation.",
+      "locale_status": "draft",
+      "content_revision": 1,
+      "based_on_ja_revision": 1
+    }
+  ]
 }

@@ -2,75 +2,76 @@
 
 ## 目的
 
-工程3-1では、確定済みの管理単位に対応する本番用`data/`と`schemas/`の枠組みを配置し、ローカルで構造・配置・最小限の整合性を検証できる状態にします。画面、公開成果物、実在情報はこの工程に含めません。
+本番用`data/`と`schemas/`の配置、正式なitem Schemaの実装範囲、意味検証との責務分担を記録します。工程3-2Aでは、実在情報を登録せず、地域から公式性確認根拠までの最小縦切りを検証可能にします。画面と公開成果物はこの工程に含めません。
 
-## データファイル
+## 配置件数
 
-`data/core/`には言語共通の14ファイル、`data/locales/ja/`と`data/locales/en/`にはそれぞれ13ファイルを置きます。合計は40ファイルです。内部確認履歴である`check-history.json`はcoreだけに置き、locale版は作りません。
+- 本番用データ: 40ファイル（core 14、日本語13、英語13）
+- Schema: 27ファイル（core 14、locale 13）
+- 単一オブジェクトのsiteデータ: 3ファイル
+- 工程3-2Aで架空データを登録した配列データ: 12ファイル
+- `items: []`を維持する配列データ: 25ファイル
 
-3つの`site.json`だけは単一オブジェクトです。coreはサイトID、対応locale、公開状態、災害別案内の有効状態を持ち、日本語・英語はサイト表示文言と文面改訂情報を持ちます。初期状態はいずれも`draft`です。確定済みの問い合わせURLはないため、coreの初期データに`contact_url`は登録しません。
+配列ファイルは`schema_version`、`data_updated_on`、`items`を持ちます。`site.json`は`items`を持たない単一オブジェクトです。
 
-`site.json`以外の37ファイルは、次の配列エンベロープで開始します。
+## 正式なitem Schema
 
-```json
-{
-  "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
-  "items": []
-}
-```
+工程3-2Aで正式化した8 Schemaは次のとおりです。
 
-工程3-1では実在する団体、公式URL、災害、案内先、連絡先などを登録しません。
+- `schemas/core/regions.schema.json`
+- `schemas/core/organizations.schema.json`
+- `schemas/core/sources.schema.json`
+- `schemas/core/evidence.schema.json`
+- `schemas/locales/regions.schema.json`
+- `schemas/locales/organizations.schema.json`
+- `schemas/locales/sources.schema.json`
+- `schemas/locales/evidence.schema.json`
 
-## Schema
+これらは空配列も受け入れます。本番用架空データの件数は配置・統合テストで別に保証します。
 
-`schemas/core/`にはcore 14管理単位、`schemas/locales/`にはlocale 13管理単位のSchemaを置きます。合計は27 Schemaです。日本語と英語は同じlocale Schemaを利用します。
+対象外の17 Schemaは引き続き`items.maxItems: 0`を持ちます。
 
-Schemaは管理単位ごとに分け、変更範囲と責務を追跡しやすくします。構造が安定していない初期段階では、重複を許容して各Schemaを単独で理解できることを優先し、複数Schemaから参照する共通Schemaは作りません。外部Schemaへの`$ref`やリモート取得も使用しません。
+- core: `sections`、`cards`、`disasters`、`events`、`card-source-links`、`disaster-source-links`、`event-source-links`、`check-history`、`update-history`
+- locale: `sections`、`cards`、`disasters`、`events`、`card-source-links`、`disaster-source-links`、`event-source-links`、`update-history`
 
-全SchemaはJSON Schema Draft 2020-12、Schema版`1.0.0`を使用し、`$id`を次のURN形式で一意に付与します。
+## 架空データ
 
-- core: `urn:madoguchi-mimamori:schema:core:{管理単位}:1.0.0`
-- locale: `urn:madoguchi-mimamori:schema:locale:{管理単位}:1.0.0`
+core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`の12ファイルに、架空の国と都道府県、架空団体、`example.invalid`配下の架空案内先、架空の公式性確認根拠を登録しています。全coreレコードとlocaleレコードは`draft`です。
 
-`site.json`以外の25 Schemaは、未実装の`items`へデータが入らないよう`maxItems: 0`を指定します。正式なitem Schemaは工程3-2以降で、実装対象となる管理単位から段階的に追加します。
+実在する団体、自治体、URL、災害、電話番号、個人情報は登録していません。検証とテストは`example.invalid`へ接続しません。
 
-coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では、`site_last_checked_on`と`contact_url`の両方を必須とします。その他の公開状態では、未確定URLを推測して登録せず省略できます。
+## 配置対応表
 
-## dataとSchemaの対応
+`scripts/validation/data-layout.js`は、データパス、Schemaパス、scope、管理単位、localeを一元管理し、次の3区分を公開します。
 
-`scripts/validation/data-layout.js`がcore管理単位、locale管理単位、対応locale、データパス、Schemaパス、siteか配列エンベロープかを一元管理します。CLI、検証処理、テストはこの一覧を参照し、同じファイル一覧を重複定義しません。
+- `SITE_DATA_LAYOUT`: 3ファイル
+- `IMPLEMENTED_ARRAY_DATA_LAYOUT`: 12ファイル
+- `EMPTY_DATA_LAYOUT`: 25ファイル
 
-coreデータは同名の`schemas/core/*.schema.json`へ対応します。日本語と英語のlocaleデータは、言語にかかわらず同名の`schemas/locales/*.schema.json`へ対応します。
+`DATA_LAYOUT`は40件、`SCHEMA_LAYOUT`は27件を維持します。テストは重複、欠落、データとSchemaの対応不整合を検出します。
 
-## 検証
+## Schemaと意味検証の責務
 
-次のコマンドは`data/`と`schemas/`を読み取り専用で検証し、ファイルを書き換えません。
+JSON Schema Draft 2020-12とAjv strictモードを使い、各Schemaは一意の`$id`、`schema_version: 1.0.0`、`additionalProperties: false`を持ちます。単一ファイル内の型、必須項目、列挙値、ID接頭辞、日付、HTTPS URL、空文字列、配列重複、公開時条件はSchemaが担当します。
 
-```sh
-npm run validate:data
-```
+`scripts/validation/official-source-semantic-validator.js`は、次のファイル間条件を担当します。
 
-検証内容は次のとおりです。
+- 管理単位内のID重複と参照整合性
+- 地域階層の自己参照・循環と団体階層の自己参照
+- coreと日英localeの対応、日英改訂番号、団体公式名称のフォールバック
+- 公開状態と参照先公開状態の整合
+- 日本語のみの案内先に対する英語注意文
+- 公開団体・公開案内先の有効な公式性確認根拠
 
-- 必須40データファイルと27 Schemaの存在
-- `data/`と`schemas/`配下の全JSONの走査と、配置対応表にないJSONファイル、未対応locale、locale版check-historyの検出
-- JSON構文
-- Schemaの`$id`重複
-- Ajv strictモードでのSchemaコンパイル
-- 各データファイルと対応Schemaの検証
-- 英語siteの`based_on_ja_revision`の存在と日本語改訂番号との一致
-- 日本語siteへの`based_on_ja_revision`混入禁止
-- core・日本語・英語siteの`site_id`一致
-- `default_locale`と`supported_locales`の整合
-- localeファイル自身の`locale`との一致
+意味検証は一部データがSchema違反していても例外終了せず、可能な問題を収集し、決定論的に並べます。Schemaや配置対応表の異常は`RUN-E`系としてデータErrorから分離します。
 
-データの不備は既存の`E001`から`E004`と、新規の`E006`から`E010`で報告し、終了コード`1`とします。Schema配置、Schema JSON、`$id`、コンパイル、配置対応表、読込環境の異常は`RUN-E001`から`RUN-E005`で区別し、終了コード`2`とします。`data/`または`schemas/`の正本配下では、`tmp`や`dist`などのディレクトリ名を理由にJSONを除外しません。複数の問題は可能な範囲で収集し、結果を決定論的に並べます。
+## 未実装範囲
 
-`npm run check`には`validate:data`が含まれます。データを更新した場合は、コミット前に`npm run check`を実行します。
+工程3-2Bの分野・案内カード・カードと案内先の関連、災害・出来事・関連・履歴の正式Schemaと意味検証、URL正規化後の重複、確認期限、公開可能件数の検証は後続工程で実装します。公開対象抽出、公開成果物生成、内部項目の生成物再検証、画面も未実装です。
 
-## 未実装範囲と次工程
+## 関連文書
 
-工程3-1では、37空ファイル間のID参照、ID・URL重複、組織階層、公式性根拠、災害名称根拠、表示期間、確認期限、公開可能件数、内部項目除外などの全意味検証を実装していません。公開対象抽出、公開成果物生成、画面も未実装です。
-
-工程3-2では、予約用途ドメインと明確な架空名称だけを用いて最小縦切りデータを追加し、必要なitem Schemaと意味検証を段階的に実装します。実在情報はさらに後の確認工程で扱います。検証とテストは外部ネットワークへ接続しません。
+- [データモデル](DATA_MODEL.md)
+- [データフィールド定義](DATA_FIELDS.md)
+- [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md)
+- [工程3-2Aの最小縦切りを架空データで実装する決定](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md)

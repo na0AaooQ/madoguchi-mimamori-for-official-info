@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:core:regions:1.0.0",
   "title": "Core 地域",
-  "description": "地域の未実装データを空配列として管理するSchemaです。",
+  "description": "地域の階層と公開状態を管理するSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,37 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^region-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "region_type": {
+            "type": "string",
+            "enum": ["country", "nationwide", "prefecture", "municipality", "service-area"]
+          },
+          "parent_region_id": {
+            "type": "string",
+            "pattern": "^region-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "official_code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "publication_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "hidden", "archived"]
+          },
+          "internal_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["id", "region_type", "publication_status"],
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],

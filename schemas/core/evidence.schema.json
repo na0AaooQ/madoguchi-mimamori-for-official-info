@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:core:evidence:1.0.0",
   "title": "Core 確認根拠",
-  "description": "確認根拠の未実装データを空配列として管理するSchemaです。",
+  "description": "公式性や公式名称の確認根拠を管理するSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,190 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^evidence-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "target_type": {
+            "type": "string",
+            "enum": ["organization", "source", "disaster"]
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_aspect": {
+            "type": "string",
+            "enum": [
+              "official-organization",
+              "official-page",
+              "official-account",
+              "official-name",
+              "organizational-relationship"
+            ]
+          },
+          "target_locale": {
+            "type": "string",
+            "enum": ["ja", "en"]
+          },
+          "evidence_type": {
+            "type": "string",
+            "enum": [
+              "official-site-link",
+              "official-site-list",
+              "official-announcement",
+              "government-directory",
+              "official-organization-page",
+              "other-public-official-record"
+            ]
+          },
+          "evidence_source_id": {
+            "type": "string",
+            "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "evidence_url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "checked_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["confirmed", "needs-review", "invalid"]
+          },
+          "publication_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "hidden", "archived"]
+          },
+          "internal_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "target_type",
+          "target_id",
+          "target_aspect",
+          "evidence_type",
+          "checked_on",
+          "status",
+          "publication_status"
+        ],
+        "anyOf": [
+          {
+            "properties": {
+              "evidence_source_id": true
+            },
+            "required": ["evidence_source_id"]
+          },
+          {
+            "properties": {
+              "evidence_url": true
+            },
+            "required": ["evidence_url"]
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "target_type": {
+                  "const": "organization"
+                }
+              },
+              "required": ["target_type"]
+            },
+            "then": {
+              "properties": {
+                "target_id": {
+                  "type": "string",
+                  "pattern": "^org-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "target_type": {
+                  "const": "source"
+                }
+              },
+              "required": ["target_type"]
+            },
+            "then": {
+              "properties": {
+                "target_id": {
+                  "type": "string",
+                  "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "target_type": {
+                  "const": "disaster"
+                }
+              },
+              "required": ["target_type"]
+            },
+            "then": {
+              "properties": {
+                "target_id": {
+                  "type": "string",
+                  "pattern": "^disaster-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "target_aspect": {
+                  "const": "official-name"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "target_aspect": {
+                  "const": "official-name"
+                }
+              },
+              "required": ["target_aspect"]
+            },
+            "then": {
+              "properties": {
+                "target_locale": true
+              },
+              "required": ["target_locale"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "publication_status": {
+                  "const": "published"
+                }
+              },
+              "required": ["publication_status"]
+            },
+            "then": {
+              "properties": {
+                "status": {
+                  "const": "confirmed"
+                }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],

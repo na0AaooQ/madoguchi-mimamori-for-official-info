@@ -1,5 +1,19 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "region-example-country",
+      "region_type": "country",
+      "publication_status": "draft",
+      "internal_note": "工程3-2Aのデータ構造確認用の架空地域です。"
+    },
+    {
+      "id": "region-example-prefecture",
+      "region_type": "prefecture",
+      "parent_region_id": "region-example-country",
+      "publication_status": "draft",
+      "internal_note": "工程3-2Aのデータ構造確認用の架空地域です。"
+    }
+  ]
 }

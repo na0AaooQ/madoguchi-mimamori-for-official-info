@@ -4,7 +4,7 @@
 
 この文書は、第一版の管理用JSONについて、項目名、型、必須条件、許可値、意味、主な整合性ルールを定めます。[データモデル](DATA_MODEL.md)が管理単位・責務・参照関係を定め、この文書が各ファイルのフィールド仕様を定めます。
 
-工程3-1では本番用`data/`ファイルとJSON Schemaの枠組みを実装済みです。`site.json`以外の正式なitem Schemaは後続工程で実装します。JSON Schemaは、この文書で確定したフィールド名、型、必須条件、列挙値を表現します。変更が必要になった場合は、実装上の都合だけで変更せず、設計文書と必要なADRを先に更新します。
+工程3-2Aでは、`site.json`に加え、`regions.json`、`organizations.json`、`sources.json`、`evidence.json`のcore・localeに対応する8 Schemaの正式なitem定義を実装済みです。その他の管理単位の正式なitem Schemaは後続工程で実装します。JSON Schemaは、この文書で確定したフィールド名、型、必須条件、列挙値を表現します。変更が必要になった場合は、実装上の都合だけで変更せず、設計文書と必要なADRを先に更新します。
 
 ## 型の表記
 
@@ -837,6 +837,8 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ## 公開条件と意味検証
 
+工程3-2Aで正式化した管理単位では、単一レコード内で確認できる型、列挙値、日付・HTTPS URL、配列重複、公開時必須項目、案内先種別ごとの条件、根拠対象の構造条件をJSON Schemaが担当します。ID重複、参照先の存在、階層循環、coreとlocaleの対応、公開状態の整合、公式名称フォールバック、有効な公式性確認根拠はファイル間の意味検証が担当します。
+
 - 公開対象のcoreレコードは`publication_status: published`とする
 - 対応localeは`locale_status: published`とする
 - 英語の`based_on_ja_revision`を日本語の`content_revision`と一致させる
@@ -862,11 +864,7 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ## 後続工程で決定する事項
 
-- 実際のJSON Schemaファイルの記述
-- 使用するJSON Schemaバリデータ
-- 検証プログラムの実装言語
-- テストランナー
-- Linter、Formatter
+- 工程3-2B以降の管理単位の正式なitem Schemaと意味検証
 - CI/CD
 - 公開成果物の具体的なディレクトリ
 - URLパス

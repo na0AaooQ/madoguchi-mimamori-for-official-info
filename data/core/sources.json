@@ -1,5 +1,21 @@
 {
   "schema_version": "1.0.0",
   "data_updated_on": "2026-08-02",
-  "items": []
+  "items": [
+    {
+      "id": "src-example-prefecture-official-home",
+      "publisher_organization_id": "org-example-prefecture-disaster-office",
+      "source_type": "official-homepage",
+      "content_format": "html",
+      "url": "https://example.invalid/example-prefecture/",
+      "destination_locales": ["ja"],
+      "primary_official_home_for_locales": ["ja"],
+      "lifecycle_type": "permanent",
+      "destination_status": "needs-review",
+      "official_information_status": "unconfirmed",
+      "show_in_official_source_list": false,
+      "publication_status": "draft",
+      "internal_note": "工程3-2Aのデータ構造確認用の架空案内先です。"
+    }
+  ]
 }

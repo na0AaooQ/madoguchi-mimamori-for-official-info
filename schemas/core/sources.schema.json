@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:core:sources:1.0.0",
   "title": "Core 案内先",
-  "description": "案内先の未実装データを空配列として管理するSchemaです。",
+  "description": "公式情報の案内先、確認状態、公開状態を管理するSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,232 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "publisher_organization_id": {
+            "type": "string",
+            "pattern": "^org-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "related_organization_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^org-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "uniqueItems": true
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "official-homepage",
+              "information-page",
+              "disaster-page",
+              "service-page",
+              "social-account",
+              "messaging-service",
+              "email-service",
+              "search-service",
+              "consultation-guide"
+            ]
+          },
+          "content_format": {
+            "type": "string",
+            "enum": ["html", "pdf", "social-profile", "external-service", "other"]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "destination_locales": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ja", "en"]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "equivalent_source_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["x", "line", "facebook", "youtube", "other"]
+          },
+          "account_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "primary_official_home_for_locales": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ja", "en"]
+            },
+            "uniqueItems": true
+          },
+          "lifecycle_type": {
+            "type": "string",
+            "enum": ["permanent", "temporary"]
+          },
+          "destination_status": {
+            "type": "string",
+            "enum": ["confirmed", "needs-review", "unavailable", "retired"]
+          },
+          "destination_checked_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "official_information_status": {
+            "type": "string",
+            "enum": ["confirmed", "needs-review", "unconfirmed", "invalid"]
+          },
+          "official_information_checked_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "show_in_official_source_list": {
+            "type": "boolean"
+          },
+          "publication_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "hidden", "archived"]
+          },
+          "internal_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "publisher_organization_id",
+          "source_type",
+          "content_format",
+          "url",
+          "destination_locales",
+          "lifecycle_type",
+          "destination_status",
+          "official_information_status",
+          "show_in_official_source_list",
+          "publication_status"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "publication_status": {
+                  "const": "published"
+                }
+              },
+              "required": ["publication_status"]
+            },
+            "then": {
+              "properties": {
+                "destination_status": {
+                  "const": "confirmed"
+                },
+                "official_information_status": {
+                  "const": "confirmed"
+                },
+                "destination_checked_on": true,
+                "official_information_checked_on": true
+              },
+              "required": ["destination_checked_on", "official_information_checked_on"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source_type": {
+                  "const": "social-account"
+                }
+              },
+              "required": ["source_type"]
+            },
+            "then": {
+              "properties": {
+                "content_format": {
+                  "const": "social-profile"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source_type": {
+                  "enum": ["social-account", "messaging-service"]
+                }
+              },
+              "required": ["source_type"]
+            },
+            "then": {
+              "properties": {
+                "platform": true
+              },
+              "required": ["platform"]
+            },
+            "else": {
+              "not": {
+                "properties": {
+                  "platform": true
+                },
+                "required": ["platform"]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source_type": {
+                  "const": "social-account"
+                }
+              },
+              "required": ["source_type"]
+            },
+            "then": {
+              "properties": {
+                "account_id": true
+              },
+              "required": ["account_id"]
+            },
+            "else": {
+              "not": {
+                "properties": {
+                  "account_id": true
+                },
+                "required": ["account_id"]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source_type": {
+                  "const": "official-homepage"
+                }
+              },
+              "required": ["source_type"]
+            },
+            "else": {
+              "not": {
+                "properties": {
+                  "primary_official_home_for_locales": true
+                },
+                "required": ["primary_official_home_for_locales"]
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],

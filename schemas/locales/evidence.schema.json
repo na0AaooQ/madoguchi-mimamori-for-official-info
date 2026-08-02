@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:madoguchi-mimamori:schema:locale:evidence:1.0.0",
   "title": "Locale 確認根拠",
-  "description": "確認根拠の未実装データを空配列として管理するSchemaです。",
+  "description": "日本語と英語で共有する確認根拠説明のSchemaです。",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -15,7 +15,51 @@
     },
     "items": {
       "type": "array",
-      "maxItems": 0
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^evidence-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locale_status": {
+            "type": "string",
+            "enum": ["draft", "under-review", "published", "needs-update", "archived"]
+          },
+          "content_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "based_on_ja_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_reviewed_on": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": ["id", "description", "locale_status", "content_revision"],
+        "if": {
+          "properties": {
+            "locale_status": {
+              "const": "published"
+            }
+          },
+          "required": ["locale_status"]
+        },
+        "then": {
+          "properties": {
+            "content_reviewed_on": true
+          },
+          "required": ["content_reviewed_on"]
+        },
+        "additionalProperties": false
+      }
     }
   },
   "required": ["schema_version", "data_updated_on", "items"],
