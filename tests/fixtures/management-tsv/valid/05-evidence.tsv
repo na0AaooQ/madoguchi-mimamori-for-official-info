@@ -1,0 +1,6 @@
+架空fixtureの説明1
+架空fixtureの説明2
+	No	evidence_id	target_type	target_id	target_aspect	target_locale	evidence_type	evidence_source_id	evidence_url	checked_on	status	publication_status	description_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	description_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
+	3	evidence-example-source-official-page	source	src-example-prefecture-official-home	official-page		official-site-link		https://example.invalid/example-prefecture/official-links/	2026-08-02	needs-review	draft	架空の案内先を確認する架空根拠です。	draft	1		Fictional evidence for the destination.	draft	1	1		架空fixture用の内部メモです。
+	1	evidence-example-organization-official	organization	org-example-prefecture-disaster-office	official-organization		official-organization-page		https://example.invalid/example-prefecture/about/	2026-08-02	needs-review	draft	架空団体の公式性を確認する架空根拠です。	draft	1		Fictional evidence for the organization.	draft	1	1		架空fixture用の内部メモです。
+	2	evidence-example-organization-name-ja	organization	org-example-prefecture-disaster-office	official-name	ja	official-organization-page		https://example.invalid/example-prefecture/about/	2026-08-02	needs-review	draft	架空団体の日本語名称を確認する架空根拠です。	draft	1		Fictional evidence for the Japanese name.	draft	1	1		架空fixture用の内部メモです。

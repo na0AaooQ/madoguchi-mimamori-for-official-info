@@ -99,6 +99,37 @@
 
 Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書、管理データ、公開データ、previewサイト、再現性をまとめて確認できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
 
+## サイト公開データの作成手順
+
+Googleスプレッドシートの`03_団体`から`08_地域`までの6シートを個別にTSV出力し、指定名へ変更して`imports/management/`へ配置します。最初に検査だけを行います。
+
+```sh
+npm run data:import:tsv -- \
+  --input-dir imports/management \
+  --data-updated-on YYYY-MM-DD \
+  --check
+```
+
+検査が成功した後だけ、Core、日本語locale、英語localeの管理JSON 18ファイルへ書き込みます。
+
+```sh
+npm run data:import:tsv -- \
+  --input-dir imports/management \
+  --data-updated-on YYYY-MM-DD \
+  --write
+```
+
+書込み後は検証と差分確認を行います。
+
+```sh
+npm run validate:data
+npm run check
+git status --short
+git diff -- data/
+```
+
+この処理は、スプレッドシートに人が入力した値の型変換と検証だけを行います。公式性、公開可否、確認状態、確認日を自動判断・自動変更しません。実在TSVはGit管理しないでください。出力方法、ファイル名、変換規則、エラー、書込み安全性の詳細は[管理TSVからJSONを生成する手順](docs/MANAGEMENT_TSV_IMPORT.md)を参照してください。この手順だけでproduction生成やデプロイが行われることはありません。
+
 ## 公開用ナビゲーションデータ生成MVPの確認手順
 
 ### 前提環境
@@ -252,6 +283,7 @@ npm run check
 - [公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)
 - [Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)
 - [データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)
+- [管理TSVからJSONを生成する手順](docs/MANAGEMENT_TSV_IMPORT.md)
 - [品質管理基盤](docs/QUALITY_TOOLING.md)
 - [開発工程](docs/DEVELOPMENT_PHASES.md)
 - [設計判断記録](docs/decisions/README.md)

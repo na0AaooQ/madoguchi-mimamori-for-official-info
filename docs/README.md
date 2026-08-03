@@ -17,6 +17,7 @@
 | [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md) | JSON Schema、意味検証、公開停止条件、内部項目除外               |
 | [公開データ契約](PUBLIC_DATA_CONTRACT.md)                      | navigation.jsonの公開フィールド、抽出、検証、Git管理            |
 | [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)              | データ・Schema配置、工程3-2Aの実装範囲、責務分担                |
+| [管理TSVからJSONを生成する手順](MANAGEMENT_TSV_IMPORT.md)      | GoogleスプレッドシートTSVの検査、変換、書込み、安全確認         |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
 | [Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)                    | 静的HTML生成、画面用locale、安全性、手動確認                    |
 | [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |

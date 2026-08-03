@@ -1,0 +1,4 @@
+架空fixtureの説明1
+架空fixtureの説明2
+	No	organization_id	organization_type	region_ids	parent_organization_id	publication_status	official_name_ja	display_name_ja	name_kind_ja	summary_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	official_name_en	display_name_en	name_kind_en	summary_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
+	1	org-example-prefecture-disaster-office	local-government	"[""region-example-prefecture""]"		draft	架空県防災情報窓口		official-ja	架空県の情報を案内する架空団体です。	draft	1		架空県防災情報窓口		official-ja-fallback	A fictional organization for Example Prefecture.	draft	1	1		架空fixture用の内部メモです。
