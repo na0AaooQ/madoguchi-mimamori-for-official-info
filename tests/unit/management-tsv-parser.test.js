@@ -38,11 +38,17 @@ test('parses BOM, LF, CRLF, quoted cells, and escaped quotes', () => {
   );
 });
 
-test('rejects invalid UTF-8, an unclosed quote, invalid quote placement, and bare CR', async (t) => {
+test('preserves quotes inside unquoted Google Sheets cells', () => {
+  assert.deepEqual(parseTsv('["region-example"]\t["ja","en"]')[0].cells, [
+    '["region-example"]',
+    '["ja","en"]'
+  ]);
+});
+
+test('rejects invalid UTF-8, an unclosed quote, invalid quoted content, and bare CR', async (t) => {
   const cases = [
     ['invalid UTF-8', () => decodeTsv(Buffer.from([0xff])), 'TSV-E002'],
     ['unclosed quote', () => parseTsv('"abc'), 'TSV-E003'],
-    ['quote in unquoted cell', () => parseTsv('a"b\tc'), 'TSV-E004'],
     ['text after closing quote', () => parseTsv('"a"b\tc'), 'TSV-E004'],
     ['bare CR', () => parseTsv('a\rb'), 'TSV-E004']
   ];

@@ -97,14 +97,7 @@ export function parseTsv(source) {
       continue;
     }
 
-    if (character === '"') {
-      if (cell.length > 0) {
-        throw new TsvSyntaxError('TSV-E004', '引用符の位置またはエスケープが不正です。', {
-          line,
-          columnIndex: cells.length + 1,
-          suggestedAction: 'セル全体を引用符で囲み、セル内の引用符は二重引用符にしてください。'
-        });
-      }
+    if (character === '"' && cell.length === 0) {
       state = 'quoted';
       rowStarted = true;
     } else if (character === '\t') {

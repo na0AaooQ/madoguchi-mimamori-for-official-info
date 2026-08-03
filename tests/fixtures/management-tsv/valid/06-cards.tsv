@@ -1,4 +1,4 @@
 架空fixtureの説明1
 架空fixtureの説明2
 	No	card_id	section_id	region_ids	display_order	publication_status	title_ja	summary_ja	region_label_ja	emergency_note_ja	details_label_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	title_en	summary_en	region_label_en	emergency_note_en	details_label_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
-	1	card-example-disaster-information	section-public-institutions-disaster	"[""region-example-prefecture""]"	1.0	draft	情報を確認する（架空データ）	架空の案内先へ進む架空カードです。	架空県		案内先の詳細を見る	draft	1		Check information (fictional data)	A fictional card for verifying the data structure.	Example Prefecture		View destination details	draft	1	1		架空fixture用の内部メモです。
+	1	card-example-disaster-information	section-public-institutions-disaster	["region-example-prefecture"]	1.0	draft	情報を確認する（架空データ）	架空の案内先へ進む架空カードです。	架空県		案内先の詳細を見る	draft	1		Check information (fictional data)	A fictional card for verifying the data structure.	Example Prefecture		View destination details	draft	1	1		架空fixture用の内部メモです。
