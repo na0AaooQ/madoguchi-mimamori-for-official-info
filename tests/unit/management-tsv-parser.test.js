@@ -59,19 +59,30 @@ test('rejects invalid UTF-8, an unclosed quote, invalid quoted content, and bare
   }
 });
 
-test('accepts an exact header with zero or one leading management column and ignores empty rows', async () => {
-  const rows = await organizationRows();
-  const withLeadingColumn = validateSheetRows(organizationUnit, rows);
-  assert.equal(withLeadingColumn.results.length, 0);
-  assert.equal(withLeadingColumn.records.length, 1);
+test('accepts an exact header and ignores all-empty data rows with either header layout', async (t) => {
+  const original = await organizationRows();
+  for (const hasLeadingColumn of [true, false]) {
+    await t.test(hasLeadingColumn ? 'with management column' : 'without management column', () => {
+      const rows = structuredClone(original);
+      const header = findHeader(organizationUnit, rows);
+      if (!hasLeadingColumn) {
+        for (const row of rows.slice(header.index)) row.cells.shift();
+      }
 
-  const withoutLeadingColumn = structuredClone(rows);
-  const header = findHeader(organizationUnit, withoutLeadingColumn);
-  for (const row of withoutLeadingColumn.slice(header.index)) row.cells.shift();
-  withoutLeadingColumn.push({ cells: [''], line: 99, cellStartLines: [99] });
-  const execution = validateSheetRows(organizationUnit, withoutLeadingColumn);
-  assert.equal(execution.results.length, 0);
-  assert.equal(execution.records.length, 1);
+      const expectedCellCount = organizationUnit.headers.length + (hasLeadingColumn ? 1 : 0);
+      const [tabSeparatedEmptyRow] = parseTsv(`${'\t'.repeat(expectedCellCount - 1)}\n`);
+      tabSeparatedEmptyRow.line = 98;
+      rows.splice(header.index + 1, 0, tabSeparatedEmptyRow);
+
+      const [singleCellEmptyRow] = parseTsv('\n');
+      singleCellEmptyRow.line = 99;
+      rows.push(singleCellEmptyRow);
+
+      const execution = validateSheetRows(organizationUnit, rows);
+      assert.equal(execution.results.length, 0);
+      assert.equal(execution.records.length, 1);
+    });
+  }
 });
 
 test('detects header and column layout errors deterministically', async (t) => {

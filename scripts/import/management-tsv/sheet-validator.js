@@ -101,7 +101,7 @@ function analyzeHeaderMismatch(unit, row) {
 }
 
 function isCompletelyEmptyRow(row) {
-  return row.cells.length === 1 && row.cells[0] === '';
+  return row.cells.every((cell) => cell === '');
 }
 
 export function validateSheetRows(unit, rows) {
