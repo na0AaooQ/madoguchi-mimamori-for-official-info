@@ -1,13 +1,28 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "org-example-prefecture-disaster-office",
+      "id": "org-kumamoto-prefecture",
       "organization_type": "local-government",
-      "region_ids": ["region-example-prefecture"],
-      "publication_status": "draft",
-      "internal_note": "工程3-2Aのデータ構造確認用の架空団体です。"
+      "region_ids": ["region-kumamoto-prefecture"],
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録対象。公式名称と団体の公式性は確認根拠シートで管理する。"
+    },
+    {
+      "id": "org-kumamoto-prefecture-kumamoto-city",
+      "organization_type": "local-government",
+      "region_ids": ["region-kumamoto-prefecture-kumamoto-city"],
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録対象。公式名称と団体の公式性は確認根拠シートで管理する。"
+    },
+    {
+      "id": "org-kumamoto-prefecture-kumamoto-city-waterworks",
+      "organization_type": "utility-operator",
+      "region_ids": ["region-kumamoto-prefecture-kumamoto-city"],
+      "parent_organization_id": "org-kumamoto-prefecture-kumamoto-city",
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録対象。熊本市との組織関係と英語公式名称は確認根拠シートで管理する。"
     }
   ]
 }

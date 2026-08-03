@@ -1,22 +1,33 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "region-example-country",
-      "name": "Example Country",
-      "scope_note": "A fictional country used to verify the data structure.",
-      "locale_status": "draft",
+      "id": "region-japan",
+      "name": "Japan",
+      "scope_note": "A region covering all of Japan.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "region-example-prefecture",
-      "name": "Example Prefecture",
-      "scope_note": "A fictional prefecture used to verify the data structure.",
-      "locale_status": "draft",
+      "id": "region-kumamoto-prefecture",
+      "name": "Kumamoto Prefecture",
+      "scope_note": "A region covering all of Kumamoto Prefecture, Japan.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "region-kumamoto-prefecture-kumamoto-city",
+      "name": "Kumamoto City",
+      "scope_note": "A region covering Kumamoto City in Kumamoto Prefecture, Japan.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

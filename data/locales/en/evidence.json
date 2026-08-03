@@ -1,27 +1,198 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "evidence-example-organization-official",
-      "description": "Fictional evidence used to verify the data structure for confirming that the organization is an official public organization.",
-      "locale_status": "draft",
+      "id": "evidence-kumamoto-prefecture-official-organization",
+      "description": "Evidence used to confirm that Kumamoto Prefecture is an official local government.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "evidence-example-organization-name-ja",
-      "description": "Fictional evidence used to verify the data structure for confirming the organization's official Japanese name.",
-      "locale_status": "draft",
+      "id": "evidence-kumamoto-prefecture-official-name-ja",
+      "description": "Evidence used to confirm the organization's official Japanese name.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "evidence-example-source-official-page",
-      "description": "Fictional evidence used to verify the data structure for confirming that the destination is an official page published by the organization.",
-      "locale_status": "draft",
+      "id": "evidence-kumamoto-prefecture-official-name-en",
+      "description": "Evidence used to confirm the organization's official English name.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-home-ja-official-page",
+      "description": "Evidence used to confirm that the Japanese homepage is an official page published by Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-home-en-official-page",
+      "description": "Evidence used to confirm that the English translation homepage is provided through the official Kumamoto Prefecture website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-portal-official-page",
+      "description": "Evidence used to confirm that the Kumamoto disaster information portal is an official disaster-information destination of Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-guide-ja-official-page",
+      "description": "Evidence used to confirm that the Japanese emergency-information page is an official page published by Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-guide-en-official-page",
+      "description": "Evidence used to confirm that the English emergency-information page is provided through the official Kumamoto Prefecture website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-x-official-account",
+      "description": "Evidence used to confirm that the X account is an official account operated by Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-organization",
+      "description": "Evidence used to confirm that Kumamoto City is an official local government.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-name-ja",
+      "description": "Evidence used to confirm the organization's official Japanese name.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-name-en",
+      "description": "Evidence used to confirm the organization's official English name.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-home-ja-official-page",
+      "description": "Evidence used to confirm that the Japanese homepage is an official page published by Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-home-en-official-page",
+      "description": "Evidence used to confirm that the English translation homepage is provided through the official Kumamoto City website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-info-ja-official-page",
+      "description": "Evidence used to confirm that the Japanese disaster-prevention website is an official page published by Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-info-en-official-page",
+      "description": "Evidence used to confirm that the English translation of the disaster-prevention website is provided through the official Kumamoto City website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-guide-ja-official-page",
+      "description": "Evidence used to confirm that the Japanese emergency-information page is an official page published by Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-guide-en-official-page",
+      "description": "Evidence used to confirm that the English emergency-information page is provided through the official Kumamoto City website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-x-official-account",
+      "description": "Evidence used to confirm that the X account is an official account operated by Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-organization",
+      "description": "Evidence used to confirm that the Kumamoto City Waterworks and Sewerage Bureau is an official public utility organization.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-name-ja",
+      "description": "Evidence used to confirm the organization's official Japanese name.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-name-en",
+      "description": "Evidence used to confirm the organization's official English name.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-organizational-relationship",
+      "description": "Evidence used to confirm the organizational relationship between the Kumamoto City Waterworks and Sewerage Bureau and Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-home-official-page",
+      "description": "Evidence used to confirm that the homepage is an official page published by the Kumamoto City Waterworks and Sewerage Bureau.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

@@ -1,14 +1,36 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "org-example-prefecture-disaster-office",
-      "official_name": "架空県防災情報窓口",
+      "id": "org-kumamoto-prefecture",
+      "official_name": "熊本県",
+      "display_name": "熊本県",
       "name_kind": "official-ja",
-      "summary": "架空県の防災情報を案内する、データ構造確認用の架空団体です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "summary": "熊本県の行政を担う地方公共団体です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "org-kumamoto-prefecture-kumamoto-city",
+      "official_name": "熊本市",
+      "display_name": "熊本市",
+      "name_kind": "official-ja",
+      "summary": "熊本県熊本市の行政を担う地方公共団体です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "org-kumamoto-prefecture-kumamoto-city-waterworks",
+      "official_name": "熊本市上下水道局",
+      "display_name": "熊本市上下水道局",
+      "name_kind": "official-ja",
+      "summary": "熊本市の水道・下水道事業を担う組織です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }
