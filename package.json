@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "format": "node scripts/formatting/prettier-runner.js --write",
     "format:check": "node scripts/formatting/prettier-runner.js --check",
+    "data:import:tsv": "node scripts/import/management-tsv/cli.js",
     "validate:fixtures": "node scripts/validation/cli.js --fixtures",
     "validate:docs": "node scripts/validation/docs-validator.js",
     "validate:data": "node scripts/validation/cli.js --data",

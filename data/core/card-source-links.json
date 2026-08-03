@@ -1,17 +1,160 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-source-example-disaster-information-primary",
-      "card_id": "card-example-disaster-information",
-      "source_id": "src-example-prefecture-official-home",
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-disaster-portal",
       "display_order": 1,
       "display_locales": ["ja", "en"],
+      "publication_status": "published",
       "role": "primary",
       "visibility_context": "always",
-      "publication_status": "draft",
-      "internal_note": "工程3-2Bの画面・データ構造確認に使用する架空のカード関連です。"
+      "internal_note": "熊本県カードの日英共通の主案内先。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-ja",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-home-ja",
+      "display_order": 2,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版だけに表示する公式ホームページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-en",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-home-en",
+      "display_order": 3,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "英語版だけに表示する公式英語翻訳ホームページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-ja",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-disaster-guide-ja",
+      "display_order": 4,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "disaster",
+      "internal_note": "災害時向けの案内先として表示する。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-en",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-disaster-guide-en",
+      "display_order": 5,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "disaster",
+      "internal_note": "災害時向けの案内先として表示する。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-x",
+      "card_id": "card-kumamoto-prefecture-disaster-information",
+      "source_id": "src-kumamoto-prefecture-x",
+      "display_order": 6,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日英両画面に表示する。リンク先は主に日本語。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-ja",
+      "display_order": 1,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "熊本市カードの日本語版の主案内先。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-en",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-en",
+      "display_order": 2,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "熊本市カードの英語版の主案内先。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-home-ja",
+      "display_order": 3,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版だけに表示する公式ホームページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-en",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-home-en",
+      "display_order": 4,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "英語版だけに表示する公式英語翻訳ホームページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-ja",
+      "display_order": 5,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "disaster",
+      "internal_note": "災害時向けの案内先として表示する。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-en",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-en",
+      "display_order": 6,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "disaster",
+      "internal_note": "災害時向けの案内先として表示する。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-x",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-x",
+      "display_order": 7,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日英両画面に表示する。リンク先は主に日本語。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-water-sewerage-information-home",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-waterworks-home",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日英両画面の主案内先。リンク先は日本語。"
     }
   ]
 }

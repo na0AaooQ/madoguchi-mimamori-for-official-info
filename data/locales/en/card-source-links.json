@@ -1,14 +1,122 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-source-example-disaster-information-primary",
-      "button_label": "View the Example Prefecture disaster information guide (fictional link)",
-      "public_note": "A fictional navigation link used to verify the screen and data structure for phase 3-2B.",
-      "locale_status": "draft",
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
+      "button_label": "View the Kumamoto Prefecture disaster information portal",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-ja",
+      "button_label": "View the Kumamoto Prefecture official website in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-en",
+      "button_label": "View the Kumamoto Prefecture official website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-ja",
+      "button_label": "View emergency information from Kumamoto Prefecture in Japanese",
+      "public_note": "This destination is intended primarily for use during disasters.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-en",
+      "button_label": "View emergency information from Kumamoto Prefecture",
+      "public_note": "This destination is intended primarily for use during disasters.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-x",
+      "button_label": "View official updates from Kumamoto Prefecture on X",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-ja",
+      "button_label": "View the Kumamoto City disaster prevention website in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-en",
+      "button_label": "View the Kumamoto City disaster prevention website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-ja",
+      "button_label": "View the Kumamoto City official website in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-en",
+      "button_label": "View the Kumamoto City official website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-ja",
+      "button_label": "View emergency information from Kumamoto City in Japanese",
+      "public_note": "This destination is intended primarily for use during disasters.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-en",
+      "button_label": "View emergency information from Kumamoto City",
+      "public_note": "This destination is intended primarily for use during disasters.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-x",
+      "button_label": "View official updates from Kumamoto City on X",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-water-sewerage-information-home",
+      "button_label": "View the Kumamoto City Waterworks and Sewerage Bureau official website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

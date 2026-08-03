@@ -1,19 +1,28 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "region-example-country",
+      "id": "region-japan",
       "region_type": "country",
-      "publication_status": "draft",
-      "internal_note": "工程3-2Aのデータ構造確認用の架空地域です。"
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。最上位地域として管理し、official_codeは設定しない。"
     },
     {
-      "id": "region-example-prefecture",
+      "id": "region-kumamoto-prefecture",
       "region_type": "prefecture",
-      "parent_region_id": "region-example-country",
-      "publication_status": "draft",
-      "internal_note": "工程3-2Aのデータ構造確認用の架空地域です。"
+      "parent_region_id": "region-japan",
+      "official_code": "43000",
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。official_codeには統計に用いる標準地域コード「43000」を設定する。"
+    },
+    {
+      "id": "region-kumamoto-prefecture-kumamoto-city",
+      "region_type": "municipality",
+      "parent_region_id": "region-kumamoto-prefecture",
+      "official_code": "43100",
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。official_codeには統計に用いる標準地域コード「43100」を設定する。"
     }
   ]
 }

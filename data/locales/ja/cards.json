@@ -1,15 +1,39 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-example-disaster-information",
-      "title": "防災情報を確認する（架空データ）",
-      "summary": "架空県の防災情報を確認する公式案内先へ進むための、画面・データ構造確認用の架空カードです。",
-      "region_label": "架空県",
+      "id": "card-kumamoto-prefecture-disaster-information",
+      "title": "熊本県の防災情報を確認する",
+      "summary": "熊本県が提供する防災情報、災害時の案内、公式サイト・SNSを確認できます。",
+      "region_label": "熊本県全域",
+      "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
       "details_label": "案内先の詳細を見る",
-      "locale_status": "draft",
-      "content_revision": 1
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "title": "熊本市の防災情報を確認する",
+      "summary": "熊本市が提供する防災情報、災害時の案内、公式サイト・SNSを確認できます。",
+      "region_label": "熊本市",
+      "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+      "title": "熊本市の水道・下水道情報を確認する",
+      "summary": "熊本市上下水道局が提供する水道・下水道の公式情報を確認できます。",
+      "region_label": "熊本市",
+      "emergency_note": "断水・給水・下水道に関する最新情報は、リンク先で直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

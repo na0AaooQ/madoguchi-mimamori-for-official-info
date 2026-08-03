@@ -1,24 +1,174 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "evidence-example-organization-official",
-      "description": "架空県防災情報窓口が架空の公的機関であることを確認するための、データ構造確認用の架空根拠です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "evidence-kumamoto-prefecture-official-organization",
+      "description": "熊本県が公式な地方公共団体であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "evidence-example-organization-name-ja",
-      "description": "架空県防災情報窓口の日本語名称を確認するための、データ構造確認用の架空根拠です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "evidence-kumamoto-prefecture-official-name-ja",
+      "description": "熊本県の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "evidence-example-source-official-page",
-      "description": "架空の案内先が団体自身の公式ページであることを確認するための、データ構造確認用の架空根拠です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "evidence-kumamoto-prefecture-official-name-en",
+      "description": "熊本県の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-home-ja-official-page",
+      "description": "熊本県の日本語ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-home-en-official-page",
+      "description": "熊本県の英語翻訳ホームページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-portal-official-page",
+      "description": "「防災情報くまもと」が熊本県の公式防災案内先であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-guide-ja-official-page",
+      "description": "熊本県の日本語災害時案内ページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-disaster-guide-en-official-page",
+      "description": "熊本県の英語災害時案内ページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-x-official-account",
+      "description": "Xアカウント「【熊本県公式】気になる！くまもと」が熊本県の公式アカウントであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-organization",
+      "description": "熊本市が公式な地方公共団体であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-name-ja",
+      "description": "熊本市の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-official-name-en",
+      "description": "熊本市の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-home-ja-official-page",
+      "description": "熊本市の日本語ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-home-en-official-page",
+      "description": "熊本市の英語翻訳ホームページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-info-ja-official-page",
+      "description": "熊本市防災サイトの日本語ページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-info-en-official-page",
+      "description": "熊本市防災サイトの英語翻訳ページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-guide-ja-official-page",
+      "description": "熊本市の日本語災害時案内ページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-disaster-guide-en-official-page",
+      "description": "熊本市の英語災害時案内ページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-x-official-account",
+      "description": "Xアカウント「熊本市」が熊本市の公式アカウントであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-organization",
+      "description": "熊本市上下水道局が公式な公共事業組織であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-name-ja",
+      "description": "熊本市上下水道局の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-official-name-en",
+      "description": "熊本市上下水道局の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-organizational-relationship",
+      "description": "熊本市上下水道局と熊本市の組織関係を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-waterworks-home-official-page",
+      "description": "熊本市上下水道局ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

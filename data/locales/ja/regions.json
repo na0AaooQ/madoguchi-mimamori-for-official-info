@@ -1,20 +1,30 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "region-example-country",
-      "name": "架空国",
-      "scope_note": "データ構造を確認するための架空の国です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "region-japan",
+      "name": "日本",
+      "scope_note": "日本全国を対象とする地域です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
-      "id": "region-example-prefecture",
-      "name": "架空県",
-      "scope_note": "データ構造を確認するための架空の都道府県です。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "region-kumamoto-prefecture",
+      "name": "熊本県",
+      "scope_note": "熊本県全域を対象とする地域です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "region-kumamoto-prefecture-kumamoto-city",
+      "name": "熊本市",
+      "scope_note": "熊本県熊本市の市域を対象とする地域です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

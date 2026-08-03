@@ -1,13 +1,108 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-source-example-disaster-information-primary",
-      "button_label": "架空県の防災情報案内を確認する（架空リンク）",
-      "public_note": "工程3-2Bの画面・データ構造確認に使用する架空の案内リンクです。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
+      "button_label": "熊本県防災情報ポータルを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-ja",
+      "button_label": "熊本県公式ホームページを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-home-en",
+      "button_label": "熊本県公式ホームページ（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-ja",
+      "button_label": "熊本県の災害時の案内を見る",
+      "public_note": "災害時の確認を主目的とする案内先です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-en",
+      "button_label": "熊本県の災害時の案内（英語）を見る",
+      "public_note": "災害時の確認を主目的とする案内先です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-disaster-information-x",
+      "button_label": "熊本県の公式Xを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-ja",
+      "button_label": "熊本市防災サイトを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-en",
+      "button_label": "熊本市防災サイト（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-ja",
+      "button_label": "熊本市公式ホームページを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-en",
+      "button_label": "熊本市公式ホームページ（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-ja",
+      "button_label": "熊本市の災害時の案内を見る",
+      "public_note": "災害時の確認を主目的とする案内先です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-en",
+      "button_label": "熊本市の災害時の案内（英語）を見る",
+      "public_note": "災害時の確認を主目的とする案内先です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-x",
+      "button_label": "熊本市の公式Xを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-water-sewerage-information-home",
+      "button_label": "熊本市上下水道局公式ホームページを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

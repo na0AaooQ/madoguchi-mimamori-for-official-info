@@ -1,0 +1,4 @@
+架空fixtureの説明1
+架空fixtureの説明2
+	No	card_source_link_id	card_id	source_id	display_order	display_locales	site_display_start_on	site_display_end_on	publication_status	role	visibility_context	button_label_ja	public_note_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	button_label_en	public_note_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
+	1	card-source-example-disaster-information-primary	card-example-disaster-information	src-example-prefecture-official-home	1	["ja","en"]			draft	primary	always	架空の情報案内を確認する（架空リンク）	架空fixture用の案内リンクです。	draft	1		View the fictional information guide	A fictional navigation link.	draft	1	1		架空fixture用の内部メモです。

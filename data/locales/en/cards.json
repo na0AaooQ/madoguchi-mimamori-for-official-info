@@ -1,16 +1,42 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-example-disaster-information",
-      "title": "Check disaster information (fictional data)",
-      "summary": "A fictional card used to verify the screen and data path to an official disaster information destination for Example Prefecture.",
-      "region_label": "Example Prefecture",
+      "id": "card-kumamoto-prefecture-disaster-information",
+      "title": "Check disaster information for Kumamoto Prefecture",
+      "summary": "Check disaster prevention information, emergency guidance, official websites, and social media provided by Kumamoto Prefecture.",
+      "region_label": "Kumamoto Prefecture",
+      "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
       "details_label": "View destination details",
-      "locale_status": "draft",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "title": "Check disaster information for Kumamoto City",
+      "summary": "Check disaster prevention information, emergency guidance, official websites, and social media provided by Kumamoto City.",
+      "region_label": "Kumamoto City",
+      "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+      "title": "Check water and sewerage information for Kumamoto City",
+      "summary": "Check official water supply and sewerage information provided by the Kumamoto City Waterworks and Sewerage Bureau.",
+      "region_label": "Kumamoto City",
+      "emergency_note": "Check the linked official destination directly for the latest information about water outages, emergency water supply, and sewerage services.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }

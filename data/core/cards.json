@@ -1,14 +1,30 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "card-example-disaster-information",
+      "id": "card-kumamoto-prefecture-disaster-information",
       "section_id": "section-public-institutions-disaster",
-      "region_ids": ["region-example-prefecture"],
+      "region_ids": ["region-kumamoto-prefecture"],
       "display_order": 1,
-      "publication_status": "draft",
-      "internal_note": "工程3-2Bの画面・データ構造確認に使用する架空カードです。"
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。熊本県の案内先をまとめるカード。"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+      "section_id": "section-public-institutions-disaster",
+      "region_ids": ["region-kumamoto-prefecture-kumamoto-city"],
+      "display_order": 2,
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。熊本市の案内先をまとめるカード。"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+      "section_id": "section-lifelines",
+      "region_ids": ["region-kumamoto-prefecture-kumamoto-city"],
+      "display_order": 1,
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録用。熊本市上下水道局の案内先をまとめるカード。"
     }
   ]
 }

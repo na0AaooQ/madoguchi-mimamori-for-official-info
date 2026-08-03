@@ -1,16 +1,145 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
-      "id": "src-example-prefecture-official-home",
-      "display_title": "Example Prefecture Disaster Information Guide (fictional data)",
-      "purpose": "A fictional official destination used to verify the data structure for disaster information guidance in Example Prefecture.",
-      "destination_language_note": "The linked page is available in Japanese only.",
-      "public_note": "This destination is fictional data used for phase 3-2A validation.",
-      "locale_status": "draft",
+      "id": "src-kumamoto-prefecture-home-ja",
+      "display_title": "Kumamoto Prefecture Official Website (Japanese)",
+      "purpose": "Provides general official information from Kumamoto Prefecture.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-home-en",
+      "display_title": "Kumamoto Prefecture Official Website",
+      "purpose": "Provides general official information from Kumamoto Prefecture in English.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-disaster-portal",
+      "display_title": "Kumamoto Prefecture Disaster Prevention Information Portal",
+      "purpose": "Provides consolidated disaster prevention information for Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-disaster-guide-ja",
+      "display_title": "Kumamoto Prefecture Emergency Information (Japanese)",
+      "purpose": "Provides official emergency guidance from Kumamoto Prefecture during a disaster.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-disaster-guide-en",
+      "display_title": "Kumamoto Prefecture Emergency Information",
+      "purpose": "Provides official emergency guidance from Kumamoto Prefecture in English during a disaster.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-x",
+      "display_title": "【熊本県公式】気になる！くまもと",
+      "purpose": "Provides official notices and regional information from Kumamoto Prefecture on X.",
+      "destination_language_note": "The destination is mainly available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-home-ja",
+      "display_title": "Kumamoto City Official Website (Japanese)",
+      "purpose": "Provides general official information from Kumamoto City.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-home-en",
+      "display_title": "Kumamoto City Official Website",
+      "purpose": "Provides general official information from Kumamoto City in English.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-ja",
+      "display_title": "Kumamoto City Disaster Prevention Website (Japanese)",
+      "purpose": "Provides consolidated disaster prevention information for Kumamoto City.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-en",
+      "display_title": "Kumamoto City Disaster Prevention Website",
+      "purpose": "Provides consolidated disaster prevention information for Kumamoto City in English.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-ja",
+      "display_title": "Kumamoto City Emergency Information (Japanese)",
+      "purpose": "Provides official emergency guidance from Kumamoto City during a disaster.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-en",
+      "display_title": "Kumamoto City Emergency Information",
+      "purpose": "Provides official emergency guidance from Kumamoto City in English during a disaster.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-x",
+      "display_title": "熊本市",
+      "purpose": "Provides official notices from Kumamoto City on X.",
+      "destination_language_note": "The destination is mainly available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-waterworks-home",
+      "display_title": "Kumamoto City Waterworks and Sewerage Bureau Official Website",
+      "purpose": "Provides official information about water supply and sewerage services in Kumamoto City.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     }
   ]
 }
