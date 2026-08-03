@@ -1,6 +1,13 @@
+import { fileURLToPath } from 'node:url';
+
+import * as prettier from 'prettier';
+
 import { SCHEMA_VERSION } from './config.js';
 import { createImportResult } from './result.js';
 import { convertCellValue } from './value-converter.js';
+
+const JSON_FORMAT_PATH = fileURLToPath(new URL('../../../management-data.json', import.meta.url));
+const prettierOptions = prettier.resolveConfig(JSON_FORMAT_PATH);
 
 function outputTarget(column) {
   if (column.endsWith('_ja')) return { scope: 'ja', property: column.slice(0, -3) };
@@ -68,6 +75,10 @@ export function createEnvelope(items, dataUpdatedOn) {
   };
 }
 
-export function serializeJson(value) {
-  return `${JSON.stringify(value, null, 2)}\n`;
+export async function serializeJson(value) {
+  return prettier.format(`${JSON.stringify(value, null, 2)}\n`, {
+    ...(await prettierOptions),
+    filepath: JSON_FORMAT_PATH,
+    parser: 'json'
+  });
 }

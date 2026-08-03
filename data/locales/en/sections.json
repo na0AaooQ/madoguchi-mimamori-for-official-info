@@ -1,14 +1,15 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "items": [
     {
       "id": "section-public-institutions-disaster",
       "title": "Public Institutions and General Disaster Information",
       "short_description": "Find official guidance from governments and public bodies on disaster information, evacuation, rivers, government response, and support.",
-      "locale_status": "draft",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
       "id": "section-life-safety-medical",
@@ -22,9 +23,10 @@
       "id": "section-lifelines",
       "title": "Lifelines",
       "short_description": "Find official guidance on water and sewerage, electricity, gas, and communications.",
-      "locale_status": "draft",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-04"
     },
     {
       "id": "section-roads-transportation",

@@ -38,7 +38,7 @@ function writeErrorResult(error) {
   });
 }
 
-function buildCandidates(convertedByUnit, dataUpdatedOn) {
+async function buildCandidates(convertedByUnit, dataUpdatedOn) {
   const candidates = new Map();
   const locationsByUnit = new Map();
   for (const unit of MANAGEMENT_UNITS) {
@@ -46,7 +46,7 @@ function buildCandidates(convertedByUnit, dataUpdatedOn) {
     locationsByUnit.set(unit.key, converted.locations);
     for (const scope of ['core', 'ja', 'en']) {
       const envelope = createEnvelope(converted.items[scope], dataUpdatedOn);
-      candidates.set(unit.outputPaths[scope], serializeJson(envelope));
+      candidates.set(unit.outputPaths[scope], await serializeJson(envelope));
     }
   }
   return { candidates, locationsByUnit };
@@ -107,7 +107,10 @@ export async function runManagementImport(
     return { exitCode: runtimeFailure ? 2 : 1, results: sortImportResults(inputResults) };
   }
 
-  const { candidates, locationsByUnit } = buildCandidates(convertedByUnit, options.dataUpdatedOn);
+  const { candidates, locationsByUnit } = await buildCandidates(
+    convertedByUnit,
+    options.dataUpdatedOn
+  );
   const validation = await validateCandidates({
     repoRoot,
     candidates,

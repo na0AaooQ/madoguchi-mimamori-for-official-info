@@ -51,12 +51,12 @@ function parseStringArray(value) {
 }
 
 function parseBoolean(value) {
-  if (value === 'true') return { value: true };
-  if (value === 'false') return { value: false };
+  if (value === 'true' || value === 'TRUE') return { value: true };
+  if (value === 'false' || value === 'FALSE') return { value: false };
   return error(
     'TSV-E035',
-    '真偽値は小文字のtrueまたはfalseだけを使用できます。',
-    '値をtrueまたはfalseへ修正してください。'
+    '真偽値はtrue、false、TRUE、FALSEのいずれかだけを使用できます。',
+    'Googleスプレッドシートのチェックボックス、またはtrue、falseを使用してください。'
   );
 }
 

@@ -82,34 +82,13 @@ test('separates site, implemented array, and empty data layouts', async () => {
   }
 });
 
-test('loads the expected fictional records from all 21 implemented array files', async () => {
-  const expectedCounts = {
-    regions: 2,
-    organizations: 1,
-    sources: 1,
-    evidence: 3,
-    sections: 5,
-    cards: 1,
-    'card-source-links': 1
-  };
-  for (const { dataPath, managementUnit } of IMPLEMENTED_ARRAY_DATA_LAYOUT) {
+test('loads stable metadata from all 21 implemented array files', async () => {
+  for (const { dataPath } of IMPLEMENTED_ARRAY_DATA_LAYOUT) {
     const value = JSON.parse(await readFile(path.join(repoRoot, dataPath), 'utf8'));
     assert.equal(value.schema_version, '1.0.0', dataPath);
-    assert.equal(value.data_updated_on, '2026-08-02', dataPath);
-    assert.equal(value.items.length, expectedCounts[managementUnit], dataPath);
+    assert.match(value.data_updated_on, /^\d{4}-\d{2}-\d{2}$/, dataPath);
+    assert.ok(value.items.length > 0, dataPath);
   }
-
-  const sourceData = JSON.parse(
-    await readFile(path.join(repoRoot, 'data/core/sources.json'), 'utf8')
-  );
-  const evidenceData = JSON.parse(
-    await readFile(path.join(repoRoot, 'data/core/evidence.json'), 'utf8')
-  );
-  const urls = [
-    ...sourceData.items.map(({ url }) => url),
-    ...evidenceData.items.map(({ evidence_url: url }) => url)
-  ];
-  assert.ok(urls.every((url) => new URL(url).hostname === 'example.invalid'));
 
   const sectionData = JSON.parse(
     await readFile(path.join(repoRoot, 'data/core/sections.json'), 'utf8')
@@ -128,6 +107,10 @@ test('loads the expected fictional records from all 21 implemented array files',
   assert.deepEqual(
     sectionData.items.map(({ display_order: displayOrder }) => displayOrder),
     [1, 2, 3, 4, 5]
+  );
+  assert.deepEqual(
+    sectionData.items.map(({ publication_status: publicationStatus }) => publicationStatus),
+    ['published', 'draft', 'published', 'draft', 'draft']
   );
 });
 

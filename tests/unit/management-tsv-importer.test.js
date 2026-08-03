@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 
+import * as prettier from 'prettier';
+
 import { runCli } from '../../scripts/import/management-tsv/cli.js';
 import { MANAGEMENT_UNITS } from '../../scripts/import/management-tsv/config.js';
 import { runManagementImport } from '../../scripts/import/management-tsv/importer.js';
@@ -41,6 +43,16 @@ test('generates 18 deterministic Core, Japanese, and English JSON candidates', a
   assert.equal(first.exitCode, 0);
   assert.equal(first.candidates.size, 18);
   assert.deepEqual([...first.candidates], [...second.candidates]);
+  for (const [relativePath, source] of first.candidates) {
+    assert.equal(
+      await prettier.check(source, {
+        ...(await prettier.resolveConfig(path.join(repoRoot, relativePath))),
+        filepath: path.join(repoRoot, relativePath)
+      }),
+      true,
+      relativePath
+    );
+  }
   assert.deepEqual(first.summary.rows, {
     organizations: 1,
     sources: 1,

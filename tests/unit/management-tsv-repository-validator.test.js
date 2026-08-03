@@ -18,13 +18,16 @@ const inputKeys = {
   'card-source-links': 'cardSourceLinks'
 };
 
-function candidatesFrom(input) {
+async function candidatesFrom(input) {
   const candidates = new Map();
   for (const unit of MANAGEMENT_UNITS) {
     const key = inputKeys[unit.key];
     for (const scope of ['core', 'ja', 'en']) {
       const records = scope === 'core' ? input.core[key] : input.locales[scope][key];
-      candidates.set(unit.outputPaths[scope], serializeJson(createEnvelope(records, '2026-08-04')));
+      candidates.set(
+        unit.outputPaths[scope],
+        await serializeJson(createEnvelope(records, '2026-08-04'))
+      );
     }
   }
   return candidates;
@@ -40,7 +43,7 @@ async function preparePublishedSections(root, input) {
       scope === 'core' ? 'data/core/sections.json' : `data/locales/${scope}/sections.json`;
     await writeFile(
       path.join(root, relativePath),
-      serializeJson(createEnvelope(records, '2026-08-04'))
+      await serializeJson(createEnvelope(records, '2026-08-04'))
     );
   }
 }
@@ -48,7 +51,7 @@ async function preparePublishedSections(root, input) {
 async function validateInput(root, input) {
   return validateCandidateRepository({
     repoRoot: root,
-    candidates: candidatesFrom(input),
+    candidates: await candidatesFrom(input),
     locationsByUnit: new Map()
   });
 }

@@ -68,8 +68,12 @@ test('validates the production data foundation successfully', async () => {
 
 test('runs the official-source semantic validator for production data files', async (t) => {
   const root = await createRepositoryCopy(t);
+  let regionId;
   await updateJson(root, 'data/core/regions.json', (value) => {
-    value.items[1].parent_region_id = 'region-missing';
+    const region = value.items.find(({ parent_region_id: parentRegionId }) => parentRegionId);
+    assert.ok(region);
+    regionId = region.id;
+    region.parent_region_id = 'region-missing';
   });
   const execution = await validateDataRepository(root);
   assert.deepEqual(execution.runtimeResults, []);
@@ -78,7 +82,7 @@ test('runs the official-source semantic validator for production data files', as
       ({ code, file, item_id: itemId, field }) =>
         code === 'E005' &&
         file === 'data/core/regions.json' &&
-        itemId === 'region-example-prefecture' &&
+        itemId === regionId &&
         field === 'parent_region_id'
     )
   );
@@ -86,7 +90,10 @@ test('runs the official-source semantic validator for production data files', as
 
 test('runs the navigation-card semantic validator for production data files', async (t) => {
   const root = await createRepositoryCopy(t);
+  let cardId;
   await updateJson(root, 'data/core/cards.json', (value) => {
+    assert.ok(value.items[0]);
+    cardId = value.items[0].id;
     value.items[0].section_id = 'section-missing';
   });
   const execution = await validateDataRepository(root);
@@ -96,7 +103,7 @@ test('runs the navigation-card semantic validator for production data files', as
       ({ code, file, item_id: itemId, field }) =>
         code === 'E005' &&
         file === 'data/core/cards.json' &&
-        itemId === 'card-example-disaster-information' &&
+        itemId === cardId &&
         field === 'section_id'
     )
   );
