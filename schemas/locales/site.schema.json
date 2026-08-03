@@ -49,6 +49,11 @@
       "type": "string",
       "minLength": 1
     },
+    "contact_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
     "locale_status": {
       "type": "string",
       "enum": ["draft", "under-review", "published", "needs-update", "archived"]

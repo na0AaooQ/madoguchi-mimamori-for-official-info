@@ -5,6 +5,7 @@ import {
   SITE_LOCALES,
   SOURCE_TYPE_CATEGORIES
 } from './site-constants.js';
+import { absoluteSiteUrl, joinSitePath } from './site-url.js';
 
 export function escapeHtml(value) {
   return String(value)
@@ -412,7 +413,7 @@ ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
   });
 }
 
-export function expectedSiteArtifactPaths(navigations) {
+function expectedPreviewSiteArtifactPaths(navigations) {
   const paths = new Set(['assets/styles.css', 'assets/font-size.js']);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);
@@ -425,7 +426,7 @@ export function expectedSiteArtifactPaths(navigations) {
   return [...paths].sort();
 }
 
-export function buildSiteArtifacts({ navigations, uiLocales, assets }) {
+function buildPreviewSiteArtifacts({ navigations, uiLocales, assets }) {
   const artifacts = new Map(Object.entries(assets));
   for (const locale of SITE_LOCALES) {
     const navigation = navigations[locale];
@@ -441,4 +442,470 @@ export function buildSiteArtifacts({ navigations, uiLocales, assets }) {
     }
   }
   return artifacts;
+}
+
+function productionPath(inputs, relative = '') {
+  return joinSitePath(inputs.siteUrl.basePath, relative);
+}
+
+function externalAnchor(url, text, ui, extraAttributes = '') {
+  const label = `${text}（${ui.destination.external_link_label}）`;
+  return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(label)}"${extraAttributes}>${escapeHtml(text)}</a>`;
+}
+
+function productionHeader(inputs, navigation, ui, alternatePath) {
+  const locale = navigation.locale;
+  const otherLocale = alternateLocale(locale);
+  return `
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="site-name" href="${escapeHtml(productionPath(inputs, `${locale}/`))}">${escapeHtml(navigation.site.site_name)}</a>
+      <div class="header-actions">
+        <nav aria-label="${escapeHtml(ui.navigation_label)}">
+          <a class="language-link" href="${escapeHtml(alternatePath)}" hreflang="${otherLocale}" lang="${otherLocale}" aria-label="${escapeHtml(ui.language_switch_label)}">${escapeHtml(ui.alternate_language_name)}</a>
+        </nav>
+        <fieldset class="font-size-control" data-font-size-control hidden>
+          <legend>${escapeHtml(ui.font_size.label)}</legend>
+          <button type="button" data-text-size="standard" aria-pressed="true">${escapeHtml(ui.font_size.standard)}</button>
+          <button type="button" data-text-size="large" aria-pressed="false">${escapeHtml(ui.font_size.large)}</button>
+        </fieldset>
+      </div>
+    </div>
+  </header>`;
+}
+
+function productionFooter(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const operatorLang = locale === 'en' ? ' lang="ja"' : '';
+  const contact = externalAnchor(navigation.site.contact_url, navigation.site.contact_url, ui);
+  return `
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav aria-label="${escapeHtml(ui.navigation_label)}">
+        <ul class="footer-links">
+          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/`))}">${escapeHtml(ui.footer.home)}</a></li>
+          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/organizations/`))}">${escapeHtml(ui.footer.organizations)}</a></li>
+          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/privacy/`))}">${escapeHtml(ui.footer.privacy)}</a></li>
+          <li><a href="#contact-information">${escapeHtml(ui.footer.contact)}</a></li>
+        </ul>
+      </nav>
+      <p id="contact-information"><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${contact}</span></p>
+      <p>${escapeHtml(ui.footer.free_notice)}</p>
+      <p class="copyright"${operatorLang}>${escapeHtml(ui.footer.copyright)}</p>
+    </div>
+  </footer>`;
+}
+
+function productionPageShell({ inputs, navigation, ui, title, alternatePath, mainContent }) {
+  const pageTitle = `${title}｜${navigation.site.site_name}`;
+  return `<!doctype html>
+<html lang="${navigation.locale}" data-text-size="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="${SITE_GENERATOR_NAME}">
+  <title>${escapeHtml(pageTitle)}</title>
+  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
+  <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${productionHeader(inputs, navigation, ui, alternatePath)}
+  <div class="page">
+    <main id="main-content">
+${mainContent}${commonDetails(navigation.site, ui)}
+    </main>
+  </div>${productionFooter(inputs, navigation, ui)}
+</body>
+</html>
+`;
+}
+
+function productionHomePage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const sectionItems = navigation.sections
+    .map(
+      (section) => `        <li>
+          <a class="section-link" href="${escapeHtml(productionPath(inputs, `${locale}/sections/${section.anchor_id}/`))}">
+            <strong>${escapeHtml(section.title)}</strong>${section.short_description ? `\n            <span>${escapeHtml(section.short_description)}</span>` : ''}
+          </a>
+        </li>`
+    )
+    .join('\n');
+  const content = `      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
+      <p>${escapeHtml(navigation.site.short_description)}</p>
+      <p>${escapeHtml(navigation.site.purpose)}</p>
+      <section aria-labelledby="sections-heading">
+        <h2 id="sections-heading">${escapeHtml(ui.pages.sections_heading)}</h2>
+        <p>${escapeHtml(ui.pages.sections_intro)}</p>
+        <ul class="section-list">
+${sectionItems}
+        </ul>
+      </section>
+      <a class="primary-link" href="${escapeHtml(productionPath(inputs, `${locale}/organizations/`))}">${escapeHtml(ui.pages.organizations_link)}</a>`;
+  return productionPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: ui.pages.home_title,
+    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/`),
+    mainContent: content
+  });
+}
+
+function renderProductionDestination({
+  destination,
+  link,
+  locale,
+  ui,
+  visibility,
+  showOrganization
+}) {
+  const organization = destination.organization;
+  const rows = [];
+  if (showOrganization)
+    rows.push(metadataRow(ui.fields.organization, displayOrganizationName(organization, locale)));
+  const urlLink = externalAnchor(destination.url, destination.url, ui);
+  rows.push(
+    metadataRow(
+      ui.fields.destination_name,
+      `<span${languageAttributes(destination.display_title, locale)}>${escapeHtml(destination.display_title)}</span>`
+    ),
+    metadataRow(ui.fields.purpose, escapeHtml(destination.purpose)),
+    metadataRow(ui.fields.usage, escapeHtml(visibility)),
+    destination.destination_language_note
+      ? metadataRow(ui.fields.language_note, escapeHtml(destination.destination_language_note))
+      : '',
+    metadataRow(ui.fields.url, `<span class="url-text">${urlLink}</span>`),
+    destination.platform ? metadataRow(ui.fields.platform, escapeHtml(destination.platform)) : '',
+    destination.account_id
+      ? metadataRow(ui.fields.account_id, escapeHtml(destination.account_id))
+      : '',
+    link?.public_note ? metadataRow(ui.fields.public_note, escapeHtml(link.public_note)) : '',
+    destination.public_note
+      ? metadataRow(ui.fields.public_note, escapeHtml(destination.public_note))
+      : '',
+    metadataRow(ui.fields.destination_checked_on, dateValue(destination.destination_checked_on)),
+    metadataRow(
+      ui.fields.official_information_checked_on,
+      dateValue(destination.official_information_checked_on)
+    )
+  );
+  const fallbackNotice =
+    showOrganization && organization.name_kind === 'official-ja-fallback'
+      ? `\n          <p class="note">${escapeHtml(ui.destination.official_name_fallback)}</p>`
+      : '';
+  const organizationSummary =
+    showOrganization && organization.summary
+      ? `\n          <p${languageAttributes(organization.summary, locale)}>${escapeHtml(organization.summary)}</p>`
+      : '';
+  const heading = link?.button_label ?? destination.display_title;
+  return `        <article class="destination">
+          <h4${languageAttributes(heading, locale)}>${escapeHtml(heading)}</h4>
+          <dl class="metadata">
+${rows.filter(Boolean).join('\n')}
+          </dl>${fallbackNotice}${organizationSummary}
+          <p>${escapeHtml(ui.destination.external_notice)}</p>
+        </article>`;
+}
+
+function renderProductionCard(card, locale, ui) {
+  const region = card.region_label
+    ? `\n          <span class="card-summary-region">${escapeHtml(card.region_label)}</span>`
+    : '';
+  const roleGroups = ROLE_ORDER.map((role) => [
+    role,
+    card.links.filter((link) => link.role === role)
+  ])
+    .filter(([, links]) => links.length > 0)
+    .map(
+      ([role, links]) => `
+        <section>
+          <h3>${escapeHtml(ui.roles[role])}</h3>
+${links
+  .map((link) =>
+    renderProductionDestination({
+      destination: link.destination,
+      link,
+      locale,
+      ui,
+      visibility: ui.visibility[link.visibility_context],
+      showOrganization: true
+    })
+  )
+  .join('\n')}
+        </section>`
+    )
+    .join('');
+  const emergency = card.emergency_note
+    ? `\n        <p class="note">${escapeHtml(card.emergency_note)}</p>`
+    : '';
+  return `      <details class="card">
+        <summary>
+          <span class="card-summary-title">${escapeHtml(card.title)}</span>
+          <span class="card-summary-description">${escapeHtml(card.summary)}</span>${region}
+        </summary>
+        <div class="card-content">${emergency}${roleGroups}
+        </div>
+      </details>`;
+}
+
+function productionSectionPage(inputs, navigation, ui, section) {
+  const locale = navigation.locale;
+  const homePath = productionPath(inputs, `${locale}/`);
+  const cards =
+    section.cards.length > 0
+      ? section.cards.map((card) => renderProductionCard(card, locale, ui)).join('\n')
+      : `      <p class="note">${escapeHtml(ui.pages.empty_section)}</p>`;
+  const content = `      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.section_back)}</a>
+      <h1>${escapeHtml(section.title)}</h1>${section.short_description ? `\n      <p>${escapeHtml(section.short_description)}</p>` : ''}
+      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
+${cards}
+      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.section_back)}</a>`;
+  return productionPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: section.title,
+    alternatePath: productionPath(
+      inputs,
+      `${alternateLocale(locale)}/sections/${section.anchor_id}/`
+    ),
+    mainContent: content
+  });
+}
+
+function productionOrganizationsPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const organizations = aggregateOrganizations(navigation)
+    .map(({ organization, regions, destinations }) => {
+      const fallback =
+        organization.name_kind === 'official-ja-fallback'
+          ? `\n        <p class="note">${escapeHtml(ui.destination.official_name_fallback)}</p>`
+          : '';
+      const summary = organization.summary
+        ? `\n        <p${languageAttributes(organization.summary, locale)}>${escapeHtml(organization.summary)}</p>`
+        : '';
+      const regionText =
+        regions.length > 0
+          ? `\n        <dl class="metadata">\n${metadataRow(ui.fields.region, regions.map(escapeHtml).join(' / '))}\n        </dl>`
+          : '';
+      const categories = DESTINATION_CATEGORY_ORDER.map((category) => [
+        category,
+        destinations.filter(
+          ({ destination }) => SOURCE_TYPE_CATEGORIES[destination.source_type] === category
+        )
+      ])
+        .filter(([, entries]) => entries.length > 0)
+        .map(
+          ([category, entries]) => `
+        <section>
+          <h3>${escapeHtml(ui.destination_categories[category])}</h3>
+${entries
+  .map(({ destination, contexts }) =>
+    renderProductionDestination({
+      destination,
+      locale,
+      ui,
+      visibility: ui.visibility[aggregateVisibility(contexts)],
+      showOrganization: false
+    })
+  )
+  .join('\n')}
+        </section>`
+        )
+        .join('');
+      return `      <article class="organization">
+        <h2${languageAttributes(organization.official_name, locale, organization.name_kind === 'official-ja-fallback')}>${escapeHtml(organization.official_name)}</h2>${fallback}${summary}${regionText}${categories}
+      </article>`;
+    })
+    .join('\n');
+  const content = `      <h1>${escapeHtml(ui.pages.organizations_title)}</h1>
+      <p>${escapeHtml(ui.pages.organizations_intro)}</p>
+      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
+${organizations}`;
+  return productionPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: ui.pages.organizations_title,
+    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/organizations/`),
+    mainContent: content
+  });
+}
+
+function productionPrivacyPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const privacy = ui.privacy;
+  const operator = externalAnchor(
+    privacy.operator_url,
+    privacy.operator_name,
+    ui,
+    locale === 'en' ? ' lang="en"' : ''
+  );
+  const contact = externalAnchor(navigation.site.contact_url, navigation.site.contact_url, ui);
+  const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
+      <p>${escapeHtml(privacy.established)}</p>
+      <section>
+        <h2>${escapeHtml(privacy.operator_heading)}</h2>
+        <p>${escapeHtml(privacy.operator_prefix)}&#x3000;${operator}</p>
+      </section>
+${privacySection(privacy.input_heading, privacy.input_items)}
+${privacySection(privacy.unused_heading, privacy.unused_items)}
+${privacySection(privacy.session_heading, privacy.session_items)}
+${privacySection(privacy.external_heading, privacy.external_items)}
+${privacySection(privacy.contact_heading, privacy.contact_items)}
+      <p><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${contact}</span></p>
+${privacySection(privacy.logs_heading, privacy.logs_items)}
+${privacySection(privacy.revision_heading, privacy.revision_items)}`;
+  return productionPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: ui.pages.privacy_title,
+    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/privacy/`),
+    mainContent: content
+  });
+}
+
+function productionRootPage(inputs) {
+  const ui = inputs.uiLocales.ja;
+  const root = ui.root;
+  const siteName = inputs.navigations.ja.site.site_name;
+  return `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="${SITE_GENERATOR_NAME}">
+  <title>${escapeHtml(root.title)}｜${escapeHtml(siteName)}</title>
+  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
+</head>
+<body>
+  <div class="page">
+    <main id="main-content">
+      <h1>${escapeHtml(root.heading)}</h1>
+      <p>${escapeHtml(root.description_ja)}</p>
+      <p lang="en">${escapeHtml(root.description_en)}</p>
+      <p class="note">${escapeHtml(root.unofficial_ja)} <span lang="en">${escapeHtml(root.unofficial_en)}</span></p>
+      <ul class="section-list">
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja"><strong>${escapeHtml(root.japanese_link)}</strong></a></li>
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en"><strong>${escapeHtml(root.english_link)}</strong></a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function productionNotFoundPage(inputs) {
+  const ui = inputs.uiLocales.ja;
+  const notFound = ui.not_found;
+  const siteName = inputs.navigations.ja.site.site_name;
+  return `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="generator" content="${SITE_GENERATOR_NAME}">
+  <title>${escapeHtml(notFound.title)}｜${escapeHtml(siteName)}</title>
+  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
+</head>
+<body>
+  <div class="page">
+    <main id="main-content">
+      <h1>${escapeHtml(notFound.heading)}</h1>
+      <p>${escapeHtml(notFound.body_ja)}</p>
+      <p lang="en">${escapeHtml(notFound.body_en)}</p>
+      <ul>
+        <li><a href="${escapeHtml(productionPath(inputs))}">${escapeHtml(notFound.root_link)}</a></li>
+        <li><a href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja">${escapeHtml(notFound.japanese_link)}</a></li>
+        <li><a href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en">${escapeHtml(notFound.english_link)}</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+export function productionSitemapUrls(inputs) {
+  const urls = [absoluteSiteUrl(inputs.siteUrl)];
+  for (const locale of SITE_LOCALES) urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/`));
+  for (const locale of SITE_LOCALES) {
+    for (const section of inputs.navigations[locale].sections) {
+      urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/sections/${section.anchor_id}/`));
+    }
+  }
+  for (const locale of SITE_LOCALES)
+    urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/organizations/`));
+  for (const locale of SITE_LOCALES)
+    urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/privacy/`));
+  return urls;
+}
+
+function productionSitemap(inputs) {
+  const entries = productionSitemapUrls(inputs)
+    .map((url) => `  <url><loc>${escapeHtml(url)}</loc></url>`)
+    .join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries}
+</urlset>
+`;
+}
+
+function expectedProductionSiteArtifactPaths(navigations) {
+  const paths = new Set([
+    'index.html',
+    '404.html',
+    'sitemap.xml',
+    'assets/styles.css',
+    'assets/font-size.js'
+  ]);
+  for (const locale of SITE_LOCALES) {
+    paths.add(`${locale}/index.html`);
+    paths.add(`${locale}/organizations/index.html`);
+    paths.add(`${locale}/privacy/index.html`);
+    for (const section of navigations[locale].sections)
+      paths.add(`${locale}/sections/${section.anchor_id}/index.html`);
+  }
+  return [...paths].sort();
+}
+
+function buildProductionSiteArtifacts(inputs) {
+  const artifacts = new Map(Object.entries(inputs.assets));
+  artifacts.set('index.html', productionRootPage(inputs));
+  artifacts.set('404.html', productionNotFoundPage(inputs));
+  artifacts.set('sitemap.xml', productionSitemap(inputs));
+  for (const locale of SITE_LOCALES) {
+    const navigation = inputs.navigations[locale];
+    const ui = inputs.uiLocales[locale];
+    artifacts.set(`${locale}/index.html`, productionHomePage(inputs, navigation, ui));
+    artifacts.set(
+      `${locale}/organizations/index.html`,
+      productionOrganizationsPage(inputs, navigation, ui)
+    );
+    artifacts.set(`${locale}/privacy/index.html`, productionPrivacyPage(inputs, navigation, ui));
+    for (const section of navigation.sections) {
+      artifacts.set(
+        `${locale}/sections/${section.anchor_id}/index.html`,
+        productionSectionPage(inputs, navigation, ui, section)
+      );
+    }
+  }
+  return artifacts;
+}
+
+export function expectedSiteArtifactPaths(navigations, mode = 'preview') {
+  return mode === 'production'
+    ? expectedProductionSiteArtifactPaths(navigations)
+    : expectedPreviewSiteArtifactPaths(navigations);
+}
+
+export function buildSiteArtifacts(inputs) {
+  return inputs.mode === 'production'
+    ? buildProductionSiteArtifacts(inputs)
+    : buildPreviewSiteArtifacts(inputs);
 }

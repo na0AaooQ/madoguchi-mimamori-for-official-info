@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-02",
+  "data_updated_on": "2026-08-04",
   "locale": "en",
   "site_id": "madoguchi-mimamori",
   "site_name": "Madoguchi Mimamori",
@@ -10,7 +10,9 @@
   "free_use_notice": "Free to use. There are no ads or affiliate links, and no sign-in is required.",
   "external_site_notice": "Destinations are external official websites. Check the linked site for the latest information.",
   "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service. Listing does not guarantee the overall reliability of an organization or the accuracy of information at a destination.",
-  "locale_status": "draft",
-  "content_revision": 2,
-  "based_on_ja_revision": 2
+  "contact_url": "https://portfolio.na0aaooq.com/en/contact.html",
+  "locale_status": "published",
+  "content_revision": 3,
+  "based_on_ja_revision": 3,
+  "content_reviewed_on": "2026-08-04"
 }

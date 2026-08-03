@@ -1,6 +1,6 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。管理データ縦切り、公開用データ生成MVP、架空preview Web画面MVPを実装しています。実在情報、production画面、災害・出来事、AWSは未実装であり、サイトが公開済みであることを示す文書ではありません。
+「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。第一版の実在管理データ、production公開データ・静的サイト生成、架空preview Web画面、GitHub Pages手動デプロイworkflowを実装しています。workflowはまだ実行しておらず、公開確認前です。
 
 ## 基本文書
 
@@ -20,6 +20,7 @@
 | [管理TSVからJSONを生成する手順](MANAGEMENT_TSV_IMPORT.md)      | GoogleスプレッドシートTSVの検査、変換、書込み、安全確認         |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
 | [Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)                    | 静的HTML生成、画面用locale、安全性、手動確認                    |
+| [GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)         | production生成、ローカル確認、手動公開、復旧                    |
 | [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |
 | [設計判断記録](decisions/README.md)                            | 採用した重要な設計判断と再検討条件                              |
 

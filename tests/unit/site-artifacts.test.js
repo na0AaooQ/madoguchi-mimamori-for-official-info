@@ -40,7 +40,10 @@ test('invalid English input preserves the existing generated site', async (t) =>
   const english = await readJson(root, 'site/locales/en.json');
   delete english.preview_notice;
   await writeJson(root, 'site/locales/en.json', english);
-  assert.equal(await runSiteCli(['generate'], { cwd: root, stdout: () => {} }), 1);
+  assert.equal(
+    await runSiteCli(['generate', '--mode', 'preview'], { cwd: root, stdout: () => {} }),
+    1
+  );
   assert.equal(await readFile(tracked, 'utf8'), before);
 });
 
@@ -75,6 +78,29 @@ test('rejects an unsafe operator profile URL', async (t) => {
     (await validateSiteRepository(root)).some(
       ({ code, field }) => code === 'SITE-E001' && field === 'privacy.operator_url'
     )
+  );
+});
+
+test('does not mix preview and production navigation artifact types', async (t) => {
+  const productionRoot = await createSiteRepositoryCopy(t);
+  const production = await readJson(
+    productionRoot,
+    'dist/public-data/production/ja/navigation.json'
+  );
+  production.artifact_type = 'fictional-preview';
+  await writeJson(productionRoot, 'dist/public-data/production/ja/navigation.json', production);
+  assert.ok(
+    (await validateSiteRepository(productionRoot, 'production')).some(
+      ({ code }) => code === 'PUB-E004'
+    )
+  );
+
+  const previewRoot = await createSiteRepositoryCopy(t);
+  const preview = await readJson(previewRoot, 'dist/public-data/preview/ja/navigation.json');
+  preview.artifact_type = 'production';
+  await writeJson(previewRoot, 'dist/public-data/preview/ja/navigation.json', preview);
+  assert.ok(
+    (await validateSiteRepository(previewRoot, 'preview')).some(({ code }) => code === 'PUB-E004')
   );
 });
 

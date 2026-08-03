@@ -106,6 +106,8 @@ dist/public-data/production/en/*
 dist/site/*
 !dist/site/preview/
 !dist/site/preview/**
+!dist/site/production/
+!dist/site/production/**
 dist/site/**/.tmp-*
 dist/site/**/.backup-*
 dist/public-data/**/.tmp-*

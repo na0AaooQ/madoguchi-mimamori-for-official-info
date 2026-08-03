@@ -9,15 +9,14 @@ import {
 import {
   ORGANIZATION_NAME_KINDS,
   ROLE_ORDER,
-  SITE_ARTIFACT_TYPE,
   SITE_ASSET_SOURCE_PATHS,
   SITE_LOCALES,
-  SITE_NAVIGATION_PATHS,
-  SITE_UI_LOCALE_PATHS,
   SOURCE_TYPE_CATEGORIES,
   SiteRuntimeError,
-  VISIBILITY_CONTEXTS
+  VISIBILITY_CONTEXTS,
+  getSiteMode
 } from './site-constants.js';
+import { loadProductionSiteUrl } from './site-url.js';
 
 const string = 'string';
 const strings = Object.freeze([string]);
@@ -101,6 +100,42 @@ const UI_LOCALE_SHAPE = Object.freeze({
     contact_prefix: string,
     free_notice: string,
     copyright: string
+  }
+});
+
+const {
+  preview_notice: ignoredPreviewNotice,
+  destination: ignoredPreviewDestination,
+  ...sharedShape
+} = UI_LOCALE_SHAPE;
+void ignoredPreviewNotice;
+void ignoredPreviewDestination;
+
+const PRODUCTION_UI_LOCALE_SHAPE = Object.freeze({
+  ...sharedShape,
+  root: {
+    title: string,
+    heading: string,
+    description_ja: string,
+    description_en: string,
+    unofficial_ja: string,
+    unofficial_en: string,
+    japanese_link: string,
+    english_link: string
+  },
+  not_found: {
+    title: string,
+    heading: string,
+    body_ja: string,
+    body_en: string,
+    root_link: string,
+    japanese_link: string,
+    english_link: string
+  },
+  destination: {
+    external_notice: string,
+    official_name_fallback: string,
+    external_link_label: string
   }
 });
 
@@ -231,14 +266,14 @@ function walkDestinations(navigation, callback) {
   }
 }
 
-function validateNavigation(navigation, locale, file) {
+function validateNavigation(navigation, locale, file, config) {
   const results = [];
-  if (navigation?.artifact_type !== SITE_ARTIFACT_TYPE) {
+  if (navigation?.artifact_type !== config.artifactType) {
     results.push(
       siteError(
         'SITE-E001',
         file,
-        'fictional-preview以外からpreview画面を生成できません。',
+        `${config.artifactType}以外から${config.mode}画面を生成できません。`,
         'artifact_type'
       )
     );
@@ -338,19 +373,19 @@ function validateNavigation(navigation, locale, file) {
   return results;
 }
 
-function validatePair(navigations) {
+function validatePair(navigations, config) {
   const results = [];
   const japanese = navigations.ja;
   const english = navigations.en;
   if (!japanese || !english) return results;
   if (japanese.site?.site_id !== english.site?.site_id) {
     results.push(
-      siteError('SITE-E001', 'dist/public-data/preview', '日英のsite_idが一致しません。')
+      siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsite_idが一致しません。')
     );
   }
   if ((japanese.sections?.length ?? -1) !== (english.sections?.length ?? -2)) {
     results.push(
-      siteError('SITE-E001', 'dist/public-data/preview', '日英のsection件数が一致しません。')
+      siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsection件数が一致しません。')
     );
     return results;
   }
@@ -360,7 +395,7 @@ function validatePair(navigations) {
       results.push(
         siteError(
           'SITE-E001',
-          'dist/public-data/preview',
+          `dist/public-data/${config.mode}`,
           `日英のsection対応が一致しません（位置${index + 1}）。`
         )
       );
@@ -369,59 +404,76 @@ function validatePair(navigations) {
   return results;
 }
 
-export async function loadSiteInputs(repoRoot) {
+export async function loadSiteInputs(repoRoot, mode = 'preview') {
+  const config = getSiteMode(mode);
   const results = [];
   const navigations = {};
   const uiLocales = {};
   const { validate } = await loadPublicSchema(repoRoot);
 
   for (const locale of SITE_LOCALES) {
-    const navigation = await readJson(repoRoot, SITE_NAVIGATION_PATHS[locale]);
+    const navigationPath = config.navigationPaths[locale];
+    const navigation = await readJson(repoRoot, navigationPath);
     if (navigation.parseError) results.push(navigation.parseError);
     else {
       navigations[locale] = navigation;
       results.push(
         ...validatePublicArtifact(navigation, {
           validateSchema: validate,
-          file: SITE_NAVIGATION_PATHS[locale],
-          expectedMode: 'preview',
+          file: navigationPath,
+          expectedMode: mode,
           expectedLocale: locale
         }),
-        ...validateNavigation(navigation, locale, SITE_NAVIGATION_PATHS[locale])
+        ...validateNavigation(navigation, locale, navigationPath, config)
       );
     }
 
-    const uiLocale = await readJson(repoRoot, SITE_UI_LOCALE_PATHS[locale]);
+    const uiLocalePath = config.uiLocalePaths[locale];
+    const uiLocale = await readJson(repoRoot, uiLocalePath);
     if (uiLocale.parseError) results.push(uiLocale.parseError);
     else {
       uiLocales[locale] = uiLocale;
-      results.push(...validateLocaleShape(uiLocale, UI_LOCALE_SHAPE, SITE_UI_LOCALE_PATHS[locale]));
+      results.push(
+        ...validateLocaleShape(
+          uiLocale,
+          mode === 'preview' ? UI_LOCALE_SHAPE : PRODUCTION_UI_LOCALE_SHAPE,
+          uiLocalePath
+        )
+      );
       if (uiLocale.locale !== locale)
         results.push(
-          siteError(
-            'SITE-E001',
-            SITE_UI_LOCALE_PATHS[locale],
-            '入力パスと画面用localeが一致しません。',
-            'locale'
-          )
+          siteError('SITE-E001', uiLocalePath, '入力パスと画面用localeが一致しません。', 'locale')
         );
       if (!isSafeOperatorUrl(uiLocale.privacy?.operator_url))
         results.push(
           siteError(
             'SITE-E001',
-            SITE_UI_LOCALE_PATHS[locale],
+            uiLocalePath,
             '運営者プロフィールURLは許可されたホストのHTTPS URLにしてください。',
             'privacy.operator_url'
           )
         );
     }
   }
-  results.push(...validatePair(navigations));
+  results.push(...validatePair(navigations, config));
 
   const assets = {};
   for (const [outputPath, sourcePath] of Object.entries(SITE_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath);
   }
 
-  return { navigations, uiLocales, assets, results: sortResults(results) };
+  const siteUrl =
+    mode === 'production'
+      ? await loadProductionSiteUrl(repoRoot, config.productionConfigPath)
+      : { basePath: config.basePath };
+
+  return {
+    mode,
+    config,
+    siteUrl,
+    navigations,
+    uiLocales,
+    assets,
+    results: sortResults(results)
+  };
 }

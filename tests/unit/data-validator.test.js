@@ -60,10 +60,7 @@ test('validates the production data foundation successfully', async () => {
     execution.results.some(({ severity }) => severity === 'error'),
     false
   );
-  assert.deepEqual(
-    execution.results.map(({ code }) => code),
-    ['I001', 'I001']
-  );
+  assert.deepEqual(execution.results, []);
 });
 
 test('runs the official-source semantic validator for production data files', async (t) => {
@@ -280,6 +277,8 @@ test('detects malformed JSON and common Schema violations', async (t) => {
       mutate: (root) =>
         updateJson(root, 'data/core/site.json', (value) => {
           value.site_publication_status = 'published';
+          delete value.site_last_checked_on;
+          delete value.contact_url;
         })
     },
     {
@@ -288,6 +287,7 @@ test('detects malformed JSON and common Schema violations', async (t) => {
       mutate: (root) =>
         updateJson(root, 'data/locales/en/site.json', (value) => {
           value.locale_status = 'published';
+          delete value.content_reviewed_on;
         })
     }
   ];
@@ -358,7 +358,12 @@ test('enforces published contact requirements and HTTPS-only contact URLs', asyn
   for (const fixture of cases) {
     await t.test(fixture.name, async (t) => {
       const root = await createRepositoryCopy(t);
-      await updateJson(root, 'data/core/site.json', fixture.mutate);
+      await updateJson(root, 'data/core/site.json', (value) => {
+        value.site_publication_status = 'draft';
+        delete value.site_last_checked_on;
+        delete value.contact_url;
+        fixture.mutate(value);
+      });
       const execution = await validateDataRepository(root);
       const hasSiteSchemaError = execution.results.some(
         ({ code, file }) => code === 'E002' && file === 'data/core/site.json'

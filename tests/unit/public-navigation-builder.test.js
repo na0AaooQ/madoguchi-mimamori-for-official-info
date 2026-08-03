@@ -41,6 +41,15 @@ test('builds the Japanese and English allowlisted navigation artifacts', async (
   }
 });
 
+test('resolves contact URL from Locale first and falls back to Core', async () => {
+  const input = await createPreviewInput();
+  assert.equal(Object.hasOwn(input.site.locales.ja, 'contact_url'), false);
+  assert.equal(build(input, 'ja').artifact.site.contact_url, input.site.core.contact_url);
+
+  input.site.locales.en.contact_url = 'https://example.invalid/en/contact/';
+  assert.equal(build(input, 'en').artifact.site.contact_url, 'https://example.invalid/en/contact/');
+});
+
 test('keeps stable IDs and non-normalizes only reachable source and organization data', async () => {
   const input = await createPreviewInput();
   input.core.sources.push({

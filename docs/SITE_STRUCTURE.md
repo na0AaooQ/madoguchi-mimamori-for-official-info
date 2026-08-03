@@ -2,13 +2,13 @@
 
 ## 文書の位置付け
 
-この文書は、第一版の情報設計と画面構成を定めます。架空preview Web画面MVPでは、後述のうちトップ、分野別、全団体一覧、プライバシーポリシーを日英静的HTMLとして実装しました。本番画面と実在情報は未実装です。実装契約は[Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)を参照してください。
+この文書は、第一版の情報設計と画面構成を定めます。架空previewと実在管理データを使用するproductionでは、後述のうちトップ、分野別、全団体一覧、プライバシーポリシーを日英静的HTMLとして実装しました。previewの契約は[Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)、productionの生成・公開手順は[GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ## 全体構成
 
 第一版は次の5ページを想定します。
 
-各ページは日本語・英語へ対応します。架空previewでは`/preview/ja/`と`/preview/en/`を対称に配置します。productionのURLは未決定です。
+各ページは日本語・英語へ対応します。架空previewでは`/preview/ja/`と`/preview/en/`、productionではカスタムドメイン直下の`/ja/`と`/en/`を対称に配置します。productionルートには言語選択ページ、`404.html`、`sitemap.xml`も生成します。
 
 | ページ                       | 役割                                                                  |
 | ---------------------------- | --------------------------------------------------------------------- |

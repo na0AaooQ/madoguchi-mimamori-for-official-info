@@ -17,8 +17,8 @@ export async function createSiteRepositoryCopy(t) {
   t.after(() => rm(root, { recursive: true, force: true }));
   for (const relative of [
     'contracts/public/navigation.schema.json',
-    'dist/public-data/preview',
-    'dist/site/preview',
+    'dist/public-data',
+    'dist/site',
     'site'
   ]) {
     await mkdir(path.dirname(path.join(root, relative)), { recursive: true });

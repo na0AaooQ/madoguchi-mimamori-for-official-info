@@ -689,12 +689,13 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 | `free_use_notice`      | string  | 必須                | 無料・広告なし等の案内             |
 | `external_site_notice` | string  | 必須                | 外部公式サイトへ移動する案内       |
 | `disclaimer_summary`   | string  | 必須                | 役割と非保証事項の要約             |
+| `contact_url`          | string  | 任意                | 対象言語のHTTPS問い合わせ先        |
 | `locale_status`        | string  | 必須                | 言語別文面状態                     |
 | `content_revision`     | integer | 必須・1以上         | 文面改訂番号                       |
 | `based_on_ja_revision` | integer | 英語のみ必須・1以上 | 基にした日本語改訂番号             |
 | `content_reviewed_on`  | string  | 公開時必須          | 文面確認日                         |
 
-日本語の`site.json`に`based_on_ja_revision`を持たせません。
+日本語の`site.json`に`based_on_ja_revision`を持たせません。`contact_url`はdraftを含めて省略可能です。公開生成時は対象言語の`contact_url`を優先し、省略時はCoreの`contact_url`へフォールバックします。
 
 ### 言語別`regions.json`
 

@@ -4,17 +4,17 @@
 
 ## 現在の開発状況
 
-| 項目             | 状況                                                       |
-| ---------------- | ---------------------------------------------------------- |
-| 開発段階         | 架空preview Web画面MVPと第一版の実在管理データ登録まで完了 |
-| 第一版           | 実在管理データ登録済み、本番画面・公開サイトは未実装       |
-| 対応言語         | 日本語・英語                                               |
-| 公開サイト       | まだ存在しない                                             |
-| ホスティング構成 | GitHub Pagesとカスタムドメインを予定、未実装               |
+| 項目             | 状況                                                                 |
+| ---------------- | -------------------------------------------------------------------- |
+| 開発段階         | 第一版の実在管理データ、production公開データ・静的サイト生成まで完了 |
+| 第一版           | 実在管理データ登録済み、日英productionサイト生成対応済み             |
+| 対応言語         | 日本語・英語                                                         |
+| 公開サイト       | 手動workflow実行前のため公開確認前                                   |
+| ホスティング構成 | GitHub Pages・カスタムドメイン設定済み、手動workflow実装済み         |
 
 本リポジトリには、初期設計文書、ローカル品質管理基盤、架空preview Web画面MVP、TSV変換基盤、第一版の実在管理データを整備しています。第一版の管理JSONには、熊本県、熊本市、熊本市上下水道局を対象とする地域3件、団体3件、案内先14件、確認根拠24件、案内カード3件、カード案内先関連14件を登録しています。案内先と確認根拠は、人が確認した内容を管理JSONへ反映しています。
 
-第一版で使用する「公的機関・防災全般」と「ライフライン」の2セクションと、その対象管理データはpublishedです。残る3セクションと、Core・日本語・英語のsiteはdraftのままです。そのためproduction成果物とproduction静的サイトはまだ存在せず、公開サイトも未公開です。管理データのpublishedはWebサイトの一般公開を意味しません。既存の架空preview成果物は、画面と生成基盤の確認専用であり、実在管理データを表示する本番画面ではありません。
+第一版で使用する「公的機関・防災全般」と「ライフライン」の2セクション、その対象管理データ、Core・日本語・英語のsiteはpublishedです。残る3セクションはdraftで、production成果物には含めません。実在管理データから日英のproduction公開データと15ファイルの静的サイトを生成し、GitHub Pagesへ手動デプロイできる状態です。workflowはまだ実行していないため、公開確認済みとは扱いません。既存の架空preview成果物は、画面と生成基盤の確認専用として分離しています。
 
 ## 目的
 
@@ -93,7 +93,7 @@
 
 第一版は静的HTML・CSS中心を想定し、JavaScriptへの依存を最小限にします。JavaScriptなしでも主要リンクを利用可能とし、AI、外部API、自動取得、新サイト内の入力フォームは使用しません。第一版から日本語・英語へ対応し、管理データの正本にはJSONを採用します。言語共通のcoreと日英localeを分離し、検証済みの公開対象だけから成果物を生成します。
 
-工程3-2Aと工程3-2Bでは、地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応する14 Schemaと意味検証を実装しました。公開用データ生成MVPでは、published架空fixtureから日英の`navigation.json`を決定論的に生成します。Web画面preview MVPでは、その公開JSONだけからJavaScriptなしでも主要情報を利用できる日英静的HTMLを生成します。第一版対象の地域、団体、案内先、確認根拠、案内カード、カード案内先関連と、使用する2セクションは実在管理データとして登録済みです。一方、siteはCore・日本語・英語ともdraftのためproduction生成の公開ゲートを通らず、production画面、GitHub Pages、カスタムドメイン、デプロイは今後の工程です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)と[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)を参照してください。
+地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応するSchemaと意味検証を実装しています。公開生成は、架空fixtureからのpreviewと、第一版の実在管理データからのproductionを分離し、日英の`navigation.json`を決定論的に生成します。静的サイト生成もpreview・productionを分離し、JavaScriptなしでも主要情報とリンクを利用できます。productionの正式URLは`https://madoguchi.kokoromimamori.na0aaooq.com`で、GitHub Pagesの手動workflowは実装済みですが未実行です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)、[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)、[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ## 品質管理
 
@@ -207,13 +207,13 @@ npm run check
 
 Lint、書式、全テスト、fixture、文書、管理データの検証に加え、`validate:public`と`verify:public`を順に実行します。生成系コマンドは書込処理のため`check`には含めません。
 
-### production生成の現在の期待動作
+### production公開データを生成する
 
 ```sh
-npm run generate:public -- --as-of 2026-08-02
+npm run generate:public -- --as-of 2026-08-04
 ```
 
-現在の正本siteは`draft`なので、`PUB-E001`、終了コード`1`で停止し、`dist/public-data/production/`を作りません。これはdraftを誤公開しないための安全動作で、架空fixtureを使うpreview生成とは別のコマンドです。基準日は必須で、現在日時を自動採用しません。
+正本siteは`published`です。このコマンドは実在管理データから日英の`dist/public-data/production/{ja,en}/navigation.json`を一組として生成します。基準日は必須で、現在日時を自動採用しません。生成後は`npm run validate:public`と`npm run verify:public`を実行してください。
 
 ### 成果物を変更するときの基本手順
 
@@ -262,7 +262,18 @@ npm run check
 
 ブラウザでは、320pxから1280px以上、標準・大文字、文字200%・ページ400%、CSS・JavaScript無効、キーボード、日英切替、カードあり・なし、全団体一覧、プライバシーポリシー、長いURLを確認してください。詳細は[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)に記載しています。
 
-生成HTMLを直接編集してはいけません。画面変更時は、公開データの正本、`site/locales/`、テンプレート、`site/assets/`を修正し、生成・差分確認・validate・verifyを行います。生成元と`dist/site/preview/`を同じPRでGit管理します。このpreview成果物は架空データ専用であり、実在管理データを入力とするproduction画面、GitHub Pages、カスタムドメイン、デプロイはこのMVPの対象外です。
+生成HTMLを直接編集してはいけません。画面変更時は、公開データの正本、`site/locales/`、テンプレート、`site/assets/`を修正し、生成・差分確認・validate・verifyを行います。生成元と`dist/site/preview/`を同じPRでGit管理します。このpreview成果物は架空データ専用であり、実在管理データを入力とするproduction成果物とは分離します。
+
+## production静的サイトの確認手順
+
+```sh
+npm run generate:site:production
+npm run validate:site
+npm run verify:site
+npm run serve:site:production
+```
+
+ローカルでは<http://127.0.0.1:4173/>を開きます。production成果物は`dist/site/production/`にあり、ルート言語選択、日英トップ、公開中2分野、全団体・案内先一覧、プライバシーポリシー、`404.html`、`sitemap.xml`を含みます。正式base URL、手動workflow、公開後確認、再デプロイは[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ## 運用方針
 
@@ -272,7 +283,7 @@ npm run check
 
 新サイト内に問い合わせフォームは設けず、既存の[ポートフォリオサイトのお問い合わせページ](https://portfolio.na0aaooq.com/contact.html)へ案内する予定です。問い合わせは任意であり、外部ページでは名前またはハンドルネーム、メールアドレス、問い合わせ本文などの入力が必要です。ポートフォリオサイト側のプライバシーポリシーが適用されます。
 
-新サイトのホスティングにはGitHub Pagesとカスタムドメインを予定していますが、まだ実装・公開していません。アクセスログ、アクセス解析、Cookieなどは、実装構成が決まった段階で実際の構成に基づいてプライバシー説明を更新します。
+新サイトのホスティングにはGitHub Pagesを使用し、カスタムドメインを設定済みです。運営者独自のアクセス解析、Cookie、localStorageは使用しません。文字サイズは`sessionStorage`へ`standard`または`large`だけを保存します。ホスティング提供者側では配信に必要な技術情報が処理される可能性があります。workflowは未実行で、公開確認前です。
 
 ## ドキュメント
 
@@ -288,6 +299,7 @@ npm run check
 - [データ検証・公開生成方針](docs/DATA_VALIDATION_AND_PUBLICATION.md)
 - [公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)
 - [Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)
+- [GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)
 - [データSchema実装](docs/DATA_SCHEMA_IMPLEMENTATION.md)
 - [管理TSVからJSONを生成する手順](docs/MANAGEMENT_TSV_IMPORT.md)
 - [品質管理基盤](docs/QUALITY_TOOLING.md)
