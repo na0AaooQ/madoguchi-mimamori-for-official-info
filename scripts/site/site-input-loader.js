@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { TextDecoder } from 'node:util';
 
 import { createResult, sortResults } from '../validation/result.js';
 import {
@@ -9,14 +10,19 @@ import {
 import {
   ORGANIZATION_NAME_KINDS,
   ROLE_ORDER,
-  SITE_ASSET_SOURCE_PATHS,
+  SITE_BINARY_ASSET_SOURCE_PATHS,
+  SITE_ICON_PATHS,
   SITE_LOCALES,
+  SITE_TEXT_ASSET_SOURCE_PATHS,
   SOURCE_TYPE_CATEGORIES,
   SiteRuntimeError,
   VISIBILITY_CONTEXTS,
   getSiteMode
 } from './site-constants.js';
+import { validateSiteIcon } from './site-icon-validator.js';
 import { loadProductionSiteUrl } from './site-url.js';
+
+const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
 
 const string = 'string';
 const strings = Object.freeze([string]);
@@ -172,9 +178,10 @@ async function readJson(repoRoot, relativePath) {
   }
 }
 
-async function readAsset(repoRoot, relativePath) {
+async function readAsset(repoRoot, relativePath, binary = false) {
   try {
-    return await readFile(path.join(repoRoot, relativePath), 'utf8');
+    const source = await readFile(path.join(repoRoot, relativePath));
+    return binary ? source : utf8Decoder.decode(source);
   } catch (error) {
     throw new SiteRuntimeError(
       'SITE-RUN-E002',
@@ -458,8 +465,16 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   results.push(...validatePair(navigations, config));
 
   const assets = {};
-  for (const [outputPath, sourcePath] of Object.entries(SITE_ASSET_SOURCE_PATHS)) {
+  for (const [outputPath, sourcePath] of Object.entries(SITE_TEXT_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath);
+  }
+  for (const [outputPath, sourcePath] of Object.entries(SITE_BINARY_ASSET_SOURCE_PATHS)) {
+    assets[outputPath] = await readAsset(repoRoot, sourcePath, true);
+  }
+  for (const icon of SITE_ICON_PATHS) {
+    const sourcePath = SITE_TEXT_ASSET_SOURCE_PATHS[icon] ?? SITE_BINARY_ASSET_SOURCE_PATHS[icon];
+    for (const message of validateSiteIcon(icon, assets[icon]))
+      results.push(siteError('SITE-E001', sourcePath, message));
   }
 
   const siteUrl =

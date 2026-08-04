@@ -32,6 +32,16 @@ function alternateLocale(locale) {
   return locale === 'ja' ? 'en' : 'ja';
 }
 
+function sitePath(inputs, relative = '') {
+  return joinSitePath(inputs.siteUrl.basePath, relative);
+}
+
+function siteIconLinks(inputs) {
+  return `  <link rel="icon" href="${escapeHtml(sitePath(inputs, 'favicon.ico'))}" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="${escapeHtml(sitePath(inputs, 'favicon.svg'))}" type="image/svg+xml" sizes="any">
+  <link rel="apple-touch-icon" href="${escapeHtml(sitePath(inputs, 'apple-touch-icon.png'))}" sizes="180x180">`;
+}
+
 function commonDetails(site, ui) {
   return `
       <details class="common-details">
@@ -94,7 +104,7 @@ function footer(navigation, ui) {
   </footer>`;
 }
 
-function pageShell({ navigation, ui, title, alternatePath, mainContent }) {
+function pageShell({ inputs, navigation, ui, title, alternatePath, mainContent }) {
   const pageTitle = `${title}｜${navigation.site.site_name}`;
   return `<!doctype html>
 <html lang="${navigation.locale}" data-text-size="standard">
@@ -104,6 +114,7 @@ function pageShell({ navigation, ui, title, alternatePath, mainContent }) {
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(pageTitle)}</title>
+${siteIconLinks(inputs)}
   <link rel="stylesheet" href="/preview/assets/styles.css">
   <script src="/preview/assets/font-size.js" defer></script>
 </head>
@@ -123,7 +134,7 @@ ${mainContent}${commonDetails(navigation.site, ui)}
 `;
 }
 
-function homePage(navigation, ui) {
+function homePage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const sectionItems = navigation.sections
     .map(
@@ -146,6 +157,7 @@ ${sectionItems}
       </section>
       <a class="primary-link" href="/preview/${locale}/organizations/">${escapeHtml(ui.pages.organizations_link)}</a>`;
   return pageShell({
+    inputs,
     navigation,
     ui,
     title: ui.pages.home_title,
@@ -258,7 +270,7 @@ ${links
       </details>`;
 }
 
-function sectionPage(navigation, ui, section) {
+function sectionPage(inputs, navigation, ui, section) {
   const locale = navigation.locale;
   const cards =
     section.cards.length > 0
@@ -270,6 +282,7 @@ function sectionPage(navigation, ui, section) {
 ${cards}
       <a class="back-link" href="/preview/${locale}/">${escapeHtml(ui.pages.section_back)}</a>`;
   return pageShell({
+    inputs,
     navigation,
     ui,
     title: section.title,
@@ -322,7 +335,7 @@ export function aggregateVisibility(contexts) {
   return 'disaster';
 }
 
-function organizationsPage(navigation, ui) {
+function organizationsPage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const organizations = aggregateOrganizations(navigation)
     .map(({ organization, regions, destinations }) => {
@@ -372,6 +385,7 @@ ${entries
       <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
 ${organizations}`;
   return pageShell({
+    inputs,
     navigation,
     ui,
     title: ui.pages.organizations_title,
@@ -387,7 +401,7 @@ ${list(items)}
       </section>`;
 }
 
-function privacyPage(navigation, ui) {
+function privacyPage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const privacy = ui.privacy;
   const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
@@ -405,6 +419,7 @@ ${privacySection(privacy.contact_heading, privacy.contact_items)}
 ${privacySection(privacy.logs_heading, privacy.logs_items)}
 ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
   return pageShell({
+    inputs,
     navigation,
     ui,
     title: ui.pages.privacy_title,
@@ -414,7 +429,13 @@ ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
 }
 
 function expectedPreviewSiteArtifactPaths(navigations) {
-  const paths = new Set(['assets/styles.css', 'assets/font-size.js']);
+  const paths = new Set([
+    'assets/styles.css',
+    'assets/font-size.js',
+    'favicon.svg',
+    'favicon.ico',
+    'apple-touch-icon.png'
+  ]);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);
     paths.add(`${locale}/organizations/index.html`);
@@ -426,18 +447,19 @@ function expectedPreviewSiteArtifactPaths(navigations) {
   return [...paths].sort();
 }
 
-function buildPreviewSiteArtifacts({ navigations, uiLocales, assets }) {
+function buildPreviewSiteArtifacts(inputs) {
+  const { navigations, uiLocales, assets } = inputs;
   const artifacts = new Map(Object.entries(assets));
   for (const locale of SITE_LOCALES) {
     const navigation = navigations[locale];
     const ui = uiLocales[locale];
-    artifacts.set(`${locale}/index.html`, homePage(navigation, ui));
-    artifacts.set(`${locale}/organizations/index.html`, organizationsPage(navigation, ui));
-    artifacts.set(`${locale}/privacy/index.html`, privacyPage(navigation, ui));
+    artifacts.set(`${locale}/index.html`, homePage(inputs, navigation, ui));
+    artifacts.set(`${locale}/organizations/index.html`, organizationsPage(inputs, navigation, ui));
+    artifacts.set(`${locale}/privacy/index.html`, privacyPage(inputs, navigation, ui));
     for (const section of navigation.sections) {
       artifacts.set(
         `${locale}/sections/${section.anchor_id}/index.html`,
-        sectionPage(navigation, ui, section)
+        sectionPage(inputs, navigation, ui, section)
       );
     }
   }
@@ -445,7 +467,7 @@ function buildPreviewSiteArtifacts({ navigations, uiLocales, assets }) {
 }
 
 function productionPath(inputs, relative = '') {
-  return joinSitePath(inputs.siteUrl.basePath, relative);
+  return sitePath(inputs, relative);
 }
 
 function externalAnchor(url, text, ui, extraAttributes = '') {
@@ -505,6 +527,7 @@ function productionPageShell({ inputs, navigation, ui, title, alternatePath, mai
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(pageTitle)}</title>
+${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
   <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
 </head>
@@ -778,6 +801,7 @@ function productionRootPage(inputs) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(root.title)}｜${escapeHtml(siteName)}</title>
+${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
 </head>
 <body>
@@ -810,6 +834,7 @@ function productionNotFoundPage(inputs) {
   <meta name="robots" content="noindex">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(notFound.title)}｜${escapeHtml(siteName)}</title>
+${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
 </head>
 <body>
@@ -862,7 +887,10 @@ function expectedProductionSiteArtifactPaths(navigations) {
     '404.html',
     'sitemap.xml',
     'assets/styles.css',
-    'assets/font-size.js'
+    'assets/font-size.js',
+    'favicon.svg',
+    'favicon.ico',
+    'apple-touch-icon.png'
   ]);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);

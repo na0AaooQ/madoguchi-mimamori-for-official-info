@@ -33,6 +33,123 @@ test('detects missing, stale, unexpected, and directly edited artifacts', async 
   assert.ok((await verifySiteArtifacts(editedRoot)).some(({ code }) => code === 'SITE-E006'));
 });
 
+test('detects missing and unexpected site icon artifacts', async (t) => {
+  const root = await createSiteRepositoryCopy(t);
+  await rm(path.join(root, 'dist/site/preview/favicon.ico'));
+  await writeFile(path.join(root, 'dist/site/preview/favicon-old.ico'), Buffer.from([0, 1, 2]));
+  const results = await validateSiteRepository(root, 'preview');
+  assert.ok(
+    results.some(
+      ({ code, file, message }) =>
+        code === 'SITE-E004' && file.endsWith('/favicon.ico') && message.includes('必須成果物')
+    )
+  );
+  assert.ok(
+    results.some(
+      ({ code, file, message }) =>
+        code === 'SITE-E004' && file.endsWith('/favicon-old.ico') && message.includes('想定外')
+    )
+  );
+});
+
+test('detects missing, duplicate, and mode-confused HTML icon references', async (t) => {
+  const missingRoot = await createSiteRepositoryCopy(t);
+  const missingFile = path.join(missingRoot, 'dist/site/preview/ja/index.html');
+  await writeFile(
+    missingFile,
+    (await readFile(missingFile, 'utf8')).replace(
+      '  <link rel="icon" href="/preview/favicon.svg" type="image/svg+xml" sizes="any">\n',
+      ''
+    )
+  );
+  assert.ok(
+    (await validateSiteRepository(missingRoot, 'preview')).some(
+      ({ code, file, message }) =>
+        code === 'SITE-E005' &&
+        file.endsWith('/ja/index.html') &&
+        message.includes('/preview/favicon.svg')
+    )
+  );
+
+  const duplicateRoot = await createSiteRepositoryCopy(t);
+  const duplicateFile = path.join(duplicateRoot, 'dist/site/production/404.html');
+  const duplicateLink =
+    '  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">';
+  await writeFile(
+    duplicateFile,
+    (await readFile(duplicateFile, 'utf8')).replace(
+      duplicateLink,
+      `${duplicateLink}\n${duplicateLink}`
+    )
+  );
+  assert.ok(
+    (await validateSiteRepository(duplicateRoot, 'production')).some(
+      ({ code, file, message }) =>
+        code === 'SITE-E005' && file.endsWith('/404.html') && message.includes('link要素は3件')
+    )
+  );
+
+  const productionRoot = await createSiteRepositoryCopy(t);
+  const productionFile = path.join(productionRoot, 'dist/site/production/index.html');
+  await writeFile(
+    productionFile,
+    (await readFile(productionFile, 'utf8')).replace(
+      'href="/favicon.ico"',
+      'href="/preview/favicon.ico"'
+    )
+  );
+  assert.ok(
+    (await validateSiteRepository(productionRoot, 'production')).some(
+      ({ code, file, message }) =>
+        code === 'SITE-E005' && file.endsWith('/index.html') && message.includes('modeに一致しない')
+    )
+  );
+
+  const previewRoot = await createSiteRepositoryCopy(t);
+  const previewFile = path.join(previewRoot, 'dist/site/preview/en/privacy/index.html');
+  await writeFile(
+    previewFile,
+    (await readFile(previewFile, 'utf8')).replace(
+      'href="/preview/favicon.ico"',
+      'href="/favicon.ico"'
+    )
+  );
+  assert.ok(
+    (await validateSiteRepository(previewRoot, 'preview')).some(
+      ({ code, file, message }) =>
+        code === 'SITE-E005' &&
+        file.endsWith('/en/privacy/index.html') &&
+        message.includes('modeに一致しない')
+    )
+  );
+});
+
+test('compares binary artifacts byte-for-byte without newline validation', async (t) => {
+  const root = await createSiteRepositoryCopy(t);
+  const binaryFiles = [
+    'dist/site/preview/favicon.ico',
+    'dist/site/preview/apple-touch-icon.png',
+    'dist/site/production/favicon.ico',
+    'dist/site/production/apple-touch-icon.png'
+  ];
+  assert.deepEqual(await validateSiteRepository(root), []);
+  const changed = path.join(root, 'dist/site/production/apple-touch-icon.png');
+  const source = await readFile(changed);
+  source[source.length - 1] ^= 0xff;
+  await writeFile(changed, source);
+  const results = await verifySiteArtifacts(root, 'production');
+  assert.ok(
+    results.some(({ code, file }) => code === 'SITE-E006' && file.endsWith('/apple-touch-icon.png'))
+  );
+  assert.equal(
+    results.some(
+      ({ file, message }) =>
+        binaryFiles.some((binary) => file.endsWith(binary)) && message.includes('末尾改行')
+    ),
+    false
+  );
+});
+
 test('invalid English input preserves the existing generated site', async (t) => {
   const root = await createSiteRepositoryCopy(t);
   const tracked = path.join(root, 'dist/site/preview/ja/index.html');
