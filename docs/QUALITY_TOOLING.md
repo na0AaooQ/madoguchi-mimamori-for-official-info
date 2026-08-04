@@ -195,7 +195,7 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 `IMPLEMENTED_ARRAY_DATA_LAYOUT`は21件、`EMPTY_DATA_LAYOUT`は16件です。管理用`SCHEMA_LAYOUT`は27件を維持し、公開成果物Schemaは`contracts/public/`へ分離します。通常カードの基準日による期間判定と公開後検証は実装済みです。災害・出来事・履歴のID・参照、URL正規化後の重複、確認期限は未実装です。
 
-本番用の架空itemは`draft`であることを正常状態とし、レコードごとの`I001`を出力しません。`npm run validate:data`の正常時はError 0、Warning 0、Info 2を想定します。2件のInfoは日本語・英語siteが下書きであることを示します。
+本番用管理データには人が確認した実在情報を登録し、Core・日本語・英語のsiteと公開対象データを`published`にしています。残る3分野の`draft`はproduction対象外です。`npm run validate:data`の現在の正常時はError 0、Warning 0、Info 0です。架空itemは本番用`data/`ではなくfixtureへ分離します。
 
 ## 文書固有検証
 
@@ -210,4 +210,4 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 ## 外部接続と未実装範囲
 
-テスト、生成、検証は外部ネットワーク、DNS、GitHub API、実在する公式サイトへ接続しません。productionでもURLは文字列として検証し、疎通確認しません。災害・出来事・履歴は未実装です。GitHub Pagesへの公開は`workflow_dispatch`による手動実行だけとし、ローカルの`npm run check`はデプロイしません。
+テスト、生成、検証は外部ネットワーク、DNS、GitHub API、実在する公式サイトへ接続しません。productionでもURLは文字列として検証し、疎通確認しません。災害・出来事・履歴のitem Schema、意味検証、利用者向け表示は未実装で、該当する本番用管理データは空です。GitHub Pagesへの公開は`workflow_dispatch`による手動実行だけとし、ローカルの`npm run check`はデプロイしません。正式URLの到達性や外部リンク先は、自動検証と分けて人が確認します。

@@ -2,19 +2,21 @@
 
 「まどぐちみまもり」は、災害時などに確認したい内容から担当する公的機関・関係団体を見つけ、その団体自身の公式発表へ進むための案内サイトです。行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。
 
-## 現在の開発状況
+## 現在の開発・公開状況
 
-| 項目             | 状況                                                                 |
-| ---------------- | -------------------------------------------------------------------- |
-| 開発段階         | 第一版の実在管理データ、production公開データ・静的サイト生成まで完了 |
-| 第一版           | 実在管理データ登録済み、日英productionサイト生成対応済み             |
-| 対応言語         | 日本語・英語                                                         |
-| 公開サイト       | 手動workflow実行前のため公開確認前                                   |
-| ホスティング構成 | GitHub Pages・カスタムドメイン設定済み、手動workflow実装済み         |
+| 項目             | 状況                                                                                          |
+| ---------------- | --------------------------------------------------------------------------------------------- |
+| 開発段階         | 第一版を2026年8月4日に正式公開済み                                                            |
+| 正式URL          | <https://madoguchi.kokoromimamori.na0aaooq.com/>                                              |
+| 第一版           | 日本語・英語、2分野、3カード、14案内先、production静的サイト15ファイル                        |
+| ホスティング構成 | GitHub Pages、カスタムドメイン、HTTPS有効                                                     |
+| デプロイ         | 手動workflow実行 #2でbuild・deploy成功、公開後の画面・リンク・アセット・HTTPS等を手動確認済み |
 
 本リポジトリには、初期設計文書、ローカル品質管理基盤、架空preview Web画面MVP、TSV変換基盤、第一版の実在管理データを整備しています。第一版の管理JSONには、熊本県、熊本市、熊本市上下水道局を対象とする地域3件、団体3件、案内先14件、確認根拠24件、案内カード3件、カード案内先関連14件を登録しています。案内先と確認根拠は、人が確認した内容を管理JSONへ反映しています。
 
-第一版で使用する「公的機関・防災全般」と「ライフライン」の2セクション、その対象管理データ、Core・日本語・英語のsiteはpublishedです。残る3セクションはdraftで、production成果物には含めません。実在管理データから日英のproduction公開データと15ファイルの静的サイトを生成し、GitHub Pagesへ手動デプロイできる状態です。workflowはまだ実行していないため、公開確認済みとは扱いません。既存の架空preview成果物は、画面と生成基盤の確認専用として分離しています。
+第一版で使用する「公的機関・防災全般」と「ライフライン」の2セクション、その対象管理データ、Core・日本語・英語のsiteはpublishedです。残る3セクションはdraftで、production成果物には含めません。実在管理データから日英のproduction公開データと15ファイルの静的サイトを生成し、GitHub Pagesのカスタムドメインで公開しています。2026年8月4日の手動workflow実行 #2でbuildとdeployが成功し、ルート言語選択、日英トップ、公開中分野、3カード、14案内先、一覧、プライバシーポリシー、問い合わせ導線、404、sitemap、CSS、文字サイズ、リンク、HTTPS、カスタムドメインを手動確認済みです。既存の架空preview成果物は、画面と生成基盤の確認専用として分離しています。
+
+第一版公開後の改善、継続運用、将来構想は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)で管理します。
 
 ## 目的
 
@@ -98,11 +100,11 @@
 
 第一版は静的HTML・CSS中心を想定し、JavaScriptへの依存を最小限にします。JavaScriptなしでも主要リンクを利用可能とし、AI、外部API、自動取得、新サイト内の入力フォームは使用しません。第一版から日本語・英語へ対応し、管理データの正本にはJSONを採用します。言語共通のcoreと日英localeを分離し、検証済みの公開対象だけから成果物を生成します。
 
-地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応するSchemaと意味検証を実装しています。公開生成は、架空fixtureからのpreviewと、第一版の実在管理データからのproductionを分離し、日英の`navigation.json`を決定論的に生成します。静的サイト生成もpreview・productionを分離し、JavaScriptなしでも主要情報とリンクを利用できます。productionの正式URLは`https://madoguchi.kokoromimamori.na0aaooq.com`で、GitHub Pagesの手動workflowは実装済みですが未実行です。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)、[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)、[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
+地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連について、coreとlocaleに対応するSchemaと意味検証を実装しています。公開生成は、架空fixtureからのpreviewと、第一版の実在管理データからのproductionを分離し、日英の`navigation.json`を決定論的に生成します。静的サイト生成もpreview・productionを分離し、JavaScriptなしでも主要情報とリンクを利用できます。productionの正式URLは<https://madoguchi.kokoromimamori.na0aaooq.com/>です。GitHub Pagesの手動workflowから公開し、カスタムドメインとHTTPSを使用しています。詳しくは[公開データ契約](docs/PUBLIC_DATA_CONTRACT.md)、[Web画面preview MVP](docs/WEB_UI_PREVIEW_MVP.md)、[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ## 品質管理
 
-Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、テスト、fixture、文書、管理データ、公開データ、previewサイト、再現性をまとめて確認できます。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
+Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証でき、`npm run check`でLint、書式、543件のテスト、fixture、文書、管理データ、公開データ、preview・productionサイト、再現性をまとめて確認できます。2026年8月4日の第一版公開時点で`npm run check`は成功しています。詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
 
 ## サイト公開データの作成手順
 
@@ -194,7 +196,7 @@ git diff -- dist/public-data/preview/en/navigation.json
 npm run validate:public
 ```
 
-正常時の最終行は`Summary: Error 0, Warning 0, Info 0, Total 0`です。Git管理中のpreview日英成果物が公開Schemaを満たし、禁止項目がなく、URL安全条件を満たし、現在はproduction成果物が存在しないことを読取専用で確認します。
+正常時の最終行は`Summary: Error 0, Warning 0, Info 0, Total 0`です。Git管理中のpreview・production日英成果物が公開Schemaを満たし、禁止項目がなく、それぞれのURL安全条件を満たすことを読取専用で確認します。
 
 ### 再現性を確認する
 
@@ -202,7 +204,7 @@ npm run validate:public
 npm run verify:public
 ```
 
-preview fixtureからOSの一時領域へ日英成果物を再生成し、Git管理中のpreviewとバイト単位で比較します。tracked artifactは変更しません。正常時は`Summary: Error 0, Warning 0, Info 0, Total 0`です。手編集やfixture変更後の生成忘れは`PUB-E006`で停止します。
+preview fixtureとproduction管理データからOSの一時領域へ日英成果物を再生成し、Git管理中の各成果物とバイト単位で比較します。tracked artifactは変更しません。正常時は`Summary: Error 0, Warning 0, Info 0, Total 0`です。手編集や入力変更後の生成忘れは`PUB-E006`で停止します。
 
 ### 全体検証
 
@@ -282,13 +284,13 @@ npm run serve:site:production
 
 ## 運用方針
 
-常設主リンクは原則週1回、補助リンクは原則月1回、表示中の期間限定リンクは原則週1回確認します。「案内先確認日」はURL、公式性、案内目的などを確認した日であり、リンク先の全内容や現在状況の正確性を保証する日ではありません。詳しくは[運用方針](docs/OPERATIONS_POLICY.md)を参照してください。
+常設主リンクは原則週1回、補助リンクは原則月1回、人が確認します。期間限定リンクは現在未実装です。「案内先確認日」はURL、公式性、案内目的などを確認した日であり、リンク先の全内容や現在状況の正確性を保証する日ではありません。詳しくは[運用方針](docs/OPERATIONS_POLICY.md)を参照してください。
 
 ## お問い合わせとプライバシー
 
 新サイト内に問い合わせフォームは設けず、既存の[ポートフォリオサイトのお問い合わせページ](https://portfolio.na0aaooq.com/contact.html)へ案内します。問い合わせは任意であり、外部ページでは名前またはハンドルネーム、メールアドレス、問い合わせ本文などの入力が必要です。ポートフォリオサイト側のプライバシーポリシーが適用されます。
 
-新サイトのホスティングにはGitHub Pagesを使用し、カスタムドメインを設定済みです。運営者独自のアクセス解析、Cookie、localStorageは使用しません。文字サイズは`sessionStorage`へ`standard`または`large`だけを保存します。ホスティング提供者側では配信に必要な技術情報が処理される可能性があります。workflowは未実行で、公開確認前です。
+新サイトのホスティングにはGitHub Pagesを使用し、カスタムドメインとHTTPSを有効にしています。運営者独自のアクセス解析、Cookie、localStorageは使用しません。文字サイズは`sessionStorage`へ`standard`または`large`だけを保存します。ホスティング提供者側では配信に必要な技術情報が処理される可能性があります。Google Analyticsは未実装で、導入可否とプライバシー方針の設計は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)で管理します。
 
 ## ドキュメント
 
@@ -298,6 +300,7 @@ npm run serve:site:production
 - [情報掲載方針](docs/INFORMATION_LISTING_POLICY.md)
 - [サイト構成](docs/SITE_STRUCTURE.md)
 - [運用方針](docs/OPERATIONS_POLICY.md)
+- [公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)
 - [データモデル](docs/DATA_MODEL.md)
 - [データフィールド定義](docs/DATA_FIELDS.md)
 - [日英対応方針](docs/LOCALIZATION_POLICY.md)

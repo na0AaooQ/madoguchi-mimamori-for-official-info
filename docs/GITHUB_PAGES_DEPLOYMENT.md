@@ -1,10 +1,31 @@
-# GitHub Pagesへのproductionサイト手動デプロイ
+# GitHub Pagesへのproductionサイト手動デプロイと公開後運用
 
 ## 目的
 
-第一版の実在管理データから日本語・英語のproduction公開データと静的サイトを決定論的に生成し、GitHub Pagesへ手動デプロイする手順を定めます。公開後も修正PRまたはrevertをマージし、同じworkflowを再実行して復旧できます。
+第一版の実在管理データから日本語・英語のproduction公開データと静的サイトを決定論的に生成し、GitHub Pagesへ手動デプロイする手順、初回公開記録、再実行・復旧方針を定めます。公開後も修正PRまたはrevertをマージし、同じworkflowを手動実行して更新・復旧できます。
 
-GitHub PagesのSourceは`GitHub Actions`、Custom domainは`madoguchi.kokoromimamori.na0aaooq.com`として利用者が設定済みです。DNS checkは成功済みで、2026年8月4日時点ではHTTPS証明書の発行待ちです。GitHubの`Static HTML > Configure`は使用せず、本リポジトリの`.github/workflows/deploy-pages.yml`だけを使用します。
+## 現在状態
+
+| 項目             | 状態                                                      |
+| ---------------- | --------------------------------------------------------- |
+| 公開日           | 2026-08-04                                                |
+| 正式URL          | <https://madoguchi.kokoromimamori.na0aaooq.com/>          |
+| Source           | GitHub Actions                                            |
+| Custom domain    | `madoguchi.kokoromimamori.na0aaooq.com`                   |
+| DNS check        | successful                                                |
+| HTTPS証明書      | 発行済み                                                  |
+| Enforce HTTPS    | 有効                                                      |
+| workflow         | `Deploy production site to GitHub Pages`                  |
+| トリガー         | `workflow_dispatch`のみ                                   |
+| 初回成功実行     | 2026-08-04のworkflow実行 #2                               |
+| 公開対象コミット | `cf033acd5034aa9163f9a8ba8d41f9e6a1ed66f4`                |
+| 公開後の手動確認 | 正式URLで画面、リンク、アセット、404、sitemap等を確認済み |
+
+GitHubの`Static HTML > Configure`は使用せず、本リポジトリの`.github/workflows/deploy-pages.yml`だけを使用します。`CNAME`ファイルも使用しません。
+
+## 初回公開記録
+
+2026年8月4日のworkflow実行 #2でbuildとdeployが成功しました。対象コミットは`cf033acd5034aa9163f9a8ba8d41f9e6a1ed66f4`です。公開後、正式URLでルート言語選択、日本語・英語トップ、日英の公開中2分野、3カード、14案内先、全団体・案内先一覧、プライバシーポリシー、問い合わせ導線、404、11 URLの`sitemap.xml`、CSS、文字サイズ、内部・外部リンク、HTTPS、カスタムドメインを手動確認しました。
 
 ## production成果物の生成
 
@@ -75,11 +96,13 @@ npm run serve:site:production
 - `actions/upload-pages-artifact@v4`
 - `actions/deploy-pages@v4`
 
+`actions/checkout@v6`には`fetch-depth: 0`を設定し、`npm run check`が参照する既存MarkdownのPrettier基準コミットを含む全Git履歴を取得します。記載するActionバージョンは、現在のworkflowファイルと一致させます。
+
 PRをマージした後、利用者が次を実行します。
 
 1. Repository Settings > Pagesを開き、Sourceが`GitHub Actions`であることを確認する
 2. Custom domainが`madoguchi.kokoromimamori.na0aaooq.com`、DNS checkがsuccessfulであることを確認する
-3. HTTPS証明書の発行状態を確認する
+3. HTTPS証明書が発行済みで、Enforce HTTPSが有効であることを確認する
 4. Actionsを開く
 5. `Deploy production site to GitHub Pages`を選ぶ
 6. `Run workflow`から`main`を手動実行する
@@ -91,7 +114,7 @@ PRをマージした後、利用者が次を実行します。
 
 ## 公開後の確認
 
-`page_url`で最低限次を確認します。
+`page_url`と正式URLで最低限次を確認します。初回公開時はすべて確認済みです。
 
 1. ルートの言語選択ページ
 2. 日本語・英語トップ
@@ -105,14 +128,38 @@ PRをマージした後、利用者が次を実行します。
 10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に11 URLがあること
 11. CSS、文字サイズ、内部リンク、モバイル表示、キーボード操作
 
+## 初回失敗と修正
+
+2026年8月4日のworkflow実行 #1は、`npm run check`内の`format:check`で失敗しました。Prettierの既存Markdown基準コミット`f9ea011`を`git ls-tree`で参照できず、`actions/checkout`の浅い履歴によって必要な過去コミットを取得していなかったことが原因です。
+
+[PR #13](https://github.com/na0AaooQ/madoguchi-mimamori-for-official-info/pull/13)で`actions/checkout@v6`へ`fetch-depth: 0`を追加し、全Git履歴を取得する回帰テストを追加しました。修正を含む最新`main`からworkflow実行 #2を新規実行し、buildとdeployが成功しました。
+
+## workflowの新規実行とRe-run
+
+- コードや文書を修正して`main`へ新しいコミットをマージした場合は、最新`main`を選び、新しい`Run workflow`を実行する
+- 同じコミットを、一時的なGitHub側障害などを理由に再試行する場合は、`Re-run`を使用してよい
+- 古い失敗実行を`Re-run`しても、新しい`main`の修正は取り込まれない
+
 ## 再デプロイと復旧
 
-問題がある場合は、生成成果物を直接編集せず、管理データ・Locale・生成処理を修正するPRを作成します。修正PRをマージ後、Actionsのworkflow実行画面から`Re-run all jobs`を選ぶか、`Run workflow`で再実行します。
+問題がある場合は、生成成果物を直接編集せず、管理データ・Locale・生成処理を修正するPRを作成します。修正PRをマージ後、最新`main`から新しい`Run workflow`を実行します。
 
 直前の変更を取り消す場合は、対象PRをrevertするPRを作成してマージし、workflowを再実行します。workflow失敗時はGitHub Pagesへ新しいartifactがデプロイされないため、エラーを修正してから再実行します。
+
+## Node.js 20非推奨警告
+
+workflow実行 #2では、GitHub Actions画面にNode.js 20非推奨に関する非ブロッキング警告が2件表示されました。build、deploy、production公開は成功し、workflowでアプリを実行するNode.jsは`24.18.0`です。警告元のActionは確認できていないため推測で断定せず、今回Actionバージョンは変更しません。
+
+この対応は`deferred`です。再検討条件は[公開後バックログのBL-018](POST_LAUNCH_BACKLOG.md#bl-018-github-actionsのnodejs-20非推奨警告)を参照してください。
 
 ## CNAMEとDNS
 
 リポジトリへ`CNAME`ファイルを追加しません。カスタムドメインはRepository Settings側で管理します。GitHubのStatic HTMLテンプレートworkflowも追加しません。
 
 別のカスタムドメインへ変更する場合は、GitHub Pages側の設定、`site/production.json`、DNS、再生成成果物を同じ公開先として整合させます。DNSのCNAME値は`na0aaooq.github.io`であり、リポジトリ名を含めません。DNS変更やカスタムドメイン設定はコード変更とは別工程です。
+
+## 関連文書
+
+- [公開後バックログ](POST_LAUNCH_BACKLOG.md)
+- [サイト構成](SITE_STRUCTURE.md)
+- [運用方針](OPERATIONS_POLICY.md)
