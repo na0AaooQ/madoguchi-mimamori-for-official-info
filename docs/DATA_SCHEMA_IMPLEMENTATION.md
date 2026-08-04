@@ -2,7 +2,7 @@
 
 ## 目的
 
-本番用`data/`と`schemas/`の配置、正式なitem Schema、意味検証、公開成果物Schemaの責務分担を記録します。工程3-2Aと工程3-2Bの管理データ縦切りを維持し、公開生成MVPでは実在情報を登録せずに日英`navigation.json`を検証・生成します。画面はこの工程に含めません。
+本番用`data/`と`schemas/`の配置、正式なitem Schema、意味検証、公開成果物Schemaの責務分担を記録します。工程3-2Aと工程3-2Bで始めた管理データ縦切りを維持し、現在は第一版の実在管理データから日英`navigation.json`とproduction画面を検証・生成します。架空previewは本番用`data/`と分離します。
 
 ## 配置件数
 
@@ -33,7 +33,7 @@
 - `schemas/locales/cards.schema.json`
 - `schemas/locales/card-source-links.schema.json`
 
-これらは空配列も受け入れます。本番用架空データの件数は配置・統合テストで別に保証します。
+これらは空配列も受け入れます。本番用実在管理データと架空preview fixtureの件数・公開条件は、配置・意味検証・統合テストで別に保証します。
 
 対象外の11 Schemaは引き続き`items.maxItems: 0`を持ちます。
 
@@ -46,11 +46,11 @@
 - core: `disasters`、`events`、`disaster-source-links`、`event-source-links`、`check-history`、`update-history`
 - locale: `disasters`、`events`、`disaster-source-links`、`event-source-links`、`update-history`
 
-## 架空データ
+## 本番用管理データと架空preview
 
-core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルに、5分野、架空の国と都道府県、架空団体、`example.invalid`配下の架空案内先、架空の公式性確認根拠、架空カード1件、架空のカード関連1件を登録しています。全coreレコードとlocaleレコードは`draft`です。
+core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルには、第一版の実在管理データを登録しています。現在は地域3件、団体3件、案内先14件、確認根拠24件、5分野、案内カード3件、カード案内先関連14件です。2分野とその対象データをpublishedとし、残る3分野はdraftです。
 
-実在する団体、自治体、URL、災害、電話番号、個人情報は登録していません。検証とテストは`example.invalid`へ接続しません。
+架空previewは`tests/fixtures/`配下へ分離し、予約ドメイン`example.invalid`と明確な架空名称だけを使用します。テストと検証は`example.invalid`や実在する公式サイトへ接続しません。
 
 ## 配置対応表
 
@@ -87,15 +87,18 @@ JSON Schema Draft 2020-12とAjv strictモードを使い、各Schemaは一意の
 
 意味検証は一部データがSchema違反していても例外終了せず、可能な問題を収集し、決定論的に並べます。Schemaや配置対応表の異常は`RUN-E`系としてデータErrorから分離します。
 
-## 未実装範囲
+## 現在の未実装範囲
 
-災害・出来事・関連・履歴の正式Schemaと意味検証、URL正規化後の重複、確認期限の検証は後続工程で実装します。公開生成MVPは通常カードのnavigationだけを対象とし、災害・出来事、公式案内先一覧、画面は未実装です。主案内先の最大件数、文字数制限、アイコン、色、レイアウトは固定していません。
+災害・出来事・関連・履歴のitem Schemaと意味検証、URL正規化後の重複、確認期限の検証は未実装です。該当する本番用管理データは空で、現在のproductionへ災害別・期間限定案内や確認・更新履歴を表示しません。
+
+通常カードのnavigation、全団体・案内先一覧、日英の静的画面は実装済みです。主案内先の最大件数、文字数制限、アイコン、色、レイアウトの将来変更は固定せず、必要性を確認して個別に設計します。公開後の未実装項目は[公開後バックログ](POST_LAUNCH_BACKLOG.md)で管理します。
 
 ## 関連文書
 
 - [データモデル](DATA_MODEL.md)
 - [データフィールド定義](DATA_FIELDS.md)
 - [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md)
+- [公開後バックログ](POST_LAUNCH_BACKLOG.md)
 - [工程3-2Aの最小縦切りを架空データで実装する決定](decisions/0020-implement-official-source-minimum-slice-with-fictional-data.md)
 - [工程3-2Bの案内カード最小縦切りを実装する決定](decisions/0021-implement-navigation-card-minimum-slice-with-fictional-data.md)
 - [公開用navigation成果物を生成してGit管理する決定](decisions/0022-generate-and-track-public-navigation-artifacts.md)

@@ -4,6 +4,8 @@
 
 この文書は、現在実装済みのproduction画面構成と、第一版以降に検討する将来構想を区別して定めます。previewの契約は[Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)、productionの生成・公開手順は[GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
+未実装の分野・機能・表示改善の状態と着手条件は[公開後バックログ](POST_LAUNCH_BACKLOG.md)で管理します。
+
 ## 全体構成
 
 現在のproductionは、カスタムドメイン直下に次を生成します。
@@ -167,6 +169,7 @@
 - [設計原則](DESIGN_PRINCIPLES.md)
 - [情報掲載方針](INFORMATION_LISTING_POLICY.md)
 - [運用方針](OPERATIONS_POLICY.md)
+- [公開後バックログ](POST_LAUNCH_BACKLOG.md)
 - [データモデル](DATA_MODEL.md)
 - [日英対応方針](LOCALIZATION_POLICY.md)
 - [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md)

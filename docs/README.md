@@ -1,6 +1,6 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計文書をまとめています。第一版の実在管理データ、production公開データ・静的サイト生成、架空preview Web画面、GitHub Pages手動デプロイworkflowを実装しています。workflowはまだ実行しておらず、公開確認前です。
+「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計・運用文書をまとめています。第一版productionサイトは2026年8月4日に公開済みです。GitHub Pagesの手動workflowでbuildとdeployが成功し、カスタムドメイン <https://madoguchi.kokoromimamori.na0aaooq.com/>、HTTPS、日英画面、リンク、アセット、404、sitemapを公開後に確認しています。
 
 ## 基本文書
 
@@ -9,8 +9,9 @@
 | [プロジェクト背景](PROJECT_BACKGROUND.md)                      | 企画の背景、利用者の課題、対象範囲、名称決定の経緯              |
 | [設計原則](DESIGN_PRINCIPLES.md)                               | 安全性、分かりやすさ、維持可能性、技術・UIの基本原則            |
 | [情報掲載方針](INFORMATION_LISTING_POLICY.md)                  | 掲載対象、公式性確認、除外基準、リンク区分                      |
-| [サイト構成](SITE_STRUCTURE.md)                                | 5ページ、トップ導線、カード、画面上の情報設計                   |
-| [運用方針](OPERATIONS_POLICY.md)                               | 定期確認、期間限定リンク、更新履歴、情報量上限                  |
+| [サイト構成](SITE_STRUCTURE.md)                                | ルート・日英production構成、トップ導線、カード、情報設計        |
+| [運用方針](OPERATIONS_POLICY.md)                               | 公開後の定期確認、状態管理、プライバシー、情報量                |
+| [公開後バックログ](POST_LAUNCH_BACKLOG.md)                     | 公開後の改善、継続運用、中長期構想と状態                        |
 | [データモデル](DATA_MODEL.md)                                  | JSON正本、core・locale、管理単位、参照関係、内部・公開履歴      |
 | [データフィールド定義](DATA_FIELDS.md)                         | 各core・locale JSONの項目名、型、必須条件、許可値、整合性ルール |
 | [日英対応方針](LOCALIZATION_POLICY.md)                         | 第一版の日英対応、公式名称、リンク先言語、翻訳改訂              |
@@ -20,8 +21,8 @@
 | [管理TSVからJSONを生成する手順](MANAGEMENT_TSV_IMPORT.md)      | GoogleスプレッドシートTSVの検査、変換、書込み、安全確認         |
 | [品質管理基盤](QUALITY_TOOLING.md)                             | Node.js、Lint、Format、テスト、fixture、文書検証の実行方法      |
 | [Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)                    | 静的HTML生成、画面用locale、安全性、手動確認                    |
-| [GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)         | production生成、ローカル確認、手動公開、復旧                    |
-| [開発工程](DEVELOPMENT_PHASES.md)                              | 工程1から工程13までの目的、成果物、完了条件                     |
+| [GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)         | production生成、手動公開、初回公開記録、公開後運用、復旧        |
+| [開発工程](DEVELOPMENT_PHASES.md)                              | 初期の工程計画と、第一版での実際の完了・未実装範囲              |
 | [設計判断記録](decisions/README.md)                            | 採用した重要な設計判断と再検討条件                              |
 
 ## 設計判断記録

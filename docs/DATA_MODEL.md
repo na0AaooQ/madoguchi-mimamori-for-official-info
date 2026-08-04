@@ -4,7 +4,7 @@
 
 この文書は、第一版の管理データの正本と、各ファイルの責務・参照関係を定めます。各ファイルの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)に記録します。本番用の40データファイルと27 Schemaを配置済みで、工程3-2Aと工程3-2Bでは地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連の14 Schemaと21データファイルを正式化しています。
 
-5分野と、架空の国・都道府県、団体、日本語のみの案内先、公式性確認根拠、案内カード1件、カード関連1件と日英localeを、参照関係の検証用に`draft`で登録しています。本番用`data/`とは別に同じ管理契約を使うpublished架空fixtureを置き、日英の公開用`navigation.json`を生成します。実在する団体、URL、災害情報などは未登録です。災害・出来事・履歴、画面は未実装です。
+本番用`data/`には、地域3件、団体3件、案内先14件、確認根拠24件、5分野、案内カード3件、カード関連14件と日英localeを登録しています。2分野とその対象データをpublishedとし、残る3分野はdraftです。本番用`data/`とは別に、同じ管理契約を使うpublished架空fixtureを置き、preview用の日英`navigation.json`と画面を生成します。災害・出来事・履歴の本番用管理データは空で、利用者向け表示は未実装です。
 
 管理データの正本にはJSONを使用し、言語に依存しない`core`と、表示文言を持つ日本語・英語の`locale`を分離します。管理用の正本データをそのままWeb公開せず、検証済みの公開対象だけから利用者向け成果物を生成します。
 
@@ -404,31 +404,24 @@ localeレコードは、少なくとも次を持ちます。
 
 `internal_note`、`checked_by`、内部確認履歴の`summary`、非公開URL、調査途中の記録などは公開成果物へ含めません。管理用ファイル全体を静的配信対象へ置かず、公開生成後にも内部項目の混入を再検証します。
 
-## 現在の実装状態と後続工程
+## 現在の実装状態と未実装範囲
 
-工程3-1の配置・site検証基盤に加え、工程3-2Aと工程3-2Bで次を実装済みです。
+工程3-1の配置・site検証基盤と、工程3-2A・工程3-2Bの最小縦切りから拡張し、次を実装済みです。
 
-- `regions`、`organizations`、`sources`、`evidence`のcore・locale 8 Schema
-- 上記4管理単位のcore・日本語・英語の12データファイル
-- 架空国から架空県、架空団体、架空案内先、架空根拠への参照関係
-- ID重複、参照、地域階層、core・locale、日英改訂、公開状態、公式性確認根拠の意味検証
-- `sections`、`cards`、`card-source-links`のcore・locale 6 Schema
-- 確定済み5分野、架空カード1件、架空のカード関連1件と日英locale
-- アンカー・表示順、関連組み合わせ、表示期間、公開カードの主案内先の意味検証
+- `regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`のcore・locale 14 Schema
+- 上記7管理単位のcore・日本語・英語の21データファイル
+- 第一版の実在する地域、団体、案内先、確認根拠、5分野、3カード、14件のカード関連と日英locale
+- ID重複、参照、地域階層、core・locale、日英改訂、公開状態、公式性確認根拠、表示順、表示期間、主案内先の意味検証
+- publishedの公開対象抽出、日英のpreview・production成果物生成、公開後検証、バイト一致確認
+- 架空previewと実在productionを分離した静的画面生成
 
-次は後続工程で実装・具体化します。
+災害・出来事・関連・履歴のitem Schemaと意味検証、URL正規化後の重複、確認期限は未実装です。該当する本番用管理データは空で、災害別・期間限定案内と確認・更新履歴の利用者向け表示は現在のproductionに含めません。
 
-- 災害・出来事・履歴を含む後続管理単位のSchemaと意味検証
-- 公開対象の抽出と日英成果物の生成
-- 架空データによる画面MVP
-- 現在日時による表示期間判定
-- 改訂番号を増やす変更の詳細運用
-
-実在する団体、URL、災害情報などは、公開用データ生成と画面仕様の確定後に掲載・更新・削除手順を整備するまで登録しません。
+実在する団体、URL等を追加・更新・削除する場合は、人が公式性と案内目的を確認し、日英、管理データ、生成成果物、公開ゲートを整合させます。将来項目は[公開後バックログ](POST_LAUNCH_BACKLOG.md)で管理します。
 
 フィールド名、型、必須条件、列挙値は[データフィールド定義](DATA_FIELDS.md)で確定済みであり、後続工程の未確定事項として扱いません。
 
-この文書は、`operator_name`の具体値、本番URL、URLパス構成、英語版を`/en/`へ置くか、ホスティング方式、実際の掲載団体・URLを決定しません。
+`operator_name`の具体値、本番URL、URLパス、ホスティング方式、実際の掲載団体・URLは、現在の管理データ、`site/production.json`、生成成果物、[サイト構成](SITE_STRUCTURE.md)、[GitHub Pagesへのproductionサイト手動デプロイと公開後運用](GITHUB_PAGES_DEPLOYMENT.md)を正とします。この文書だけで変更しません。
 
 ## 関連文書
 
@@ -438,6 +431,7 @@ localeレコードは、少なくとも次を持ちます。
 - [情報掲載方針](INFORMATION_LISTING_POLICY.md)
 - [運用方針](OPERATIONS_POLICY.md)
 - [データSchema実装](DATA_SCHEMA_IMPLEMENTATION.md)
+- [公開後バックログ](POST_LAUNCH_BACKLOG.md)
 - [coreとlocaleを分離する決定](decisions/0012-separate-core-and-locale-data.md)
 - [災害と出来事を分離する決定](decisions/0013-separate-disasters-and-guidance-events.md)
 - [内部確認履歴と公開更新履歴を分離する決定](decisions/0014-separate-internal-and-public-history.md)
