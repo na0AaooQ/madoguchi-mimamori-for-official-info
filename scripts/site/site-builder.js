@@ -32,6 +32,10 @@ function alternateLocale(locale) {
   return locale === 'ja' ? 'en' : 'ja';
 }
 
+function footerContactAnchor(ui) {
+  return `<a href="${escapeHtml(ui.footer.contact_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(ui.footer.contact_link_label)}">${escapeHtml(ui.footer.contact)}</a>`;
+}
+
 function sitePath(inputs, relative = '') {
   return joinSitePath(inputs.siteUrl.basePath, relative);
 }
@@ -86,6 +90,7 @@ function header(navigation, ui, alternatePath) {
 function footer(navigation, ui) {
   const locale = navigation.locale;
   const operatorLang = locale === 'en' ? ' lang="ja"' : '';
+  const contact = footerContactAnchor(ui);
   return `
   <footer class="site-footer">
     <div class="footer-inner">
@@ -94,10 +99,9 @@ function footer(navigation, ui) {
           <li><a href="/preview/${locale}/">${escapeHtml(ui.footer.home)}</a></li>
           <li><a href="/preview/${locale}/organizations/">${escapeHtml(ui.footer.organizations)}</a></li>
           <li><a href="/preview/${locale}/privacy/">${escapeHtml(ui.footer.privacy)}</a></li>
-          <li><a href="#contact-information">${escapeHtml(ui.footer.contact)}</a></li>
+          <li>${contact}</li>
         </ul>
       </nav>
-      <p id="contact-information"><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${escapeHtml(navigation.site.contact_url)}</span></p>
       <p>${escapeHtml(ui.footer.free_notice)}</p>
       <p class="copyright"${operatorLang}>${escapeHtml(ui.footer.copyright)}</p>
     </div>
@@ -406,6 +410,7 @@ function privacyPage(inputs, navigation, ui) {
   const privacy = ui.privacy;
   const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
       <p>${escapeHtml(privacy.established)}</p>
+      <p>${escapeHtml(privacy.last_revised)}</p>
       <section>
         <h2>${escapeHtml(privacy.operator_heading)}</h2>
         <p>${escapeHtml(privacy.operator_prefix)}&#x3000;<a href="${escapeHtml(privacy.operator_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(privacy.operator_link_label)}">${escapeHtml(privacy.operator_name)}</a></p>
@@ -415,7 +420,6 @@ ${privacySection(privacy.unused_heading, privacy.unused_items)}
 ${privacySection(privacy.session_heading, privacy.session_items)}
 ${privacySection(privacy.external_heading, privacy.external_items)}
 ${privacySection(privacy.contact_heading, privacy.contact_items)}
-      <p><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${escapeHtml(navigation.site.contact_url)}</span></p>
 ${privacySection(privacy.logs_heading, privacy.logs_items)}
 ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
   return pageShell({
@@ -499,7 +503,7 @@ function productionHeader(inputs, navigation, ui, alternatePath) {
 function productionFooter(inputs, navigation, ui) {
   const locale = navigation.locale;
   const operatorLang = locale === 'en' ? ' lang="ja"' : '';
-  const contact = externalAnchor(navigation.site.contact_url, navigation.site.contact_url, ui);
+  const contact = footerContactAnchor(ui);
   return `
   <footer class="site-footer">
     <div class="footer-inner">
@@ -508,10 +512,9 @@ function productionFooter(inputs, navigation, ui) {
           <li><a href="${escapeHtml(productionPath(inputs, `${locale}/`))}">${escapeHtml(ui.footer.home)}</a></li>
           <li><a href="${escapeHtml(productionPath(inputs, `${locale}/organizations/`))}">${escapeHtml(ui.footer.organizations)}</a></li>
           <li><a href="${escapeHtml(productionPath(inputs, `${locale}/privacy/`))}">${escapeHtml(ui.footer.privacy)}</a></li>
-          <li><a href="#contact-information">${escapeHtml(ui.footer.contact)}</a></li>
+          <li>${contact}</li>
         </ul>
       </nav>
-      <p id="contact-information"><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${contact}</span></p>
       <p>${escapeHtml(ui.footer.free_notice)}</p>
       <p class="copyright"${operatorLang}>${escapeHtml(ui.footer.copyright)}</p>
     </div>
@@ -765,9 +768,9 @@ function productionPrivacyPage(inputs, navigation, ui) {
     ui,
     locale === 'en' ? ' lang="en"' : ''
   );
-  const contact = externalAnchor(navigation.site.contact_url, navigation.site.contact_url, ui);
   const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
       <p>${escapeHtml(privacy.established)}</p>
+      <p>${escapeHtml(privacy.last_revised)}</p>
       <section>
         <h2>${escapeHtml(privacy.operator_heading)}</h2>
         <p>${escapeHtml(privacy.operator_prefix)}&#x3000;${operator}</p>
@@ -777,7 +780,6 @@ ${privacySection(privacy.unused_heading, privacy.unused_items)}
 ${privacySection(privacy.session_heading, privacy.session_items)}
 ${privacySection(privacy.external_heading, privacy.external_items)}
 ${privacySection(privacy.contact_heading, privacy.contact_items)}
-      <p><strong>${escapeHtml(ui.footer.contact_prefix)}</strong> <span class="url-text">${contact}</span></p>
 ${privacySection(privacy.logs_heading, privacy.logs_items)}
 ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
   return productionPageShell({

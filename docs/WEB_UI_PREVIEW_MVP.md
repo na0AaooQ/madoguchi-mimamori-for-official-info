@@ -47,7 +47,7 @@ section数は固定せず、日英`navigation.json`の対応する`sections`か�
 
 ## preview安全性
 
-すべての画面で主要コンテンツより前に架空preview注意を表示します。`artifact_type`が`fictional-preview`でなければ生成しません。架空の案内先URLと問い合わせURLはコピー可能な通常テキストとし、リンクにしません。例外として、プライバシーポリシーの運営者名だけを、許可された`portfolio.na0aaooq.com`のプロフィールへ別タブで移動する外部リンクにします。
+すべての画面で主要コンテンツより前に架空preview注意を表示します。`artifact_type`が`fictional-preview`でなければ生成しません。公開データ内の架空の案内先URLと問い合わせURLはリンクにしません。例外として、画面用Localeで言語別に許可した`portfolio.na0aaooq.com`の運営者プロフィールと問い合わせページだけを、別タブで移動する実在外部リンクにします。
 
 すべてのHTMLに`noindex, nofollow, noarchive`を設定します。これは検索エンジンへの指示であり、アクセス制御や非公開を保証するものではありません。
 

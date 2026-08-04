@@ -26,6 +26,32 @@ const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
 
 const string = 'string';
 const strings = Object.freeze([string]);
+const FOOTER_CONTACTS = Object.freeze({
+  ja: Object.freeze({
+    contact: '問い合わせ',
+    contact_url: 'https://portfolio.na0aaooq.com/contact.html',
+    contact_link_label: '問い合わせページを新しいタブで開く'
+  }),
+  en: Object.freeze({
+    contact: 'Contact',
+    contact_url: 'https://portfolio.na0aaooq.com/en/contact.html',
+    contact_link_label: 'Open the contact page in a new tab'
+  })
+});
+const ENGLISH_MONTHS = Object.freeze([
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]);
 const UI_LOCALE_SHAPE = Object.freeze({
   locale: string,
   language_name: string,
@@ -78,6 +104,7 @@ const UI_LOCALE_SHAPE = Object.freeze({
   usage: { summary: string, items: strings },
   privacy: {
     established: string,
+    last_revised: string,
     operator_heading: string,
     operator_prefix: string,
     operator_name: string,
@@ -103,7 +130,8 @@ const UI_LOCALE_SHAPE = Object.freeze({
     organizations: string,
     privacy: string,
     contact: string,
-    contact_prefix: string,
+    contact_url: string,
+    contact_link_label: string,
     free_notice: string,
     copyright: string
   }
@@ -264,6 +292,19 @@ function isSafeOperatorUrl(value) {
   }
 }
 
+function parseLastRevised(value, locale) {
+  if (locale === 'ja') {
+    const match = /^最終改定日: (\d{4})年(\d{1,2})月(\d{1,2})日$/.exec(value);
+    if (!match) return undefined;
+    return `${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
+  }
+  const match = /^Last revised: ([A-Z][a-z]+) (\d{1,2}), (\d{4})$/.exec(value);
+  if (!match) return undefined;
+  const month = ENGLISH_MONTHS.indexOf(match[1]) + 1;
+  if (month === 0) return undefined;
+  return `${match[3]}-${String(month).padStart(2, '0')}-${match[2].padStart(2, '0')}`;
+}
+
 function walkDestinations(navigation, callback) {
   for (const section of navigation.sections ?? []) {
     for (const card of section.cards ?? []) {
@@ -380,7 +421,7 @@ function validateNavigation(navigation, locale, file, config) {
   return results;
 }
 
-function validatePair(navigations, config) {
+function validatePair(navigations, uiLocales, config) {
   const results = [];
   const japanese = navigations.ja;
   const english = navigations.en;
@@ -407,6 +448,43 @@ function validatePair(navigations, config) {
         )
       );
     }
+  }
+  const revisedDates = {};
+  for (const locale of SITE_LOCALES) {
+    revisedDates[locale] = parseLastRevised(uiLocales[locale]?.privacy?.last_revised, locale);
+    if (!revisedDates[locale]) {
+      results.push(
+        siteError(
+          'SITE-E001',
+          config.uiLocalePaths[locale],
+          '最終改定日は言語別の所定形式で記載してください。',
+          'privacy.last_revised'
+        )
+      );
+    }
+    if (
+      config.mode === 'production' &&
+      uiLocales[locale]?.footer?.contact_url !== navigations[locale]?.site?.contact_url
+    ) {
+      results.push(
+        siteError(
+          'SITE-E001',
+          config.uiLocalePaths[locale],
+          'productionの問い合わせURLが公開ナビゲーションと一致しません。',
+          'footer.contact_url'
+        )
+      );
+    }
+  }
+  if (revisedDates.ja && revisedDates.en && revisedDates.ja !== revisedDates.en) {
+    results.push(
+      siteError(
+        'SITE-E001',
+        `site/locales/${config.mode === 'production' ? 'production/' : ''}`,
+        '日英の最終改定日が同じ日付を表していません。',
+        'privacy.last_revised'
+      )
+    );
   }
   return results;
 }
@@ -460,9 +538,21 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
             'privacy.operator_url'
           )
         );
+      for (const [field, expected] of Object.entries(FOOTER_CONTACTS[locale])) {
+        if (uiLocale.footer?.[field] !== expected) {
+          results.push(
+            siteError(
+              'SITE-E001',
+              uiLocalePath,
+              '問い合わせ導線は言語別の承認済み文言・URLと完全一致させてください。',
+              `footer.${field}`
+            )
+          );
+        }
+      }
     }
   }
-  results.push(...validatePair(navigations, config));
+  results.push(...validatePair(navigations, uiLocales, config));
 
   const assets = {};
   for (const [outputPath, sourcePath] of Object.entries(SITE_TEXT_ASSET_SOURCE_PATHS)) {

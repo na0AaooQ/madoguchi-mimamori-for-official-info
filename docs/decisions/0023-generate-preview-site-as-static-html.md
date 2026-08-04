@@ -11,7 +11,7 @@ Git管理中の架空preview公開データから、低速通信、JavaScript無
 - 生成HTMLを直接編集せず、生成元から再生成する
 - navigationにない画面固有文言を、厳格に検証する日英localeへ分離する
 - JavaScriptなしでも主要情報と内部ナビゲーションを利用可能にする
-- previewの外部URLは通常テキストとし、外部リンクを無効にする
+- preview公開データ内の外部URLはリンク化せず、画面用localeで許可した言語別の運営者プロフィールと問い合わせページだけを実在外部リンクにする
 - 補助JavaScriptは文字サイズ切替だけに使い、`sessionStorage`へ許可値だけを保存する
 - AWS、production画面、実在情報、デプロイを対象外とする
 

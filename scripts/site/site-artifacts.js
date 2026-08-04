@@ -6,6 +6,7 @@ import { TextDecoder } from 'node:util';
 import { createResult, sortResults } from '../validation/result.js';
 import {
   buildSiteArtifacts,
+  escapeHtml,
   expectedSiteArtifactPaths,
   productionSitemapUrls
 } from './site-builder.js';
@@ -52,6 +53,10 @@ async function collectFiles(root, relative = '') {
 
 function count(source, pattern) {
   return [...source.matchAll(pattern)].length;
+}
+
+function countLiteral(source, value) {
+  return source.split(value).length - 1;
 }
 
 function isTextArtifact(file) {
@@ -182,8 +187,24 @@ function previewHtmlContract(source, file, inputs) {
     results.push(siteError('SITE-E005', target, 'previewのrobotsメタ情報がありません。'));
   if (!source.includes(ui.preview_notice.title))
     results.push(siteError('SITE-E005', target, '架空preview注意がありません。'));
-  if (/<a\b[^>]*href="https?:\/\/(?!portfolio\.na0aaooq\.com\/)/i.test(source))
-    results.push(siteError('SITE-E005', target, 'previewに許可されていない外部リンクがあります。'));
+  const allowedExternalUrls = new Set([ui.privacy.operator_url, ui.footer.contact_url]);
+  for (const { href, attributes } of anchorElements(source).filter(({ href }) =>
+    /^https:\/\//.test(href)
+  )) {
+    if (!allowedExternalUrls.has(href))
+      results.push(
+        siteError('SITE-E005', target, `previewに許可されていない外部リンクがあります: ${href}`)
+      );
+    if (attributes.target !== '_blank')
+      results.push(
+        siteError('SITE-E005', target, `preview外部リンクにtargetがありません: ${href}`)
+      );
+    const rel = new Set((attributes.rel ?? '').split(/\s+/).filter(Boolean));
+    if (!rel.has('noopener') || !rel.has('noreferrer'))
+      results.push(
+        siteError('SITE-E005', target, `preview外部リンクに安全なrelがありません: ${href}`)
+      );
+  }
   for (const navigation of Object.values(inputs.navigations)) {
     for (const section of navigation.sections) {
       for (const card of section.cards) {
@@ -199,11 +220,111 @@ function previewHtmlContract(source, file, inputs) {
   return results;
 }
 
-function anchorAttributes(source) {
-  return [...source.matchAll(/<a\b([^>]*)href="([^"]+)"([^>]*)>/g)].map((match) => ({
-    href: match[2],
-    attributes: `${match[1]} ${match[3]}`
-  }));
+function parseAttributes(source) {
+  const attributes = {};
+  for (const match of source.matchAll(/(?:^|\s)([^\s=/>]+)(?:\s*=\s*"([^"]*)")?/g))
+    attributes[match[1]] = match[2] ?? '';
+  return attributes;
+}
+
+function anchorElements(source) {
+  return [...source.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map((match) => {
+    const attributes = parseAttributes(match[1]);
+    return { href: attributes.href ?? '', attributes, content: match[2] };
+  });
+}
+
+function localizedContactHtmlContract(source, file, inputs) {
+  const results = [];
+  const match = /^(ja|en)\//.exec(file);
+  if (!match) return results;
+  const locale = match[1];
+  const otherLocale = locale === 'ja' ? 'en' : 'ja';
+  const ui = inputs.uiLocales[locale];
+  const expectedUrl = ui.footer.contact_url;
+  const wrongUrl = inputs.uiLocales[otherLocale].footer.contact_url;
+  const target = outputFile(inputs, file);
+  const contacts = anchorElements(source).filter(({ href }) => href === expectedUrl);
+  if (contacts.length !== 1) {
+    results.push(
+      siteError('SITE-E005', target, '言語別問い合わせリンクは各フッターに1件必要です。')
+    );
+  } else {
+    const [contact] = contacts;
+    if (contact.content !== escapeHtml(ui.footer.contact))
+      results.push(
+        siteError('SITE-E005', target, '問い合わせリンクの表示文言がLocaleと一致しません。')
+      );
+    if (contact.attributes.target !== '_blank')
+      results.push(
+        siteError('SITE-E005', target, '問い合わせリンクにtarget="_blank"がありません。')
+      );
+    const rel = new Set((contact.attributes.rel ?? '').split(/\s+/).filter(Boolean));
+    if (!rel.has('noopener') || !rel.has('noreferrer'))
+      results.push(
+        siteError('SITE-E005', target, '問い合わせリンクのrelにnoopenerとnoreferrerが必要です。')
+      );
+    if (contact.attributes['aria-label'] !== ui.footer.contact_link_label)
+      results.push(
+        siteError('SITE-E005', target, '問い合わせリンクのaria-labelがLocaleと一致しません。')
+      );
+  }
+  if (countLiteral(source, expectedUrl) !== 1)
+    results.push(siteError('SITE-E005', target, '問い合わせURLはhref以外へ重複表示できません。'));
+  if (wrongUrl !== expectedUrl && source.includes(wrongUrl))
+    results.push(siteError('SITE-E005', target, '別言語の問い合わせURLが混入しています。'));
+  if (source.includes('href="#contact-information"'))
+    results.push(siteError('SITE-E005', target, '廃止した問い合わせ内部アンカーが残っています。'));
+  if (/\bid="contact-information"/.test(source))
+    results.push(siteError('SITE-E005', target, '廃止したcontact-information IDが残っています。'));
+  const navigationContact = inputs.navigations[locale].site.contact_url;
+  if (navigationContact !== expectedUrl && source.includes(navigationContact))
+    results.push(
+      siteError('SITE-E005', target, '公開データの問い合わせURLを画面へ重複表示できません。')
+    );
+  return results;
+}
+
+function privacyHtmlContract(source, file, inputs) {
+  if (!/^(ja|en)\/privacy\/index\.html$/.test(file)) return [];
+  const results = [];
+  const locale = file.split('/')[0];
+  const privacy = inputs.uiLocales[locale].privacy;
+  const target = outputFile(inputs, file);
+  for (const [value, label] of [
+    [privacy.established, '制定日'],
+    [privacy.last_revised, '最終改定日']
+  ]) {
+    if (countLiteral(source, escapeHtml(value)) !== 1)
+      results.push(siteError('SITE-E005', target, `${label}はプライバシーポリシーに1件必要です。`));
+  }
+  const sessionContract =
+    locale === 'ja'
+      ? {
+          heading: '4. 文字サイズ設定の一時保存（sessionStorage）',
+          item: 'WebブラウザのsessionStorage（同じタブを開いている間だけ、一時的にブラウザ内へデータを保存できる仕組み）を利用できない場合は、文字サイズを標準で表示します。',
+          oldHeading: '4. sessionStorage',
+          oldItem: 'sessionStorageを利用できない場合は標準サイズで表示します。'
+        }
+      : {
+          heading: '4. Temporary text-size storage (sessionStorage)',
+          item: "If the browser's sessionStorage feature (temporary storage that keeps data only while the same tab remains open) is unavailable, the site displays the standard text size.",
+          oldHeading: '4. sessionStorage',
+          oldItem: 'If sessionStorage is unavailable, the site displays the standard text size.'
+        };
+  for (const value of [sessionContract.heading, sessionContract.item]) {
+    if (!source.includes(escapeHtml(value)))
+      results.push(siteError('SITE-E005', target, '合意済みのsessionStorage説明がありません。'));
+  }
+  for (const value of [sessionContract.oldHeading, sessionContract.oldItem]) {
+    if (source.includes(escapeHtml(value)))
+      results.push(siteError('SITE-E005', target, '旧sessionStorage説明が残っています。'));
+  }
+  if (source.includes('undefined') || /<p>\s*<\/p>/.test(source))
+    results.push(
+      siteError('SITE-E005', target, 'プライバシーポリシーに未定義値または空行があります。')
+    );
+  return results;
 }
 
 function productionHtmlContract(source, file, inputs) {
@@ -235,23 +356,28 @@ function productionHtmlContract(source, file, inputs) {
       results.push(siteError('SITE-E005', target, `production禁止文言があります: ${marker}`));
   }
 
-  const anchors = anchorAttributes(source);
+  const anchors = anchorElements(source);
   for (const { href, attributes } of anchors.filter(({ href }) => /^https:\/\//.test(href))) {
-    if (!/\btarget="_blank"/.test(attributes))
+    if (attributes.target !== '_blank')
       results.push(siteError('SITE-E005', target, `外部リンクにtargetがありません: ${href}`));
-    if (!/\brel="noopener noreferrer"/.test(attributes))
+    const rel = new Set((attributes.rel ?? '').split(/\s+/).filter(Boolean));
+    if (!rel.has('noopener') || !rel.has('noreferrer'))
       results.push(siteError('SITE-E005', target, `外部リンクに安全なrelがありません: ${href}`));
   }
 
-  if (/^(?:ja|en)\//.test(file)) {
-    const locale = file.split('/')[0];
-    const expectedContact = inputs.navigations[locale].site.contact_url;
-    const otherLocale = locale === 'ja' ? 'en' : 'ja';
-    const wrongContact = inputs.navigations[otherLocale].site.contact_url;
-    if (!source.includes(`href="${expectedContact}"`))
-      results.push(siteError('SITE-E005', target, '言語別問い合わせリンクがありません。'));
-    if (wrongContact !== expectedContact && source.includes(wrongContact))
-      results.push(siteError('SITE-E005', target, '別言語の問い合わせURLが混入しています。'));
+  const localizedPage = /^(?:ja|en)\//.test(file);
+  if (!localizedPage) {
+    if (
+      source.includes('<footer') ||
+      Object.values(inputs.uiLocales).some(({ footer }) => source.includes(footer.contact_url))
+    )
+      results.push(
+        siteError(
+          'SITE-E005',
+          target,
+          'ルート言語選択ページと404ページへ問い合わせ導線を追加できません。'
+        )
+      );
   }
   if (isNotFound && anchors.some(({ href }) => /^https:\/\//.test(href)))
     results.push(siteError('SITE-E005', target, '404.htmlへ外部リンクを含められません。'));
@@ -365,6 +491,8 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
     if (file.endsWith('.html') && expected.has(file)) {
       htmlByFile.set(file, source);
       results.push(...htmlBaseContract(source, file, inputs));
+      results.push(...localizedContactHtmlContract(source, file, inputs));
+      results.push(...privacyHtmlContract(source, file, inputs));
       results.push(
         ...(inputs.mode === 'preview'
           ? previewHtmlContract(source, file, inputs)

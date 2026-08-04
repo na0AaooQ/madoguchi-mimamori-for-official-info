@@ -78,6 +78,7 @@
   },
   "privacy": {
     "established": "Established: August 3, 2026",
+    "last_revised": "Last revised: August 5, 2026",
     "operator_heading": "1. Operator",
     "operator_prefix": "Sole Proprietor (Business name: Kokoro Mimamori)",
     "operator_name": "Naohisa Aoki",
@@ -95,23 +96,23 @@
       "The site does not use advertising, affiliate marketing, or analytics tools.",
       "The site does not use cookies or localStorage."
     ],
-    "session_heading": "4. sessionStorage",
+    "session_heading": "4. Temporary text-size storage (sessionStorage)",
     "session_items": [
       "The site stores only standard or large to keep your selected text size while you move between pages in the same tab.",
       "It does not store organization names, browsing history, URLs, search terms, or personal information.",
       "It does not send the saved value to a server or external service, and does not retain it after the tab is closed.",
-      "If sessionStorage is unavailable, the site displays the standard text size."
+      "If the browser's sessionStorage feature (temporary storage that keeps data only while the same tab remains open) is unavailable, the site displays the standard text size."
     ],
     "external_heading": "5. External sites",
     "external_items": [
-      "The future production version will lead to external sites of public institutions, related organizations, and the contact destination.",
-      "The destination's privacy policy and other terms apply after leaving this site. This site does not control information collected or stored by an external site.",
-      "Fictional destination and contact URLs are not links in this preview. Only the operator name opens the specified profile in a new tab."
+      "In this preview, destinations for public institutions and related organizations use fictional URLs and are not links.",
+      "The contact page and operator profile are real external pages and open in a new tab.",
+      "The destination's privacy policy and other terms apply after leaving this site. This site does not control information collected or stored by an external site."
     ],
     "contact_heading": "6. Contact",
     "contact_items": [
-      "This site does not provide a contact form and instead points to an external contact page.",
-      "In this preview, the fictional contact URL is shown as text and is not a link."
+      "This site does not provide a contact form and instead links to an external portfolio contact page.",
+      "The external page's privacy policy applies there."
     ],
     "logs_heading": "7. Hosting and access logs",
     "logs_items": [
@@ -125,8 +126,9 @@
     "home": "Home",
     "organizations": "All Organizations and Destinations",
     "privacy": "Privacy Policy",
-    "contact": "Contact information",
-    "contact_prefix": "Contact destination (fictional URL; cannot be opened):",
+    "contact": "Contact",
+    "contact_url": "https://portfolio.na0aaooq.com/en/contact.html",
+    "contact_link_label": "Open the contact page in a new tab",
     "free_notice": "Free, no ads, and no sign-in required",
     "copyright": "© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved."
   }

@@ -93,6 +93,7 @@
   },
   "privacy": {
     "established": "制定日: 2026年8月4日",
+    "last_revised": "最終改定日: 2026年8月5日",
     "operator_heading": "1. 運営者",
     "operator_prefix": "個人事業主(屋号: こころみまもり)",
     "operator_name": "青木 直之 (あおき なおひさ)",
@@ -110,12 +111,12 @@
       "広告、アフィリエイト、アクセス解析ツールを使用しません。",
       "CookieとlocalStorageを使用しません。"
     ],
-    "session_heading": "4. sessionStorage",
+    "session_heading": "4. 文字サイズ設定の一時保存（sessionStorage）",
     "session_items": [
       "選択した文字サイズを同じタブ内のページ移動で維持するため、standardまたはlargeだけを保存します。",
       "団体名、閲覧履歴、URL、検索内容、個人情報は保存しません。",
       "保存値をサーバーや外部サービスへ送信せず、タブを閉じた後まで永続保存しません。",
-      "sessionStorageを利用できない場合は標準サイズで表示します。"
+      "WebブラウザのsessionStorage（同じタブを開いている間だけ、一時的にブラウザ内へデータを保存できる仕組み）を利用できない場合は、文字サイズを標準で表示します。"
     ],
     "external_heading": "5. 外部サイト",
     "external_items": [
@@ -140,7 +141,8 @@
     "organizations": "全団体・案内先一覧",
     "privacy": "プライバシーポリシー",
     "contact": "問い合わせ",
-    "contact_prefix": "問い合わせ先:",
+    "contact_url": "https://portfolio.na0aaooq.com/contact.html",
+    "contact_link_label": "問い合わせページを新しいタブで開く",
     "free_notice": "無料・広告なし・ログイン不要",
     "copyright": "© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved."
   }
