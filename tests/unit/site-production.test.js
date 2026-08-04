@@ -82,11 +82,54 @@ test('uses language-specific contacts and safe clickable external links', () => 
   assert.doesNotMatch(english, /href="https:\/\/portfolio\.na0aaooq\.com\/contact\.html"/);
   const section = artifacts.get('ja/sections/public-institutions-disaster/index.html');
   assert.match(section, /href="https:\/\/portal\.bousai\.pref\.kumamoto\.jp\/"/);
-  for (const source of [japanese, english, section]) {
+  for (const [file, source] of artifacts) {
+    if (!file.endsWith('.html')) continue;
+    if (!/^(?:ja|en)\//.test(file)) {
+      assert.doesNotMatch(source, /<footer|portfolio\.na0aaooq\.com\/(?:en\/)?contact\.html/);
+      continue;
+    }
+    const locale = file.split('/')[0];
+    const ui = inputs.uiLocales[locale];
+    const contactAnchor = `<a href="${ui.footer.contact_url}" target="_blank" rel="noopener noreferrer" aria-label="${ui.footer.contact_link_label}">${ui.footer.contact}</a>`;
+    assert.equal(source.split(contactAnchor).length - 1, 1, file);
+    assert.equal(source.split(ui.footer.contact_url).length - 1, 1, file);
+    assert.doesNotMatch(source, /href="#contact-information"|id="contact-information"/);
+    assert.doesNotMatch(
+      source,
+      new RegExp(
+        inputs.uiLocales[locale === 'ja' ? 'en' : 'ja'].footer.contact_url.replaceAll('.', '\\.')
+      )
+    );
     for (const match of source.matchAll(/<a\b[^>]*href="https:\/\/[^>]+>/g)) {
       assert.match(match[0], /target="_blank"/);
       assert.match(match[0], /rel="noopener noreferrer"/);
     }
+  }
+});
+
+test('keeps production privacy text outside BL-003 unchanged and adds the approved revisions', () => {
+  const artifacts = buildSiteArtifacts(inputs);
+  const japanese = artifacts.get('ja/privacy/index.html');
+  const english = artifacts.get('en/privacy/index.html');
+  assert.match(japanese, /制定日: 2026年8月4日/);
+  assert.match(japanese, /最終改定日: 2026年8月5日/);
+  assert.match(japanese, /4\. 文字サイズ設定の一時保存（sessionStorage）/);
+  assert.match(
+    japanese,
+    /公的機関・関係団体の案内先、問い合わせ先、運営者プロフィールは外部サイトです。/
+  );
+  assert.match(english, /Established: August 4, 2026/);
+  assert.match(english, /Last revised: August 5, 2026/);
+  assert.match(english, /4\. Temporary text-size storage \(sessionStorage\)/);
+  assert.match(
+    english,
+    /Destinations of public institutions and related organizations, the contact page, and the operator profile are external sites\./
+  );
+  for (const source of [japanese, english]) {
+    assert.doesNotMatch(
+      source,
+      /4\. sessionStorage|sessionStorageを利用できない場合は標準サイズで表示します。|If sessionStorage is unavailable, the site displays the standard text size\./
+    );
   }
 });
 

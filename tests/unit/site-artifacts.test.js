@@ -198,6 +198,120 @@ test('rejects an unsafe operator profile URL', async (t) => {
   );
 });
 
+test('detects every footer contact-link contract regression', async (t) => {
+  const contactUrl = 'https://portfolio.na0aaooq.com/contact.html';
+  const contactAnchor = `<a href="${contactUrl}" target="_blank" rel="noopener noreferrer" aria-label="問い合わせページを新しいタブで開く">問い合わせ</a>`;
+  for (const { name, mutate, expected } of [
+    {
+      name: 'internal anchor',
+      mutate: (source) => source.replace(`href="${contactUrl}"`, 'href="#contact-information"'),
+      expected: '内部アンカー'
+    },
+    {
+      name: 'contact-information ID',
+      mutate: (source) =>
+        source.replace(
+          '<footer class="site-footer">',
+          '<footer id="contact-information" class="site-footer">'
+        ),
+      expected: 'contact-information ID'
+    },
+    {
+      name: 'duplicate URL row',
+      mutate: (source) =>
+        source.replace(
+          '<footer class="site-footer">',
+          `<p>${contactUrl}</p>\n  <footer class="site-footer">`
+        ),
+      expected: 'href以外へ重複表示'
+    },
+    {
+      name: 'missing target',
+      mutate: (source) => source.replace(' target="_blank"', ''),
+      expected: 'target="_blank"'
+    },
+    {
+      name: 'missing noopener',
+      mutate: (source) => source.replace('rel="noopener noreferrer"', 'rel="noreferrer"'),
+      expected: 'noopenerとnoreferrer'
+    },
+    {
+      name: 'missing noreferrer',
+      mutate: (source) => source.replace('rel="noopener noreferrer"', 'rel="noopener"'),
+      expected: 'noopenerとnoreferrer'
+    },
+    {
+      name: 'wrong aria-label',
+      mutate: (source) =>
+        source.replace('aria-label="問い合わせページを新しいタブで開く"', 'aria-label="不一致"'),
+      expected: 'aria-label'
+    },
+    {
+      name: 'English URL on Japanese page',
+      mutate: (source) =>
+        source.replace(contactUrl, 'https://portfolio.na0aaooq.com/en/contact.html'),
+      expected: '別言語'
+    },
+    {
+      name: 'duplicate contact anchor',
+      mutate: (source) => source.replace(contactAnchor, `${contactAnchor}${contactAnchor}`),
+      expected: '1件必要'
+    }
+  ]) {
+    await t.test(name, async (t) => {
+      const root = await createSiteRepositoryCopy(t);
+      const file = path.join(root, 'dist/site/preview/ja/index.html');
+      await writeFile(file, mutate(await readFile(file, 'utf8')));
+      const results = await validateSiteRepository(root, 'preview');
+      assert.ok(
+        results.some(({ message }) => message.includes(expected)),
+        JSON.stringify(results)
+      );
+    });
+  }
+});
+
+test('rejects contact links on the production root and 404 pages', async (t) => {
+  for (const relative of ['index.html', '404.html']) {
+    await t.test(relative, async (t) => {
+      const root = await createSiteRepositoryCopy(t);
+      const file = path.join(root, 'dist/site/production', relative);
+      await writeFile(
+        file,
+        (await readFile(file, 'utf8')).replace(
+          '<main id="main-content">',
+          '<footer>https://portfolio.na0aaooq.com/contact.html</footer>\n    <main id="main-content">'
+        )
+      );
+      const results = await validateSiteRepository(root, 'production');
+      assert.ok(
+        results.some(({ message }) => message.includes('ルート言語選択ページと404ページ')),
+        JSON.stringify(results)
+      );
+    });
+  }
+});
+
+test('detects mixed old and new privacy sessionStorage wording', async (t) => {
+  const root = await createSiteRepositoryCopy(t);
+  const file = path.join(root, 'dist/site/preview/en/privacy/index.html');
+  await writeFile(
+    file,
+    (await readFile(file, 'utf8'))
+      .replace(
+        '4. Temporary text-size storage (sessionStorage)',
+        '4. Temporary text-size storage (sessionStorage) / 4. sessionStorage'
+      )
+      .replace(
+        'If the browser&#39;s sessionStorage feature (temporary storage that keeps data only while the same tab remains open) is unavailable, the site displays the standard text size.',
+        'If sessionStorage is unavailable, the site displays the standard text size.'
+      )
+  );
+  const results = await validateSiteRepository(root, 'preview');
+  assert.ok(results.some(({ message }) => message.includes('旧sessionStorage説明')));
+  assert.ok(results.some(({ message }) => message.includes('合意済みのsessionStorage説明')));
+});
+
 test('does not mix preview and production navigation artifact types', async (t) => {
   const productionRoot = await createSiteRepositoryCopy(t);
   const production = await readJson(
