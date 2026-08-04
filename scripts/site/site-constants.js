@@ -1,9 +1,21 @@
 export const SITE_LOCALES = Object.freeze(['ja', 'en']);
 
-export const SITE_ASSET_SOURCE_PATHS = Object.freeze({
+export const SITE_TEXT_ASSET_SOURCE_PATHS = Object.freeze({
   'assets/styles.css': 'site/assets/styles.css',
-  'assets/font-size.js': 'site/assets/font-size.js'
+  'assets/font-size.js': 'site/assets/font-size.js',
+  'favicon.svg': 'site/assets/favicon.svg'
 });
+
+export const SITE_BINARY_ASSET_SOURCE_PATHS = Object.freeze({
+  'favicon.ico': 'site/assets/favicon.ico',
+  'apple-touch-icon.png': 'site/assets/apple-touch-icon.png'
+});
+
+export const SITE_ICON_PATHS = Object.freeze([
+  'favicon.ico',
+  'favicon.svg',
+  'apple-touch-icon.png'
+]);
 
 export const SITE_MODES = Object.freeze({
   preview: Object.freeze({

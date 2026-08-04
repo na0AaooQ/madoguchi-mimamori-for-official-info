@@ -14,8 +14,11 @@ const inputs = await loadInputs();
 
 test('builds the complete deterministic Japanese and English preview site', () => {
   const first = buildSiteArtifacts(inputs);
-  const second = buildSiteArtifacts(structuredClone(inputs));
-  assert.equal(first.size, 18);
+  const cloned = structuredClone(inputs);
+  cloned.assets['favicon.ico'] = Buffer.from(cloned.assets['favicon.ico']);
+  cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
+  const second = buildSiteArtifacts(cloned);
+  assert.equal(first.size, 21);
   assert.deepEqual([...first], [...second]);
   assert.deepEqual([...first.keys()].sort(), expectedSiteArtifactPaths(inputs.navigations));
   for (const locale of ['ja', 'en']) {
@@ -38,6 +41,33 @@ test('generated HTML contains semantic structure and only approved operator prof
     assert.match(source, /<main id="main-content">/);
     assert.match(source, /<footer/);
     assert.match(source, /noindex, nofollow, noarchive/);
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<link rel="icon" href="\/preview\/favicon\.ico" sizes="16x16 32x32 48x48">/g
+        )
+      ].length,
+      1,
+      file
+    );
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<link rel="icon" href="\/preview\/favicon\.svg" type="image\/svg\+xml" sizes="any">/g
+        )
+      ].length,
+      1,
+      file
+    );
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<link rel="apple-touch-icon" href="\/preview\/apple-touch-icon\.png" sizes="180x180">/g
+        )
+      ].length,
+      1,
+      file
+    );
     assert.doesNotMatch(source, /<details\s+open/);
     if (file === 'ja/privacy/index.html') {
       assert.match(
@@ -101,7 +131,14 @@ test('derives changed section paths without fixing the section count in code', (
   const paths = expectedSiteArtifactPaths(changed.navigations);
   assert.ok(paths.includes('ja/sections/extra-fictional/index.html'));
   assert.ok(paths.includes('en/sections/extra-fictional/index.html'));
-  assert.equal(paths.length, 20);
+  assert.equal(paths.length, 23);
+});
+
+test('keeps text and binary site icon artifacts in their native representations', () => {
+  const artifacts = buildSiteArtifacts(inputs);
+  assert.equal(typeof artifacts.get('favicon.svg'), 'string');
+  assert.equal(Buffer.isBuffer(artifacts.get('favicon.ico')), true);
+  assert.equal(Buffer.isBuffer(artifacts.get('apple-touch-icon.png')), true);
 });
 
 test('escapes all HTML-sensitive characters', () => {

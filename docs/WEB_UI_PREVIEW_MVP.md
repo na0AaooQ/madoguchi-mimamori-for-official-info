@@ -11,7 +11,7 @@ Git管理中の`fictional-preview`公開データから、日本語・英語の�
 - `dist/public-data/preview/ja/navigation.json`
 - `dist/public-data/preview/en/navigation.json`
 
-画面固有文言は`site/locales/{ja,en}.json`、共通CSSと補助JavaScriptは`site/assets/`で管理します。画面用localeは固定構造、日英同一キー、必須文言、想定外キー、生HTML禁止を検証します。団体名、カード、案内先は画面用localeへ重複させません。
+画面固有文言は`site/locales/{ja,en}.json`、共通CSS、補助JavaScript、正式サイトアイコンは`site/assets/`で管理します。画面用localeは固定構造、日英同一キー、必須文言、想定外キー、生HTML禁止を検証します。団体名、カード、案内先は画面用localeへ重複させません。SVGはUTF-8テキスト、ICOとPNGはバイト列として生成・検証します。
 
 `dist/site/preview/`は生成成果物であり、直接編集しません。入力、画面用locale、テンプレート、CSSソース、JavaScriptソースを変更して再生成します。
 
@@ -23,8 +23,11 @@ Git管理中の`fictional-preview`公開データから、日本語・英語の�
 - `/preview/{ja,en}/privacy/`
 - `/preview/assets/styles.css`
 - `/preview/assets/font-size.js`
+- `/preview/favicon.svg`
+- `/preview/favicon.ico`
+- `/preview/apple-touch-icon.png`
 
-section数は固定せず、日英`navigation.json`の対応する`sections`から期待ページを導出します。現在は日本語8ページ、英語8ページ、共通アセット2件の合計18ファイルです。
+section数は固定せず、日英`navigation.json`の対応する`sections`から期待ページを導出します。現在は日本語8ページ、英語8ページ、共通アセット5件の合計21ファイルです。
 
 ## データ変換
 

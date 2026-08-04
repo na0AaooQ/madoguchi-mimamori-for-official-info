@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { TextDecoder } from 'node:util';
 
 import { createResult, sortResults } from '../validation/result.js';
 import {
@@ -8,8 +9,18 @@ import {
   expectedSiteArtifactPaths,
   productionSitemapUrls
 } from './site-builder.js';
-import { SITE_GENERATOR_NAME, SITE_LOCALES, SiteRuntimeError } from './site-constants.js';
+import {
+  SITE_GENERATOR_NAME,
+  SITE_ICON_PATHS,
+  SITE_LOCALES,
+  SiteRuntimeError
+} from './site-constants.js';
+import { validateSiteIcon } from './site-icon-validator.js';
 import { loadSiteInputs } from './site-input-loader.js';
+import { joinSitePath } from './site-url.js';
+
+const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
+const TEXT_ARTIFACT_EXTENSIONS = new Set(['.html', '.css', '.js', '.xml', '.svg']);
 
 function siteError(code, file, message) {
   return createResult({
@@ -43,6 +54,16 @@ function count(source, pattern) {
   return [...source.matchAll(pattern)].length;
 }
 
+function isTextArtifact(file) {
+  return TEXT_ARTIFACT_EXTENSIONS.has(path.extname(file));
+}
+
+function artifactEquals(expected, actual) {
+  if (typeof expected === 'string' && typeof actual === 'string') return expected === actual;
+  if (Buffer.isBuffer(expected) && Buffer.isBuffer(actual)) return expected.equals(actual);
+  return false;
+}
+
 function outputFile(inputs, file) {
   return `${inputs.config.outputRoot}/${file}`;
 }
@@ -64,6 +85,7 @@ function htmlBaseContract(source, file, inputs) {
     results.push(siteError('SITE-E005', target, 'detailsを初期openにできません。'));
   if (/<summary\b[^>]*\srole=/.test(source))
     results.push(siteError('SITE-E005', target, 'summaryへ不要なroleを設定できません。'));
+  results.push(...siteIconHtmlContract(source, file, inputs));
 
   const localizedPage = /^(?:ja|en)\//.test(file);
   if (localizedPage) {
@@ -80,6 +102,73 @@ function htmlBaseContract(source, file, inputs) {
   for (const forbidden of ['internal_note', 'display_order', 'publication_status']) {
     if (source.includes(forbidden))
       results.push(siteError('SITE-E005', target, `公開対象外の文字列が含まれます: ${forbidden}`));
+  }
+  return results;
+}
+
+function linkElements(source) {
+  return [...source.matchAll(/<link\b([^>]*)>/g)].map((element) => {
+    const attributes = {};
+    for (const attribute of element[1].matchAll(/(?:^|\s)([^\s=/>]+)(?:\s*=\s*"([^"]*)")?/g))
+      attributes[attribute[1]] = attribute[2] ?? '';
+    return attributes;
+  });
+}
+
+function siteIconHtmlContract(source, file, inputs) {
+  const target = outputFile(inputs, file);
+  const expected = [
+    {
+      rel: 'icon',
+      href: joinSitePath(inputs.siteUrl.basePath, 'favicon.ico'),
+      sizes: '16x16 32x32 48x48'
+    },
+    {
+      rel: 'icon',
+      href: joinSitePath(inputs.siteUrl.basePath, 'favicon.svg'),
+      type: 'image/svg+xml',
+      sizes: 'any'
+    },
+    {
+      rel: 'apple-touch-icon',
+      href: joinSitePath(inputs.siteUrl.basePath, 'apple-touch-icon.png'),
+      sizes: '180x180'
+    }
+  ];
+  const iconLinks = linkElements(source).filter(({ rel = '' }) => {
+    const tokens = rel.split(/\s+/);
+    return tokens.includes('icon') || tokens.includes('apple-touch-icon');
+  });
+  const results = [];
+  if (iconLinks.length !== expected.length)
+    results.push(siteError('SITE-E005', target, 'サイトアイコンのlink要素は3件必要です。'));
+
+  for (const contract of expected) {
+    const matches = iconLinks.filter(
+      ({ rel, href }) => rel === contract.rel && href === contract.href
+    );
+    if (matches.length !== 1) {
+      results.push(
+        siteError(
+          'SITE-E005',
+          target,
+          `${contract.href}を参照するrel="${contract.rel}"のlink要素は1件必要です。`
+        )
+      );
+      continue;
+    }
+    const [attributes] = matches;
+    if (attributes.sizes !== contract.sizes)
+      results.push(siteError('SITE-E005', target, `${contract.href}のsizes属性が不正です。`));
+    if ((contract.type ?? '') !== (attributes.type ?? ''))
+      results.push(siteError('SITE-E005', target, `${contract.href}のtype属性が不正です。`));
+  }
+  for (const attributes of iconLinks) {
+    if (!expected.some(({ rel, href }) => attributes.rel === rel && attributes.href === href)) {
+      results.push(
+        siteError('SITE-E005', target, 'modeに一致しないサイトアイコン参照があります。')
+      );
+    }
   }
   return results;
 }
@@ -253,12 +342,26 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
   for (const file of actualPaths) {
     let source;
     try {
-      source = await readFile(path.join(root, file), 'utf8');
+      const bytes = await readFile(path.join(root, file));
+      if (isTextArtifact(file)) {
+        try {
+          source = utf8Decoder.decode(bytes);
+        } catch {
+          results.push(
+            siteError('SITE-E005', outputFile(inputs, file), 'UTF-8テキストとして読めません。')
+          );
+          continue;
+        }
+      } else source = bytes;
     } catch (error) {
       throw new SiteRuntimeError('SITE-RUN-E002', outputFile(inputs, file), error.message, error);
     }
-    if (!source.endsWith('\n'))
+    if (typeof source === 'string' && !source.endsWith('\n'))
       results.push(siteError('SITE-E005', outputFile(inputs, file), '末尾改行がありません。'));
+    if (SITE_ICON_PATHS.includes(file)) {
+      for (const message of validateSiteIcon(file, source))
+        results.push(siteError('SITE-E005', outputFile(inputs, file), message));
+    }
     if (file.endsWith('.html') && expected.has(file)) {
       htmlByFile.set(file, source);
       results.push(...htmlBaseContract(source, file, inputs));
@@ -285,7 +388,7 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
     }
     if (inputs.mode === 'production' && file === 'sitemap.xml')
       results.push(...validateSitemap(source, inputs));
-    if (compareExpected && built.get(file) !== source)
+    if (compareExpected && !artifactEquals(built.get(file), source))
       results.push(
         siteError(
           'SITE-E006',
@@ -303,7 +406,9 @@ async function writeMap(root, artifacts) {
   for (const [relative, source] of artifacts) {
     const target = path.join(root, relative);
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, source, 'utf8');
+    if (typeof source === 'string') await writeFile(target, source, 'utf8');
+    else if (Buffer.isBuffer(source)) await writeFile(target, source);
+    else throw new TypeError(`未対応のサイト成果物型です: ${relative}`);
   }
 }
 

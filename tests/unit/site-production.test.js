@@ -13,10 +13,13 @@ const repoRoot = path.resolve(import.meta.dirname, '../..');
 const inputs = await loadSiteInputs(repoRoot, 'production');
 if (inputs.results.length > 0) throw new Error(JSON.stringify(inputs.results));
 
-test('builds the deterministic 15-file production site from production navigation only', () => {
+test('builds the deterministic 18-file production site from production navigation only', () => {
   const first = buildSiteArtifacts(inputs);
-  const second = buildSiteArtifacts(structuredClone(inputs));
-  assert.equal(first.size, 15);
+  const cloned = structuredClone(inputs);
+  cloned.assets['favicon.ico'] = Buffer.from(cloned.assets['favicon.ico']);
+  cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
+  const second = buildSiteArtifacts(cloned);
+  assert.equal(first.size, 18);
   assert.deepEqual([...first], [...second]);
   assert.deepEqual(
     [...first.keys()].sort(),
@@ -40,6 +43,30 @@ test('generates accessible indexable production HTML and only the 404 is noindex
     assert.doesNotMatch(source, /<summary\b[^>]*\srole=/, file);
     assert.doesNotMatch(source, /tabindex="[1-9]/, file);
     assert.doesNotMatch(source, /\/preview\/|example\.invalid/, file);
+    assert.equal(
+      [...source.matchAll(/<link rel="icon" href="\/favicon\.ico" sizes="16x16 32x32 48x48">/g)]
+        .length,
+      1,
+      file
+    );
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml" sizes="any">/g
+        )
+      ].length,
+      1,
+      file
+    );
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<link rel="apple-touch-icon" href="\/apple-touch-icon\.png" sizes="180x180">/g
+        )
+      ].length,
+      1,
+      file
+    );
     if (file === '404.html') assert.match(source, /<meta name="robots" content="noindex">/);
     else assert.doesNotMatch(source, /<meta name="robots"/);
   }
