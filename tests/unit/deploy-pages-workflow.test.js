@@ -40,3 +40,10 @@ test('Pages workflow checks base URL before upload and deploys after build', () 
   assert.match(workflow, /name: github-pages/);
   assert.match(workflow, /url: \$\{\{ steps\.deployment\.outputs\.page_url \}\}/);
 });
+
+test('Pages workflow fetches full Git history for baseline checks', () => {
+  assert.match(
+    workflow,
+    /- name: Checkout\n {8}uses: actions\/checkout@v6\n {8}with:\n {10}fetch-depth: 0/
+  );
+});
