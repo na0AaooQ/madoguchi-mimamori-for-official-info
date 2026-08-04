@@ -1,0 +1,147 @@
+{
+  "locale": "en",
+  "language_name": "English",
+  "alternate_language_name": "日本語",
+  "skip_link": "Skip to main content",
+  "navigation_label": "Common navigation",
+  "language_switch_label": "Switch the display language to Japanese",
+  "font_size": { "label": "Text size", "standard": "Standard", "large": "Large" },
+  "root": {
+    "title": "Select a language",
+    "heading": "まどぐちみまもり｜Madoguchi Mimamori",
+    "description_ja": "熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。",
+    "description_en": "A guide to official information published by public institutions and related organizations serving Kumamoto Prefecture and Kumamoto City.",
+    "unofficial_ja": "行政機関が運営する公式サイトではありません。",
+    "unofficial_en": "This is not an official government website.",
+    "japanese_link": "日本語で見る",
+    "english_link": "View in English"
+  },
+  "not_found": {
+    "title": "Page not found",
+    "heading": "ページが見つかりません｜Page not found",
+    "body_ja": "指定されたページは見つかりませんでした。",
+    "body_en": "The requested page could not be found.",
+    "root_link": "言語選択へ戻る｜Return to language selection",
+    "japanese_link": "日本語トップへ",
+    "english_link": "English home"
+  },
+  "pages": {
+    "home_title": "Home",
+    "home_heading": "Find official information to check",
+    "sections_heading": "Find information by topic",
+    "sections_intro": "Choose the topic closest to the information you want to check.",
+    "organizations_title": "All Organizations and Destinations",
+    "organizations_intro": "Review published organizations and destinations by organization name. You can also use your browser's find-in-page feature.",
+    "privacy_title": "Privacy Policy",
+    "section_back": "Return to the home page",
+    "empty_section": "There is currently no guidance to display in this topic. Return to the home page to check another topic.",
+    "organizations_link": "Find information in the full organization and destination list",
+    "situation_notice": "This site does not determine current disaster conditions or whether information is true."
+  },
+  "roles": {
+    "primary": "Main destinations",
+    "temporary-highlight": "Temporarily listed destinations",
+    "secondary": "Related destinations"
+  },
+  "visibility": {
+    "always": "Normal and disaster situations",
+    "normal": "Normal situations",
+    "disaster": "Disaster situations"
+  },
+  "destination_categories": {
+    "official_site": "Official websites",
+    "official_information": "Official information pages",
+    "official_channel": "Official information channels"
+  },
+  "fields": {
+    "region": "Area",
+    "organization": "Organization",
+    "destination_name": "Destination name",
+    "purpose": "Purpose",
+    "usage": "When to use",
+    "language_note": "Destination language",
+    "public_note": "Note",
+    "destination_checked_on": "Destination checked on",
+    "official_information_checked_on": "Official-information status checked on",
+    "platform": "Platform",
+    "account_id": "Account ID",
+    "url": "URL"
+  },
+  "destination": {
+    "external_notice": "This link opens an external site. The destination site's policies apply after you leave this site. Check the linked site directly for current information.",
+    "official_name_fallback": "This guide has not confirmed an official English name, so the official Japanese name is displayed.",
+    "external_link_label": "Open in a new tab"
+  },
+  "about": {
+    "summary": "About this site",
+    "items": [
+      "This guide helps you find the responsible public institution or related organization by topic and continue to that organization's own official announcement.",
+      "It is not an official government website.",
+      "It is not a breaking-news service, news site, or fact-checking service.",
+      "It does not rate organizations or sources, or provide AI summaries or decisions."
+    ]
+  },
+  "usage": {
+    "summary": "Before using this site",
+    "items": [
+      "Listing does not recommend an organization as a whole or guarantee its reliability.",
+      "This site does not guarantee the accuracy, completeness, or currency of destination information. Check the organization's own official announcements directly for current information.",
+      "For evacuation and safety decisions during a disaster, follow the latest information from the relevant authorities.",
+      "Display order does not represent importance, reliability, accuracy, or recommendation. Destination groups and usage situations do not represent importance or urgency.",
+      "The destination site's policies apply after you leave this site."
+    ]
+  },
+  "privacy": {
+    "established": "Established: August 4, 2026",
+    "operator_heading": "1. Operator",
+    "operator_prefix": "Sole Proprietor (Business name: Kokoro Mimamori)",
+    "operator_name": "Naohisa Aoki",
+    "operator_url": "https://portfolio.na0aaooq.com/en/about.html",
+    "operator_link_label": "Open Naohisa Aoki's profile in a new tab",
+    "input_heading": "2. Input and registration on this site",
+    "input_items": [
+      "The site does not provide an input form.",
+      "The site does not provide sign-in or account registration.",
+      "The site does not ask you to enter or submit a name, email address, street address, or similar information."
+    ],
+    "unused_heading": "3. Features and services not used",
+    "unused_items": [
+      "The site does not use AI, external APIs, web search, automated collection, RSS, crawling, or scraping.",
+      "The site does not use advertising, affiliate marketing, or analytics tools.",
+      "The site does not use cookies or localStorage."
+    ],
+    "session_heading": "4. sessionStorage",
+    "session_items": [
+      "The site stores only standard or large to keep your selected text size while you move between pages in the same tab.",
+      "It does not store organization names, browsing history, URLs, search terms, or personal information.",
+      "It does not send the saved value to a server or external service, and does not retain it after the tab is closed.",
+      "If sessionStorage is unavailable, the site displays the standard text size."
+    ],
+    "external_heading": "5. External sites",
+    "external_items": [
+      "Destinations of public institutions and related organizations, the contact page, and the operator profile are external sites.",
+      "The destination's privacy policy and other terms apply after leaving this site. This site does not control information collected or stored by an external site."
+    ],
+    "contact_heading": "6. Contact",
+    "contact_items": [
+      "This site does not provide a contact form and instead links to an external portfolio contact page.",
+      "The external page's privacy policy applies there."
+    ],
+    "logs_heading": "7. Hosting and technical information",
+    "logs_items": [
+      "This site is hosted on GitHub Pages. The hosting provider may process technical information required for delivery, such as IP addresses, user agents, and access times.",
+      "The operator has not added independent analytics, advertising, or tracking."
+    ],
+    "revision_heading": "8. Revisions",
+    "revision_items": ["Changes to this policy will be announced on this page."]
+  },
+  "footer": {
+    "home": "Home",
+    "organizations": "All Organizations and Destinations",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "contact_prefix": "Contact:",
+    "free_notice": "Free, no ads, and no sign-in required",
+    "copyright": "© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved."
+  }
+}

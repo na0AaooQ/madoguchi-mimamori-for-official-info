@@ -1,0 +1,147 @@
+{
+  "locale": "ja",
+  "language_name": "日本語",
+  "alternate_language_name": "English",
+  "skip_link": "本文へ移動",
+  "navigation_label": "共通ナビゲーション",
+  "language_switch_label": "表示言語を英語へ切り替える",
+  "font_size": { "label": "文字サイズ", "standard": "標準", "large": "大" },
+  "root": {
+    "title": "言語を選択",
+    "heading": "まどぐちみまもり｜Madoguchi Mimamori",
+    "description_ja": "熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。",
+    "description_en": "A guide to official information published by public institutions and related organizations serving Kumamoto Prefecture and Kumamoto City.",
+    "unofficial_ja": "行政機関が運営する公式サイトではありません。",
+    "unofficial_en": "This is not an official government website.",
+    "japanese_link": "日本語で見る",
+    "english_link": "View in English"
+  },
+  "not_found": {
+    "title": "ページが見つかりません",
+    "heading": "ページが見つかりません｜Page not found",
+    "body_ja": "指定されたページは見つかりませんでした。",
+    "body_en": "The requested page could not be found.",
+    "root_link": "言語選択へ戻る｜Return to language selection",
+    "japanese_link": "日本語トップへ",
+    "english_link": "English home"
+  },
+  "pages": {
+    "home_title": "トップページ",
+    "home_heading": "確認したい公式情報を探す",
+    "sections_heading": "分野から探す",
+    "sections_intro": "確認したい内容に近い分野を選んでください。",
+    "organizations_title": "全団体・案内先一覧",
+    "organizations_intro": "公開中の団体と案内先を団体名ごとに確認できます。ブラウザのページ内検索も利用できます。",
+    "privacy_title": "プライバシーポリシー",
+    "section_back": "トップページへ戻る",
+    "empty_section": "現在、この分野に表示できる案内はありません。トップページへ戻り、別の分野を確認してください。",
+    "organizations_link": "全団体・案内先一覧から探す",
+    "situation_notice": "このサイトは現在の災害発生状況や情報の真偽を判定しません。"
+  },
+  "roles": {
+    "primary": "主な案内先",
+    "temporary-highlight": "期間限定の案内先",
+    "secondary": "関連する案内先"
+  },
+  "visibility": {
+    "always": "平常時・災害時",
+    "normal": "平常時",
+    "disaster": "災害時"
+  },
+  "destination_categories": {
+    "official_site": "公式サイト",
+    "official_information": "公式情報ページ",
+    "official_channel": "公式発信元アカウント・チャンネル"
+  },
+  "fields": {
+    "region": "対象地域",
+    "organization": "団体",
+    "destination_name": "案内先名",
+    "purpose": "案内内容",
+    "usage": "利用場面",
+    "language_note": "リンク先の言語",
+    "public_note": "補足",
+    "destination_checked_on": "案内先確認日",
+    "official_information_checked_on": "公式情報確認日",
+    "platform": "プラットフォーム",
+    "account_id": "アカウントID",
+    "url": "URL"
+  },
+  "destination": {
+    "external_notice": "外部サイトへ移動します。移動後は、移動先の方針が適用されます。最新情報はリンク先で直接確認してください。",
+    "official_name_fallback": "この案内では公式英語名称を確認できていないため、日本語の正式名称を表示しています。",
+    "external_link_label": "新しいタブで開く"
+  },
+  "about": {
+    "summary": "このサイトについて",
+    "items": [
+      "確認したい内容から担当する公的機関・関係団体を探し、その団体自身の公式発表へ進むための案内です。",
+      "行政機関が運営する公式サイトではありません。",
+      "速報サイト、ニュースサイト、情報の真偽判定サービスではありません。",
+      "団体や情報源の格付け、AIによる要約・判断を行いません。"
+    ]
+  },
+  "usage": {
+    "summary": "ご利用にあたって",
+    "items": [
+      "一覧への掲載は、その団体全体の推奨や信頼性の保証を意味しません。",
+      "案内先情報の正確性、完全性、最新性を保証しません。最新情報は団体自身の公式発表で直接確認してください。",
+      "災害時の避難や安全に関する判断は、関係機関の最新情報に従ってください。",
+      "表示順は、重要度、信頼度、正確性、推奨順位を意味しません。案内先の区分や利用場面も重要度や緊急度を意味しません。",
+      "外部サイトへ移動した後は、移動先の方針が適用されます。"
+    ]
+  },
+  "privacy": {
+    "established": "制定日: 2026年8月4日",
+    "operator_heading": "1. 運営者",
+    "operator_prefix": "個人事業主(屋号: こころみまもり)",
+    "operator_name": "青木 直之 (あおき なおひさ)",
+    "operator_url": "https://portfolio.na0aaooq.com/about.html",
+    "operator_link_label": "青木 直之 (あおき なおひさ)のプロフィールを新しいタブで開く",
+    "input_heading": "2. サイト内での入力・登録",
+    "input_items": [
+      "サイト内に入力フォームを設けません。",
+      "ログインやアカウント登録を設けません。",
+      "氏名、メールアドレス、住所などをサイト内で入力・送信させません。"
+    ],
+    "unused_heading": "3. 使用しない機能・サービス",
+    "unused_items": [
+      "AI、外部API、Web検索、自動取得、RSS、クローリング、スクレイピングを使用しません。",
+      "広告、アフィリエイト、アクセス解析ツールを使用しません。",
+      "CookieとlocalStorageを使用しません。"
+    ],
+    "session_heading": "4. sessionStorage",
+    "session_items": [
+      "選択した文字サイズを同じタブ内のページ移動で維持するため、standardまたはlargeだけを保存します。",
+      "団体名、閲覧履歴、URL、検索内容、個人情報は保存しません。",
+      "保存値をサーバーや外部サービスへ送信せず、タブを閉じた後まで永続保存しません。",
+      "sessionStorageを利用できない場合は標準サイズで表示します。"
+    ],
+    "external_heading": "5. 外部サイト",
+    "external_items": [
+      "公的機関・関係団体の案内先、問い合わせ先、運営者プロフィールは外部サイトです。",
+      "移動後は移動先のプライバシーポリシーなどが適用され、本サイトは外部サイト側の情報取得・保存を管理しません。"
+    ],
+    "contact_heading": "6. 問い合わせ",
+    "contact_items": [
+      "このサイト内に問い合わせフォームを設けず、外部のポートフォリオ問い合わせページへ案内します。",
+      "外部ページでは、そのページのプライバシーポリシーが適用されます。"
+    ],
+    "logs_heading": "7. ホスティング・技術情報",
+    "logs_items": [
+      "本サイトのホスティングにはGitHub Pagesを使用します。ホスティング提供者側で配信に必要なIPアドレス、ユーザーエージェント、閲覧日時などの技術情報が処理される可能性があります。",
+      "運営者は独自のアクセス解析、広告、トラッキングを追加していません。"
+    ],
+    "revision_heading": "8. 改定",
+    "revision_items": ["内容を変更した場合は、本ページ上で案内します。"]
+  },
+  "footer": {
+    "home": "トップページ",
+    "organizations": "全団体・案内先一覧",
+    "privacy": "プライバシーポリシー",
+    "contact": "問い合わせ",
+    "contact_prefix": "問い合わせ先:",
+    "free_notice": "無料・広告なし・ログイン不要",
+    "copyright": "© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved."
+  }
+}

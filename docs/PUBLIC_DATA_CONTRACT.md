@@ -4,7 +4,7 @@
 
 `navigation.json`は、管理用`data/`を画面へ直接渡さず、検証済みの公開可能情報だけを日英別に提供する公開成果物です。管理用の正規化データを公開カードからたどって非正規化し、画面が内部状態や確認根拠を読まなくても案内を構築できる形にします。
 
-架空preview Web画面MVPでは、日英`navigation.json`を公開案内情報の唯一の入力として、ビルド時に完成済み静的HTMLを生成します。ブラウザは主要表示のために本ファイルをfetchせず、画面生成処理も管理用`data/`を直接参照しません。
+previewとproductionの静的サイト生成では、各modeの日英`navigation.json`を公開案内情報の唯一の入力として、ビルド時に完成済み静的HTMLを生成します。ブラウザは主要表示のために本ファイルをfetchせず、画面生成処理も管理用`data/`を直接参照しません。
 
 ## 成果物とトップレベル
 
@@ -30,7 +30,7 @@
 
 ### site
 
-`site_id`、`default_locale`、`supported_locales`、`site_name`、`subtitle`、`short_description`、`purpose`、`free_use_notice`、`external_site_notice`、`disclaimer_summary`、`contact_url`を公開します。`site_last_checked_on`は公開可否判定だけに使い、成果物へ出力しません。
+`site_id`、`default_locale`、`supported_locales`、`site_name`、`subtitle`、`short_description`、`purpose`、`free_use_notice`、`external_site_notice`、`disclaimer_summary`、`contact_url`を公開します。`contact_url`は対象言語のsite Localeを優先し、省略時はCoreへフォールバックします。`site_last_checked_on`は公開可否判定だけに使い、成果物へ出力しません。
 
 ### sectionとcard
 
@@ -74,7 +74,7 @@ sections、同一sectionのcards、同一cardのlinksは`display_order`昇順、
 
 previewはpublished架空fixtureを基準日`2026-08-02`で生成し、`artifact_type: fictional-preview`とします。実在する団体、制度、URL、個人情報を含みません。
 
-productionは本番用`data/`から明示的な`--as-of`で生成します。現在の正本siteはdraftなので生成を`PUB-E001`で停止し、productionファイルを作りません。将来siteがpublishedになった場合は日英を一組として生成・検証します。正本が非公開へ戻ったのにproductionが残る場合は`PUB-E007`とし、自動削除せず削除差分を人が確認します。
+productionは本番用`data/`から明示的な`--as-of`で生成します。正本siteはpublishedで、2026年8月4日を基準日とする日英成果物を一組としてGit管理します。正本が非公開へ戻ったのにproductionが残る場合は`PUB-E007`とし、自動削除せず削除差分を人が確認します。
 
 ## Git管理、直接編集禁止、鮮度検証
 
@@ -84,4 +84,4 @@ productionは本番用`data/`から明示的な`--as-of`で生成します。現
 
 ## 対象外
 
-公開データ生成MVPは災害、出来事、災害関連、出来事関連、確認・更新履歴、実在情報、AWS、デプロイを扱いません。後続の架空preview Web画面MVPは本契約を入力にしますが、公開JSON契約自体は画面都合で拡張しません。
+公開データ生成は災害、出来事、災害関連、出来事関連、確認・更新履歴を扱いません。previewとproductionの静的サイトは本契約を入力にしますが、公開JSON契約自体を画面都合で拡張しません。デプロイ手順は[GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)に分離します。

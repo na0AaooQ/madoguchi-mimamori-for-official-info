@@ -72,7 +72,7 @@ JSON Schemaは、一つのレコードまたはファイル内部で宣言的に
 
 工程3-2Aと工程3-2Bでは、`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`のcore・locale 14 Schemaを正式化しています。対象外の11 Schemaは`maxItems: 0`を維持し、正式なitem Schemaがない状態でデータだけが追加されることを防ぎます。
 
-coreの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`では`site_last_checked_on`と`contact_url`の両方を必須とし、それ以外の公開状態では未確定の`contact_url`を省略できます。
+Coreとsite Localeの`contact_url`は、値が存在する場合は公開状態にかかわらずHTTPS URLだけを許可します。`site_publication_status: published`ではCoreの`site_last_checked_on`と`contact_url`を必須とします。Localeの`contact_url`は公開時も任意で、公開生成は対象言語のLocaleを優先し、省略時はCoreへフォールバックします。
 
 ## 本番用データ検証
 

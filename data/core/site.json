@@ -3,7 +3,9 @@
   "site_id": "madoguchi-mimamori",
   "default_locale": "ja",
   "supported_locales": ["ja", "en"],
-  "site_publication_status": "draft",
+  "site_publication_status": "published",
+  "site_last_checked_on": "2026-08-04",
+  "contact_url": "https://portfolio.na0aaooq.com/contact.html",
   "disaster_guidance_enabled": false,
-  "data_updated_on": "2026-08-02"
+  "data_updated_on": "2026-08-04"
 }

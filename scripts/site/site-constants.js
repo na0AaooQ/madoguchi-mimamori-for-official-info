@@ -1,22 +1,48 @@
 export const SITE_LOCALES = Object.freeze(['ja', 'en']);
 
-export const SITE_NAVIGATION_PATHS = Object.freeze({
-  ja: 'dist/public-data/preview/ja/navigation.json',
-  en: 'dist/public-data/preview/en/navigation.json'
-});
-
-export const SITE_UI_LOCALE_PATHS = Object.freeze({
-  ja: 'site/locales/ja.json',
-  en: 'site/locales/en.json'
-});
-
 export const SITE_ASSET_SOURCE_PATHS = Object.freeze({
   'assets/styles.css': 'site/assets/styles.css',
   'assets/font-size.js': 'site/assets/font-size.js'
 });
 
-export const SITE_OUTPUT_ROOT = 'dist/site/preview';
-export const SITE_ARTIFACT_TYPE = 'fictional-preview';
+export const SITE_MODES = Object.freeze({
+  preview: Object.freeze({
+    mode: 'preview',
+    artifactType: 'fictional-preview',
+    outputRoot: 'dist/site/preview',
+    basePath: '/preview',
+    productionConfigPath: undefined,
+    navigationPaths: Object.freeze({
+      ja: 'dist/public-data/preview/ja/navigation.json',
+      en: 'dist/public-data/preview/en/navigation.json'
+    }),
+    uiLocalePaths: Object.freeze({
+      ja: 'site/locales/ja.json',
+      en: 'site/locales/en.json'
+    })
+  }),
+  production: Object.freeze({
+    mode: 'production',
+    artifactType: 'production',
+    outputRoot: 'dist/site/production',
+    productionConfigPath: 'site/production.json',
+    navigationPaths: Object.freeze({
+      ja: 'dist/public-data/production/ja/navigation.json',
+      en: 'dist/public-data/production/en/navigation.json'
+    }),
+    uiLocalePaths: Object.freeze({
+      ja: 'site/locales/production/ja.json',
+      en: 'site/locales/production/en.json'
+    })
+  })
+});
+
+// Backward-compatible preview constants used by existing tests and imports.
+export const SITE_NAVIGATION_PATHS = SITE_MODES.preview.navigationPaths;
+export const SITE_UI_LOCALE_PATHS = SITE_MODES.preview.uiLocalePaths;
+export const SITE_OUTPUT_ROOT = SITE_MODES.preview.outputRoot;
+export const SITE_ARTIFACT_TYPE = SITE_MODES.preview.artifactType;
+
 export const SITE_GENERATOR_NAME = 'madoguchi-static-site-v1';
 
 export const ROLE_ORDER = Object.freeze(['primary', 'temporary-highlight', 'secondary']);
@@ -44,6 +70,18 @@ export const SOURCE_TYPE_CATEGORIES = Object.freeze({
   'messaging-service': 'official_channel',
   'email-service': 'official_channel'
 });
+
+export function getSiteMode(mode) {
+  const config = SITE_MODES[mode];
+  if (!config) {
+    throw new SiteRuntimeError(
+      'SITE-RUN-E001',
+      'scripts/site/site-constants.js',
+      'modeはpreviewまたはproductionだけです。'
+    );
+  }
+  return config;
+}
 
 export class SiteRuntimeError extends Error {
   constructor(code, file, message, cause) {

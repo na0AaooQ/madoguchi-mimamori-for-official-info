@@ -1,0 +1,302 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "production",
+  "locale": "ja",
+  "generated_for_date": "2026-08-04",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "まどぐちみまもり",
+    "subtitle": "熊本県・熊本市の公式情報案内",
+    "short_description": "災害時などに確認したい内容から担当する公的機関・関係団体を見つけ、その団体自身の公式発表へ進むための案内サイトです。",
+    "purpose": "公的機関・関係団体の公式情報へ短時間で到達できるよう案内します。",
+    "free_use_notice": "無料で利用でき、広告・アフィリエイトはなく、ログインも不要です。",
+    "external_site_notice": "案内先は外部の公式サイトです。最新情報はリンク先で確認してください。",
+    "disclaimer_summary": "行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。掲載は団体全体の信頼性や、案内先の情報の正しさを保証するものではありません。",
+    "contact_url": "https://portfolio.na0aaooq.com/contact.html"
+  },
+  "sections": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "title": "公的機関・防災全般",
+      "short_description": "国・自治体の防災情報、避難、河川、行政対応や支援の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-disaster-information",
+          "title": "熊本県の防災情報を確認する",
+          "summary": "熊本県が提供する防災情報、災害時の案内、公式サイト・SNSを確認できます。",
+          "region_label": "熊本県全域",
+          "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本県防災情報ポータルを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-disaster-portal",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://portal.bousai.pref.kumamoto.jp/",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "熊本県防災情報ポータル",
+                "purpose": "熊本県内の防災情報をまとめて確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-home-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "熊本県公式ホームページを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-home-ja",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp/index2.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本県公式ホームページ",
+                "purpose": "熊本県の公式情報全般を確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-ja",
+              "role": "secondary",
+              "visibility_context": "disaster",
+              "button_label": "熊本県の災害時の案内を見る",
+              "public_note": "災害時の確認を主目的とする案内先です。",
+              "destination": {
+                "id": "src-kumamoto-prefecture-disaster-guide-ja",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp/soshiki/1/274517.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本県 災害時の案内",
+                "purpose": "災害時に熊本県が提供する公式案内を確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-x",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "熊本県の公式Xを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-x",
+                "source_type": "social-account",
+                "content_format": "social-profile",
+                "url": "https://x.com/KumamotoPre_koh",
+                "destination_locales": [
+                  "ja"
+                ],
+                "platform": "x",
+                "account_id": "KumamotoPre_koh",
+                "display_title": "【熊本県公式】気になる！くまもと",
+                "purpose": "熊本県からのお知らせや地域情報をXで確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+          "title": "熊本市の防災情報を確認する",
+          "summary": "熊本市が提供する防災情報、災害時の案内、公式サイト・SNSを確認できます。",
+          "region_label": "熊本市",
+          "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本市防災サイトを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp/bousai/default.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市防災サイト",
+                "purpose": "熊本市の防災情報をまとめて確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "熊本市公式ホームページを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-home-ja",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市公式ホームページ",
+                "purpose": "熊本市の公式情報全般を確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-ja",
+              "role": "secondary",
+              "visibility_context": "disaster",
+              "button_label": "熊本市の災害時の案内を見る",
+              "public_note": "災害時の確認を主目的とする案内先です。",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-ja",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp/list04828.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市 災害時の案内",
+                "purpose": "災害時に熊本市が提供する公式案内を確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-x",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "熊本市の公式Xを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-x",
+                "source_type": "social-account",
+                "content_format": "social-profile",
+                "url": "https://x.com/kumamotocity_",
+                "destination_locales": [
+                  "ja"
+                ],
+                "platform": "x",
+                "account_id": "kumamotocity_",
+                "display_title": "熊本市",
+                "purpose": "熊本市からのお知らせをXで確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-lifelines",
+      "anchor_id": "lifelines",
+      "title": "ライフライン",
+      "short_description": "水道・下水道、電気、ガス、通信の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+          "title": "熊本市の水道・下水道情報を確認する",
+          "summary": "熊本市上下水道局が提供する水道・下水道の公式情報を確認できます。",
+          "region_label": "熊本市",
+          "emergency_note": "断水・給水・下水道に関する最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-water-sewerage-information-home",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本市上下水道局公式ホームページを見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-waterworks-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.kumamoto-waterworks.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市上下水道局公式ホームページ",
+                "purpose": "熊本市の水道・下水道に関する公式情報を確認できます。",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city-waterworks",
+                  "official_name": "熊本市上下水道局",
+                  "name_kind": "official-ja",
+                  "summary": "熊本市の水道・下水道事業を担う組織です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

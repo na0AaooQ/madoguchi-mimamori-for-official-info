@@ -46,13 +46,18 @@ test('keeps the management Schema layout at 27 and separates the public contract
   );
 });
 
-test('keeps production data draft and reports only the existing two site Info results', async () => {
+test('loads the published production data without validation findings', async () => {
   const loaded = await loadProductionInput(repoRoot);
-  assert.deepEqual(
-    loaded.results.map(({ code }) => code),
-    ['I001', 'I001']
+  assert.deepEqual(loaded.results, []);
+  assert.equal(loaded.input.site.core.site_publication_status, 'published');
+  assert.equal(
+    loaded.input.site.locales.ja.contact_url,
+    'https://portfolio.na0aaooq.com/contact.html'
   );
-  assert.equal(loaded.input.site.core.site_publication_status, 'draft');
+  assert.equal(
+    loaded.input.site.locales.en.contact_url,
+    'https://portfolio.na0aaooq.com/en/contact.html'
+  );
 });
 
 test('fixture contains only fictional URL and naming markers', async () => {

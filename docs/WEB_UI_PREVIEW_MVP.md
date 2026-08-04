@@ -2,7 +2,7 @@
 
 ## 目的と範囲
 
-Git管理中の`fictional-preview`公開データから、日本語・英語の完成済み静的HTMLを生成します。実在情報、production画面、AWS、ホスティング、デプロイは対象外です。ブラウザは主要表示のために`navigation.json`を取得せず、JavaScriptが無効でも説明、分野、カード、団体、案内先を利用できます。
+Git管理中の`fictional-preview`公開データから、日本語・英語の完成済み静的HTMLを生成するpreview固有の契約です。production画面、ホスティング、デプロイの契約は本書の対象外とし、[GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)に分離します。ブラウザは主要表示のために`navigation.json`を取得せず、JavaScriptが無効でも説明、分野、カード、団体、案内先を利用できます。
 
 ## 入力と生成元
 
@@ -54,7 +54,7 @@ section数は固定せず、日英`navigation.json`の対応する`sections`か�
 
 補助JavaScriptが`sessionStorage`へ保存するのは`standard`または`large`だけです。Cookieと`localStorage`を使用せず、団体名、閲覧ページ、URL、検索内容、閲覧履歴、個人情報を保存・送信しません。保存機能が例外を投げても標準表示を維持します。
 
-プライバシーポリシー本文は画面用localeで管理し、制定日は日英とも2026年8月3日の固定文言です。公開環境が未決定のため、アクセスログが一切記録されないとは断定しません。本番前にログ項目、目的、保存期間、閲覧可能者を確認してproduction用文面へ反映します。
+previewのプライバシーポリシー本文はpreview用画面Localeで管理し、制定日は日英とも2026年8月3日の固定文言です。production用画面Localeとは分離し、preview成果物の既存文面とバイト一致を維持します。
 
 ## 生成・検証
 

@@ -195,7 +195,7 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
     siteLocale?.locale_status !== 'published' ||
     !siteCore?.supported_locales?.includes(locale) ||
     !siteCore?.site_last_checked_on ||
-    !siteCore?.contact_url
+    !(siteLocale?.contact_url || siteCore?.contact_url)
   ) {
     results.push(
       publicationError(
@@ -304,7 +304,7 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
         free_use_notice: siteLocale.free_use_notice,
         external_site_notice: siteLocale.external_site_notice,
         disclaimer_summary: siteLocale.disclaimer_summary,
-        contact_url: siteCore.contact_url
+        contact_url: siteLocale.contact_url ?? siteCore.contact_url
       },
       sections
     },

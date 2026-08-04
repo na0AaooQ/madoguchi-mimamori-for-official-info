@@ -60,39 +60,31 @@ test('detects tracked preview edits and stale fixture generation with PUB-E006',
 test('enforces production lifecycle and pair rules', async (t) => {
   await t.test('draft with no production is valid', async (t) => {
     const root = await createPublicRepositoryCopy(t);
+    const site = await readJson(root, 'data/core/site.json');
+    site.site_publication_status = 'draft';
+    await writeJson(root, 'data/core/site.json', site);
+    await rm(path.join(root, 'dist/public-data/production'), { recursive: true });
     assert.deepEqual((await validatePublicRepository(root)).results, []);
   });
   await t.test('draft with production is PUB-E007', async (t) => {
     const root = await createPublicRepositoryCopy(t);
-    const previews = await createPreviewArtifacts();
-    for (const locale of ['ja', 'en']) {
-      await writeJson(
-        root,
-        PUBLIC_ARTIFACT_PATHS.production[locale],
-        makeProductionArtifact(previews[locale])
-      );
-    }
+    const site = await readJson(root, 'data/core/site.json');
+    site.site_publication_status = 'draft';
+    await writeJson(root, 'data/core/site.json', site);
     assert.ok(
       (await validatePublicRepository(root)).results.some(({ code }) => code === 'PUB-E007')
     );
   });
   await t.test('published with no production is PUB-E007', async (t) => {
     const root = await createPublicRepositoryCopy(t);
-    const site = await readJson(root, 'data/core/site.json');
-    Object.assign(site, {
-      site_publication_status: 'published',
-      site_last_checked_on: '2026-08-02',
-      contact_url: 'https://public.example/contact/'
-    });
-    await writeJson(root, 'data/core/site.json', site);
+    await rm(path.join(root, 'dist/public-data/production'), { recursive: true });
     assert.ok(
       (await validatePublicRepository(root)).results.some(({ code }) => code === 'PUB-E007')
     );
   });
   await t.test('one production language is PUB-E008', async (t) => {
     const root = await createPublicRepositoryCopy(t);
-    const previews = await createPreviewArtifacts();
-    await writeJson(root, PUBLIC_ARTIFACT_PATHS.production.ja, makeProductionArtifact(previews.ja));
+    await rm(path.join(root, PUBLIC_ARTIFACT_PATHS.production.en));
     assert.ok(
       (await validatePublicRepository(root)).results.some(({ code }) => code === 'PUB-E008')
     );
@@ -160,6 +152,10 @@ test('CLI validates arguments and returns 0, 1, and 2 by error class', async (t)
 
   await t.test('draft production generation is content exit 1 and writes nothing', async (t) => {
     const root = await createPublicRepositoryCopy(t);
+    const site = await readJson(root, 'data/core/site.json');
+    site.site_publication_status = 'draft';
+    await writeJson(root, 'data/core/site.json', site);
+    await rm(path.join(root, 'dist/public-data/production'), { recursive: true });
     let output = '';
     assert.equal(
       await runPublicCli(['generate', '--mode', 'production', '--as-of', '2026-08-02'], {

@@ -54,11 +54,9 @@ export async function createPublicRepositoryCopy(t) {
     path.join(root, 'tests', 'fixtures', 'public-generation', 'preview'),
     { recursive: true }
   );
-  await cp(
-    path.join(repoRoot, 'dist', 'public-data', 'preview'),
-    path.join(root, 'dist', 'public-data', 'preview'),
-    { recursive: true }
-  );
+  await cp(path.join(repoRoot, 'dist', 'public-data'), path.join(root, 'dist', 'public-data'), {
+    recursive: true
+  });
   return root;
 }
 
