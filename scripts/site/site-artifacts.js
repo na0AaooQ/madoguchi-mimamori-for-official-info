@@ -92,8 +92,9 @@ function htmlBaseContract(source, file, inputs) {
     results.push(siteError('SITE-E005', target, 'summaryへ不要なroleを設定できません。'));
   results.push(...siteIconHtmlContract(source, file, inputs));
 
-  const localizedPage = /^(?:ja|en)\//.test(file);
-  if (localizedPage) {
+  const sharedUiPage =
+    /^(?:ja|en)\//.test(file) || (inputs.mode === 'production' && file === 'index.html');
+  if (sharedUiPage) {
     for (const [pattern, message] of [
       [/<header[ >]/, 'headerランドマークがありません。'],
       [/<nav[ >]/, 'navランドマークがありません。'],
@@ -365,18 +366,13 @@ function productionHtmlContract(source, file, inputs) {
       results.push(siteError('SITE-E005', target, `外部リンクに安全なrelがありません: ${href}`));
   }
 
-  const localizedPage = /^(?:ja|en)\//.test(file);
-  if (!localizedPage) {
+  if (isNotFound) {
     if (
       source.includes('<footer') ||
       Object.values(inputs.uiLocales).some(({ footer }) => source.includes(footer.contact_url))
     )
       results.push(
-        siteError(
-          'SITE-E005',
-          target,
-          'ルート言語選択ページと404ページへ問い合わせ導線を追加できません。'
-        )
+        siteError('SITE-E005', target, '404.htmlへフッターや問い合わせ導線を追加できません。')
       );
   }
   if (isNotFound && anchors.some(({ href }) => /^https:\/\//.test(href)))

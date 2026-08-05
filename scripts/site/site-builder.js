@@ -36,6 +36,10 @@ function footerContactAnchor(ui) {
   return `<a href="${escapeHtml(ui.footer.contact_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(ui.footer.contact_link_label)}">${escapeHtml(ui.footer.contact)}</a>`;
 }
 
+function rootOperatorLine(ui, languageAttribute = '', labelSeparator = '') {
+  return `<p${languageAttribute}>${escapeHtml(ui.root.operator_label)}${labelSeparator}${escapeHtml(ui.privacy.operator_prefix)}&#x3000;<a href="${escapeHtml(ui.privacy.operator_url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(ui.privacy.operator_link_label)}">${escapeHtml(ui.privacy.operator_name)}</a></p>`;
+}
+
 function sitePath(inputs, relative = '') {
   return joinSitePath(inputs.siteUrl.basePath, relative);
 }
@@ -793,32 +797,72 @@ ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
 }
 
 function productionRootPage(inputs) {
-  const ui = inputs.uiLocales.ja;
-  const root = ui.root;
-  const siteName = inputs.navigations.ja.site.site_name;
+  const japaneseUi = inputs.uiLocales.ja;
+  const englishUi = inputs.uiLocales.en;
+  const japaneseRoot = japaneseUi.root;
+  const englishRoot = englishUi.root;
+  const japaneseSiteName = inputs.navigations.ja.site.site_name;
+  const englishSiteName = inputs.navigations.en.site.site_name;
+  const pageTitle = `${japaneseRoot.title} / ${englishRoot.title}｜${japaneseSiteName}`;
   return `<!doctype html>
-<html lang="ja">
+<html lang="ja" data-text-size="standard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
-  <title>${escapeHtml(root.title)}｜${escapeHtml(siteName)}</title>
+  <title>${escapeHtml(pageTitle)}</title>
 ${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
+  <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">${escapeHtml(japaneseUi.skip_link)}<span lang="en"> / ${escapeHtml(englishUi.skip_link)}</span></a>
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="site-name">${escapeHtml(japaneseSiteName)}｜<span lang="en">${escapeHtml(englishSiteName)}</span></span>
+      <div class="header-actions">
+        <fieldset class="font-size-control" data-font-size-control hidden>
+          <legend>${escapeHtml(japaneseUi.font_size.label)}<span lang="en"> / ${escapeHtml(englishUi.font_size.label)}</span></legend>
+          <button type="button" data-text-size="standard" aria-pressed="true">${escapeHtml(japaneseUi.font_size.standard)}<span lang="en"> / ${escapeHtml(englishUi.font_size.standard)}</span></button>
+          <button type="button" data-text-size="large" aria-pressed="false">${escapeHtml(japaneseUi.font_size.large)}<span lang="en"> / ${escapeHtml(englishUi.font_size.large)}</span></button>
+        </fieldset>
+      </div>
+    </div>
+  </header>
   <div class="page">
     <main id="main-content">
-      <h1>${escapeHtml(root.heading)}</h1>
-      <p>${escapeHtml(root.description_ja)}</p>
-      <p lang="en">${escapeHtml(root.description_en)}</p>
-      <p class="note">${escapeHtml(root.unofficial_ja)} <span lang="en">${escapeHtml(root.unofficial_en)}</span></p>
+      <h1>${escapeHtml(japaneseRoot.heading)}<br><span lang="en">${escapeHtml(englishRoot.heading)}</span></h1>
+      <p>${escapeHtml(japaneseRoot.description)}</p>
+      <p lang="en">${escapeHtml(englishRoot.description)}</p>
+      <p class="note">${escapeHtml(japaneseRoot.unofficial)}</p>
+      <p class="note" lang="en">${escapeHtml(englishRoot.unofficial)}</p>
       <ul class="section-list">
-        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja"><strong>${escapeHtml(root.japanese_link)}</strong></a></li>
-        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en"><strong>${escapeHtml(root.english_link)}</strong></a></li>
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja"><strong>${escapeHtml(japaneseRoot.language_link)}</strong></a></li>
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en"><strong>${escapeHtml(englishRoot.language_link)}</strong></a></li>
       </ul>
     </main>
   </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav aria-label="${escapeHtml(japaneseRoot.footer_navigation_label)}">
+        <ul class="footer-links">
+          <li><a href="${escapeHtml(productionPath(inputs, 'ja/privacy/'))}">${escapeHtml(japaneseUi.footer.privacy)}</a></li>
+          <li>${footerContactAnchor(japaneseUi)}</li>
+        </ul>
+      </nav>
+      <nav lang="en" aria-label="${escapeHtml(englishRoot.footer_navigation_label)}">
+        <ul class="footer-links">
+          <li><a href="${escapeHtml(productionPath(inputs, 'en/privacy/'))}">${escapeHtml(englishUi.footer.privacy)}</a></li>
+          <li>${footerContactAnchor(englishUi)}</li>
+        </ul>
+      </nav>
+      <p>${escapeHtml(japaneseUi.footer.free_notice)}</p>
+      <p lang="en">${escapeHtml(englishUi.footer.free_notice)}</p>
+      ${rootOperatorLine(japaneseUi)}
+      ${rootOperatorLine(englishUi, ' lang="en"', ' ')}
+      <p class="copyright">${escapeHtml(japaneseUi.footer.copyright)}</p>
+    </div>
+  </footer>
 </body>
 </html>
 `;

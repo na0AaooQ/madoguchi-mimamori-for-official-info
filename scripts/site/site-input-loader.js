@@ -150,12 +150,11 @@ const PRODUCTION_UI_LOCALE_SHAPE = Object.freeze({
   root: {
     title: string,
     heading: string,
-    description_ja: string,
-    description_en: string,
-    unofficial_ja: string,
-    unofficial_en: string,
-    japanese_link: string,
-    english_link: string
+    description: string,
+    unofficial: string,
+    language_link: string,
+    footer_navigation_label: string,
+    operator_label: string
   },
   not_found: {
     title: string,
@@ -483,6 +482,19 @@ function validatePair(navigations, uiLocales, config) {
         `site/locales/${config.mode === 'production' ? 'production/' : ''}`,
         '日英の最終改定日が同じ日付を表していません。',
         'privacy.last_revised'
+      )
+    );
+  }
+  if (
+    config.mode === 'production' &&
+    uiLocales.ja?.footer?.copyright !== uiLocales.en?.footer?.copyright
+  ) {
+    results.push(
+      siteError(
+        'SITE-E001',
+        'site/locales/production/',
+        'productionの日英著作権表記が一致しません。',
+        'footer.copyright'
       )
     );
   }
