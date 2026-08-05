@@ -78,6 +78,22 @@
 - **今回含めないこと:** 全国版の地域別URL移行、新しい県・言語の追加、`/ja/`・`/en/`以下の画面変更、previewルートの新設、ブラウザー言語による自動転送、canonical・hreflang・sitemap構成の変更
 - **完了条件:** 正式ルートで日本語・英語を同じ重みで選択でき、文字サイズ変更、キーボード操作、JavaScript無効時の主要導線、運営者情報と各種リンクを利用できることを確認する。既存の日英画面、preview、404、sitemapへ意図しない影響がなく、自動検証、本番デプロイ、公開後確認を完了する（完了）
 
+### BL-019 OGP画像とSNS共有メタデータを設定する
+
+- 状態:** `completed`
+- 完了日:** 2026-08-05
+- **完了内容:**
+  - 共通OGP画像をproduction専用アセットとして追加
+  - productionの通常ページ全11ページへOpen Graph・X向けメタデータを設定
+  - ページごとのタイトル、説明、正式URLを既存データから生成
+  - 日本語・英語のサイト名と画像代替説明へ対応
+  - preview全ページとproductionの404ページはOGP対象外として維持
+  - production成果物19件、preview成果物21件、sitemap 11 URLを維持
+  - 自動テスト600件、各validate・verify・checkがすべて成功
+  - Pull Request #20をマージ
+  - GitHub Pagesへの本番デプロイに成功
+  - 公開OGP画像、本番HTML、X Card Validator、X投稿作成画面、X実投稿での表示を確認
+
 ## next
 
 ### BL-005 Google Analyticsとプライバシー方針の設計
