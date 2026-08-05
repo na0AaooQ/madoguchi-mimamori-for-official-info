@@ -20,7 +20,7 @@ import {
   getSiteMode
 } from './site-constants.js';
 import { validateOgpImage, validateSiteIcon } from './site-icon-validator.js';
-import { loadProductionSiteUrl } from './site-url.js';
+import { loadProductionSiteConfig } from './site-url.js';
 
 const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
 
@@ -52,6 +52,29 @@ const ENGLISH_MONTHS = Object.freeze([
   'November',
   'December'
 ]);
+const PRIVACY_SHAPE = Object.freeze({
+  established: string,
+  last_revised: string,
+  operator_heading: string,
+  operator_prefix: string,
+  operator_name: string,
+  operator_url: string,
+  operator_link_label: string,
+  input_heading: string,
+  input_items: strings,
+  unused_heading: string,
+  unused_items: strings,
+  session_heading: string,
+  session_items: strings,
+  external_heading: string,
+  external_items: strings,
+  contact_heading: string,
+  contact_items: strings,
+  logs_heading: string,
+  logs_items: strings,
+  revision_heading: string,
+  revision_items: strings
+});
 const UI_LOCALE_SHAPE = Object.freeze({
   locale: string,
   language_name: string,
@@ -102,29 +125,7 @@ const UI_LOCALE_SHAPE = Object.freeze({
   },
   about: { summary: string, items: strings },
   usage: { summary: string, items: strings },
-  privacy: {
-    established: string,
-    last_revised: string,
-    operator_heading: string,
-    operator_prefix: string,
-    operator_name: string,
-    operator_url: string,
-    operator_link_label: string,
-    input_heading: string,
-    input_items: strings,
-    unused_heading: string,
-    unused_items: strings,
-    session_heading: string,
-    session_items: strings,
-    external_heading: string,
-    external_items: strings,
-    contact_heading: string,
-    contact_items: strings,
-    logs_heading: string,
-    logs_items: strings,
-    revision_heading: string,
-    revision_items: strings
-  },
+  privacy: PRIVACY_SHAPE,
   footer: {
     home: string,
     organizations: string,
@@ -147,6 +148,14 @@ void ignoredPreviewDestination;
 
 const PRODUCTION_UI_LOCALE_SHAPE = Object.freeze({
   ...sharedShape,
+  privacy: {
+    ...PRIVACY_SHAPE,
+    analytics: {
+      heading: string,
+      paragraphs: strings,
+      links: [{ label: string, url: string }]
+    }
+  },
   root: {
     title: string,
     heading: string,
@@ -594,7 +603,7 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
 
   const siteUrl =
     mode === 'production'
-      ? await loadProductionSiteUrl(repoRoot, config.productionConfigPath)
+      ? await loadProductionSiteConfig(repoRoot, config.productionConfigPath)
       : { basePath: config.basePath };
 
   return {

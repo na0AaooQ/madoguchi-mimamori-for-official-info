@@ -33,7 +33,7 @@ test('accepts the approved preview and production Locale contracts', async () =>
 });
 
 test('requires the new footer and privacy keys and rejects removed or unexpected keys', async (t) => {
-  for (const { name, mutate, field } of [
+  for (const { name, mode = 'preview', mutate, field } of [
     {
       name: 'missing footer.contact_url',
       mutate: (value) => delete value.footer.contact_url,
@@ -50,6 +50,12 @@ test('requires the new footer and privacy keys and rejects removed or unexpected
       field: 'privacy.last_revised'
     },
     {
+      name: 'missing production privacy.analytics',
+      mode: 'production',
+      mutate: (value) => delete value.privacy.analytics,
+      field: 'privacy.analytics'
+    },
+    {
       name: 'removed footer.contact_prefix',
       mutate: (value) => (value.footer.contact_prefix = '廃止済み'),
       field: '$.footer'
@@ -61,10 +67,53 @@ test('requires the new footer and privacy keys and rejects removed or unexpected
     }
   ]) {
     await t.test(name, async (t) => {
-      const inputs = await mutateLocale(t, { mutate });
+      const inputs = await mutateLocale(t, { mode, mutate });
       assert.ok(hasField(inputs.results, field), JSON.stringify(inputs.results));
     });
   }
+});
+
+test('keeps analytics wording and official links production-only and structurally strict', async (t) => {
+  const production = await loadSiteInputs(new URL('../..', import.meta.url).pathname, 'production');
+  assert.deepEqual(production.results, []);
+  assert.deepEqual(production.uiLocales.ja.privacy.analytics.links, [
+    {
+      label: 'Google のサービスを使用するサイトやアプリから収集した情報の Google による使用',
+      url: 'https://policies.google.com/technologies/partner-sites?hl=ja'
+    },
+    { label: 'Google プライバシー ポリシー', url: 'https://policies.google.com/privacy?hl=ja' },
+    {
+      label: 'Google アナリティクス オプトアウト アドオン',
+      url: 'https://tools.google.com/dlpage/gaoptout?hl=ja'
+    }
+  ]);
+  assert.deepEqual(production.uiLocales.en.privacy.analytics.links, [
+    {
+      label: 'How Google uses information from sites or apps that use our services',
+      url: 'https://policies.google.com/technologies/partner-sites?hl=en-US'
+    },
+    { label: 'Google Privacy Policy', url: 'https://policies.google.com/privacy?hl=en-US' },
+    {
+      label: 'Google Analytics Opt-out Browser Add-on',
+      url: 'https://tools.google.com/dlpage/gaoptout?hl=en-GB'
+    }
+  ]);
+
+  const unexpectedProduction = await mutateLocale(t, {
+    mode: 'production',
+    mutate: (locale) => (locale.privacy.analytics.unexpected = 'unexpected')
+  });
+  assert.ok(hasField(unexpectedProduction.results, 'privacy.analytics'));
+
+  const preview = await mutateLocale(t, {
+    mutate: (locale) =>
+      (locale.privacy.analytics = {
+        heading: 'previewでは許可しない',
+        paragraphs: ['previewでは許可しない'],
+        links: [{ label: 'previewでは許可しない', url: 'https://example.invalid/' }]
+      })
+  });
+  assert.ok(hasField(preview.results, 'privacy'));
 });
 
 test('rejects every non-approved Japanese contact URL without network access', async (t) => {

@@ -410,6 +410,16 @@ ${list(items)}
       </section>`;
 }
 
+function privacyParagraphSection(heading, paragraphs, links, ui) {
+  return `      <section>
+        <h2>${escapeHtml(heading)}</h2>
+${paragraphs.map((paragraph) => `        <p>${escapeHtml(paragraph)}</p>`).join('\n')}
+        <ul>
+${links.map(({ label, url }) => `          <li>${externalAnchor(url, label, ui)}</li>`).join('\n')}
+        </ul>
+      </section>`;
+}
+
 function privacyPage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const privacy = ui.privacy;
@@ -510,6 +520,18 @@ export function productionSocialMetaTags(
     .join('\n');
 }
 
+export function googleAnalyticsTag(measurementId) {
+  return `  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(measurementId)}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '${escapeHtml(measurementId)}');
+  </script>`;
+}
+
 function externalAnchor(url, text, ui, extraAttributes = '') {
   const label = `${text}（${ui.destination.external_link_label}）`;
   return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(label)}"${extraAttributes}>${escapeHtml(text)}</a>`;
@@ -557,6 +579,28 @@ function productionFooter(inputs, navigation, ui) {
   </footer>`;
 }
 
+function productionHead({
+  inputs,
+  title,
+  socialMetadata = '',
+  robots = '',
+  includeFontSizeScript = true
+}) {
+  const robotsMeta = robots ? `  ${robots}\n` : '';
+  const fontSizeScript = includeFontSizeScript
+    ? `\n  <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>`
+    : '';
+  return `<head>
+  <meta charset="utf-8">
+${googleAnalyticsTag(inputs.siteUrl.analytics.measurement_id)}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+${robotsMeta}  <meta name="generator" content="${SITE_GENERATOR_NAME}">
+  <title>${escapeHtml(title)}</title>
+${socialMetadata ? `${socialMetadata}\n` : ''}${siteIconLinks(inputs)}
+  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">${fontSizeScript}
+</head>`;
+}
+
 function productionPageShell({
   inputs,
   navigation,
@@ -577,16 +621,7 @@ function productionPageShell({
   });
   return `<!doctype html>
 <html lang="${navigation.locale}" data-text-size="standard">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="${SITE_GENERATOR_NAME}">
-  <title>${escapeHtml(pageTitle)}</title>
-${socialMetadata}
-${siteIconLinks(inputs)}
-  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
-  <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
-</head>
+${productionHead({ inputs, title: pageTitle, socialMetadata })}
 <body>
   <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${productionHeader(inputs, navigation, ui, alternatePath)}
   <div class="page">
@@ -840,6 +875,12 @@ ${privacySection(privacy.session_heading, privacy.session_items)}
 ${privacySection(privacy.external_heading, privacy.external_items)}
 ${privacySection(privacy.contact_heading, privacy.contact_items)}
 ${privacySection(privacy.logs_heading, privacy.logs_items)}
+${privacyParagraphSection(
+  privacy.analytics.heading,
+  privacy.analytics.paragraphs,
+  privacy.analytics.links,
+  ui
+)}
 ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
   return productionPageShell({
     inputs,
@@ -870,16 +911,7 @@ function productionRootPage(inputs) {
   });
   return `<!doctype html>
 <html lang="ja" data-text-size="standard">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="${SITE_GENERATOR_NAME}">
-  <title>${escapeHtml(pageTitle)}</title>
-${socialMetadata}
-${siteIconLinks(inputs)}
-  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
-  <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
-</head>
+${productionHead({ inputs, title: pageTitle, socialMetadata })}
 <body class="production-root">
   <a class="skip-link" href="#main-content">${escapeHtml(japaneseUi.skip_link)}<span lang="en"> / ${escapeHtml(englishUi.skip_link)}</span></a>
   <header class="site-header">
@@ -939,15 +971,12 @@ function productionNotFoundPage(inputs) {
   const siteName = inputs.navigations.ja.site.site_name;
   return `<!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <meta name="generator" content="${SITE_GENERATOR_NAME}">
-  <title>${escapeHtml(notFound.title)}｜${escapeHtml(siteName)}</title>
-${siteIconLinks(inputs)}
-  <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
-</head>
+${productionHead({
+  inputs,
+  title: `${notFound.title}｜${siteName}`,
+  robots: '<meta name="robots" content="noindex">',
+  includeFontSizeScript: false
+})}
 <body>
   <div class="page">
     <main id="main-content">

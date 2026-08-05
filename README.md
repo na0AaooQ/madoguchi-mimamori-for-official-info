@@ -291,7 +291,7 @@ npm run serve:site:production
 
 新サイト内に問い合わせフォームは設けず、既存の[ポートフォリオサイトのお問い合わせページ](https://portfolio.na0aaooq.com/contact.html)へ案内します。問い合わせは任意であり、外部ページでは名前またはハンドルネーム、メールアドレス、問い合わせ本文などの入力が必要です。ポートフォリオサイト側のプライバシーポリシーが適用されます。
 
-新サイトのホスティングにはGitHub Pagesを使用し、カスタムドメインとHTTPSを有効にしています。運営者独自のアクセス解析、Cookie、localStorageは使用しません。文字サイズは`sessionStorage`へ`standard`または`large`だけを保存します。ホスティング提供者側では配信に必要な技術情報が処理される可能性があります。Google Analyticsは未実装で、導入可否とプライバシー方針の設計は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)で管理します。
+新サイトのホスティングにはGitHub Pagesを使用し、カスタムドメインとHTTPSを有効にしています。productionではGoogle Analytics 4の標準的な静的`gtag.js`タグを使用し、測定IDは`site/production.json`で一元管理します。ページビューと外部サイトへの離脱クリックだけを利用し、独自イベント、Googleタグマネージャー、広告関連機能、Googleシグナル、User-IDは追加しません。previewにはタグを出力しません。Google Analytics 4はCookieを使用しますが、運営者独自のアクセス解析システムとlocalStorageは使用しません。文字サイズは`sessionStorage`へ`standard`または`large`だけを保存します。詳細と計測を希望しない場合の方法は日英のプライバシーポリシーおよび[ADR 0025](docs/decisions/0025-adopt-minimal-ga4-analytics-for-production.md)を参照してください。
 
 ## ドキュメント
 

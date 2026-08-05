@@ -73,8 +73,8 @@ ls -la
 - 個人の氏名、写真、住所、状況、個人宅への配送依頼などを扱わない。
 - 新サイト内にログイン、アカウント登録、利用者向け入力フォーム、検索内容の入力機能を無断で追加しない。
 - 広告、アフィリエイト、協賛による掲載順位変更を無断で追加しない。
-- 現在のproductionは運営者独自のアクセス解析、Cookie、localStorageを使用しない。文字サイズ設定として`sessionStorage`へ`standard`または`large`だけを保存する。実装と利用者向けプライバシー説明を常に一致させる。
-- Google Analyticsは未実装であり、明示的な設計と利用者確認の前に解析タグを追加しない。Cookie、ブラウザ保存領域、外部送信、同意、日英の説明を設計してから実装する。
+- productionではGoogle Analytics 4を、`site/production.json`で一元管理する測定IDから標準的な静的`gtag.js`タグとして出力する。独自イベント、Googleタグマネージャー、Googleシグナル、User-ID、広告関連機能、Cookie同意バナーは追加しない。previewへタグや測定IDを出力しない。
+- Google Analytics 4はCookieを使用する一方、運営者独自のアクセス解析システム、広告目的のトラッキング、localStorageは使用しない。文字サイズ設定として`sessionStorage`へ`standard`または`large`だけを保存する。実装と日英の利用者向けプライバシー説明を常に一致させる。
 
 ## データと重複管理
 
