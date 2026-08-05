@@ -24,6 +24,10 @@
     "japanese_link": "日本語トップへ",
     "english_link": "English home"
   },
+  "social": {
+    "image_alt": "濃緑の背景に白い窓口のマークと、まどぐちみまもりの日英名称を表示した画像",
+    "privacy_description": "このサイトにおける入力・一時保存、外部サイト、問い合わせ、ホスティングなどの取り扱いを説明します。"
+  },
   "pages": {
     "home_title": "トップページ",
     "home_heading": "確認したい公式情報を探す",

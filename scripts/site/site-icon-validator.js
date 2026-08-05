@@ -1,5 +1,79 @@
+import { createHash } from 'node:crypto';
+import { inflateSync } from 'node:zlib';
+
+import { SITE_OGP_IMAGE_SHA256 } from './site-constants.js';
+
 const ICO_SIZES = Object.freeze([16, 32, 48]);
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const PNG_CRC_TABLE = Object.freeze(
+  Array.from({ length: 256 }, (_, value) => {
+    let crc = value;
+    for (let bit = 0; bit < 8; bit += 1) crc = crc & 1 ? 0xedb88320 ^ (crc >>> 1) : crc >>> 1;
+    return crc >>> 0;
+  })
+);
+
+function pngCrc32(source) {
+  let crc = 0xffffffff;
+  for (const value of source) crc = PNG_CRC_TABLE[(crc ^ value) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function inspectPng(source, file, { validateCrc = false } = {}) {
+  if (!Buffer.isBuffer(source)) return { messages: [`${file}はBufferとして読み込んでください。`] };
+  if (source.length < PNG_SIGNATURE.length || !source.subarray(0, 8).equals(PNG_SIGNATURE))
+    return { messages: [`${file}のPNGシグネチャーが不正です。`] };
+
+  const messages = [];
+  const chunks = [];
+  let offset = 8;
+  let ihdr;
+  let sawIend = false;
+  while (offset < source.length) {
+    if (offset + 12 > source.length) {
+      messages.push(`${file}のチャンクが途中で切れています。`);
+      break;
+    }
+    const length = source.readUInt32BE(offset);
+    const type = source.toString('ascii', offset + 4, offset + 8);
+    const dataStart = offset + 8;
+    const dataEnd = dataStart + length;
+    const end = dataEnd + 4;
+    if (end > source.length) {
+      messages.push(`${file}のチャンクデータが途中で切れています。`);
+      break;
+    }
+    const expectedCrc = source.readUInt32BE(dataEnd);
+    const actualCrc = pngCrc32(source.subarray(offset + 4, dataEnd));
+    if (validateCrc && actualCrc !== expectedCrc)
+      messages.push(`${file}の${type}チャンクのCRCが不正です。`);
+    chunks.push({ type, length, data: source.subarray(dataStart, dataEnd) });
+    if (type === 'IHDR') {
+      if (length !== 13) messages.push(`${file}のIHDR長が不正です。`);
+      else if (!ihdr) {
+        ihdr = {
+          width: source.readUInt32BE(dataStart),
+          height: source.readUInt32BE(dataStart + 4),
+          bitDepth: source[dataStart + 8],
+          colorType: source[dataStart + 9],
+          compression: source[dataStart + 10],
+          filter: source[dataStart + 11],
+          interlace: source[dataStart + 12]
+        };
+      }
+    }
+    offset = end;
+    if (type === 'IEND') {
+      sawIend = true;
+      if (length !== 0) messages.push(`${file}のIEND長が不正です。`);
+      if (offset !== source.length) messages.push(`${file}のIEND後に想定外のデータがあります。`);
+      break;
+    }
+  }
+  if (!ihdr) messages.push(`${file}にIHDRチャンクがありません。`);
+  if (!sawIend) messages.push(`${file}に完全なIENDチャンクがありません。`);
+  return { messages, chunks, ihdr, sawIend };
+}
 
 export function validateSvgIcon(source) {
   const messages = [];
@@ -99,51 +173,69 @@ export function validateIcoIcon(source) {
 }
 
 export function validateAppleTouchIcon(source) {
-  if (!Buffer.isBuffer(source)) return ['apple-touch-icon.pngはBufferとして読み込んでください。'];
-  if (source.length < PNG_SIGNATURE.length || !source.subarray(0, 8).equals(PNG_SIGNATURE))
-    return ['apple-touch-icon.pngのPNGシグネチャーが不正です。'];
-
-  const messages = [];
-  let offset = 8;
-  let ihdr;
-  let sawIend = false;
-  while (offset < source.length) {
-    if (offset + 12 > source.length) {
-      messages.push('apple-touch-icon.pngのチャンクが途中で切れています。');
-      break;
-    }
-    const length = source.readUInt32BE(offset);
-    const type = source.toString('ascii', offset + 4, offset + 8);
-    const end = offset + 12 + length;
-    if (end > source.length) {
-      messages.push('apple-touch-icon.pngのチャンクデータが途中で切れています。');
-      break;
-    }
-    if (type === 'IHDR') {
-      if (length !== 13) messages.push('apple-touch-icon.pngのIHDR長が不正です。');
-      else if (!ihdr) {
-        ihdr = {
-          width: source.readUInt32BE(offset + 8),
-          height: source.readUInt32BE(offset + 12)
-        };
-      }
-    }
-    offset = end;
-    if (type === 'IEND') {
-      sawIend = true;
-      if (length !== 0) messages.push('apple-touch-icon.pngのIEND長が不正です。');
-      if (offset !== source.length)
-        messages.push('apple-touch-icon.pngのIEND後に想定外のデータがあります。');
-      break;
-    }
-  }
-
-  if (!ihdr) messages.push('apple-touch-icon.pngにIHDRチャンクがありません。');
-  else if (ihdr.width !== 180 || ihdr.height !== 180)
+  const { messages, ihdr } = inspectPng(source, 'apple-touch-icon.png');
+  if (ihdr && (ihdr.width !== 180 || ihdr.height !== 180))
     messages.push(
       `apple-touch-icon.pngは180x180pxにしてください（実際: ${ihdr.width}x${ihdr.height}）。`
     );
-  if (!sawIend) messages.push('apple-touch-icon.pngに完全なIENDチャンクがありません。');
+  return messages;
+}
+
+export function validateOgpImage(source) {
+  const file = 'ogp-image.png';
+  const inspection = inspectPng(source, file, { validateCrc: true });
+  const messages = inspection.messages;
+  if (!Buffer.isBuffer(source)) return messages;
+
+  if (source.length !== 564_713)
+    messages.push(`${file}は564713 bytesにしてください（実際: ${source.length}）。`);
+  const actualHash = createHash('sha256').update(source).digest('hex');
+  if (actualHash !== SITE_OGP_IMAGE_SHA256)
+    messages.push(`${file}のSHA-256が正式採用値と一致しません。`);
+
+  const { chunks = [], ihdr } = inspection;
+  if (ihdr) {
+    if (ihdr.width !== 1200 || ihdr.height !== 630)
+      messages.push(`${file}は1200x630pxにしてください（実際: ${ihdr.width}x${ihdr.height}）。`);
+    if (ihdr.bitDepth !== 8) messages.push(`${file}のbit depthは8にしてください。`);
+    if (ihdr.colorType !== 2)
+      messages.push(`${file}のcolor typeは透明チャンネルのないRGB（2）にしてください。`);
+    if (ihdr.compression !== 0 || ihdr.filter !== 0 || ihdr.interlace !== 0)
+      messages.push(`${file}の圧縮・フィルター・インターレース方式が想定外です。`);
+  }
+
+  const types = chunks.map(({ type }) => type);
+  const allowedTypes = new Set(['IHDR', 'iCCP', 'IDAT', 'IEND']);
+  if (types.some((type) => !allowedTypes.has(type)))
+    messages.push(`${file}に許可されていないPNGチャンクがあります。`);
+  if (types[0] !== 'IHDR' || types.filter((type) => type === 'IHDR').length !== 1)
+    messages.push(`${file}の先頭にはIHDRチャンクが1件必要です。`);
+  if (types.at(-1) !== 'IEND' || types.filter((type) => type === 'IEND').length !== 1)
+    messages.push(`${file}の末尾にはIENDチャンクが1件必要です。`);
+  if (types.filter((type) => type === 'IDAT').length === 0)
+    messages.push(`${file}にIDATチャンクがありません。`);
+  const firstIdat = types.indexOf('IDAT');
+  const lastIdat = types.lastIndexOf('IDAT');
+  if (firstIdat >= 0 && types.slice(firstIdat, lastIdat + 1).some((type) => type !== 'IDAT'))
+    messages.push(`${file}のIDATチャンクは連続して配置してください。`);
+
+  const profiles = chunks.filter(({ type }) => type === 'iCCP');
+  if (profiles.length !== 1) messages.push(`${file}にはiCCPチャンクが1件必要です。`);
+  else {
+    const data = profiles[0].data;
+    const separator = data.indexOf(0);
+    if (separator < 1 || data[separator + 1] !== 0) {
+      messages.push(`${file}のiCCPチャンクが不正です。`);
+    } else {
+      try {
+        const profile = inflateSync(data.subarray(separator + 2));
+        if (!profile.includes(Buffer.from('sRGB IEC61966-2.1', 'latin1')))
+          messages.push(`${file}のICCプロファイルはsRGB IEC61966-2.1にしてください。`);
+      } catch {
+        messages.push(`${file}のiCCPプロファイルを展開できません。`);
+      }
+    }
+  }
   return messages;
 }
 

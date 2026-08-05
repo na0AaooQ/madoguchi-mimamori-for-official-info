@@ -11,6 +11,14 @@ export const SITE_BINARY_ASSET_SOURCE_PATHS = Object.freeze({
   'apple-touch-icon.png': 'site/assets/apple-touch-icon.png'
 });
 
+export const SITE_PRODUCTION_BINARY_ASSET_SOURCE_PATHS = Object.freeze({
+  'ogp-image.png': 'site/assets/ogp-image.png'
+});
+
+export const SITE_OGP_IMAGE_PATH = 'ogp-image.png';
+export const SITE_OGP_IMAGE_SHA256 =
+  '7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84';
+
 export const SITE_ICON_PATHS = Object.freeze([
   'favicon.ico',
   'favicon.svg',
@@ -23,6 +31,7 @@ export const SITE_MODES = Object.freeze({
     artifactType: 'fictional-preview',
     outputRoot: 'dist/site/preview',
     basePath: '/preview',
+    binaryAssetSourcePaths: Object.freeze({}),
     productionConfigPath: undefined,
     navigationPaths: Object.freeze({
       ja: 'dist/public-data/preview/ja/navigation.json',
@@ -38,6 +47,7 @@ export const SITE_MODES = Object.freeze({
     artifactType: 'production',
     outputRoot: 'dist/site/production',
     rootStylePath: 'site/assets/production-root.css',
+    binaryAssetSourcePaths: SITE_PRODUCTION_BINARY_ASSET_SOURCE_PATHS,
     productionConfigPath: 'site/production.json',
     navigationPaths: Object.freeze({
       ja: 'dist/public-data/production/ja/navigation.json',
