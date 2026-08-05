@@ -150,12 +150,11 @@ const PRODUCTION_UI_LOCALE_SHAPE = Object.freeze({
   root: {
     title: string,
     heading: string,
-    description_ja: string,
-    description_en: string,
-    unofficial_ja: string,
-    unofficial_en: string,
-    japanese_link: string,
-    english_link: string
+    description: string,
+    unofficial: string,
+    language_link: string,
+    footer_navigation_label: string,
+    operator_label: string
   },
   not_found: {
     title: string,
@@ -486,6 +485,19 @@ function validatePair(navigations, uiLocales, config) {
       )
     );
   }
+  if (
+    config.mode === 'production' &&
+    uiLocales.ja?.footer?.copyright !== uiLocales.en?.footer?.copyright
+  ) {
+    results.push(
+      siteError(
+        'SITE-E001',
+        'site/locales/production/',
+        'productionの日英著作権表記が一致しません。',
+        'footer.copyright'
+      )
+    );
+  }
   return results;
 }
 
@@ -557,6 +569,10 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   const assets = {};
   for (const [outputPath, sourcePath] of Object.entries(SITE_TEXT_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath);
+  }
+  if (config.rootStylePath) {
+    const rootStyles = await readAsset(repoRoot, config.rootStylePath);
+    assets['assets/styles.css'] = `${assets['assets/styles.css'].trimEnd()}\n\n${rootStyles}`;
   }
   for (const [outputPath, sourcePath] of Object.entries(SITE_BINARY_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath, true);

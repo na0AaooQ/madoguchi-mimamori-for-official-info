@@ -8,13 +8,12 @@
   "font_size": { "label": "文字サイズ", "standard": "標準", "large": "大" },
   "root": {
     "title": "言語を選択",
-    "heading": "まどぐちみまもり｜Madoguchi Mimamori",
-    "description_ja": "熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。",
-    "description_en": "A guide to official information published by public institutions and related organizations serving Kumamoto Prefecture and Kumamoto City.",
-    "unofficial_ja": "行政機関が運営する公式サイトではありません。",
-    "unofficial_en": "This is not an official government website.",
-    "japanese_link": "日本語で見る",
-    "english_link": "View in English"
+    "heading": "表示する言語を選ぶ",
+    "description": "熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。",
+    "unofficial": "行政機関が運営する公式サイトではありません。",
+    "language_link": "日本語で見る",
+    "footer_navigation_label": "日本語フッターナビゲーション",
+    "operator_label": "運営者："
   },
   "not_found": {
     "title": "ページが見つかりません",

@@ -271,25 +271,21 @@ test('detects every footer contact-link contract regression', async (t) => {
   }
 });
 
-test('rejects contact links on the production root and 404 pages', async (t) => {
-  for (const relative of ['index.html', '404.html']) {
-    await t.test(relative, async (t) => {
-      const root = await createSiteRepositoryCopy(t);
-      const file = path.join(root, 'dist/site/production', relative);
-      await writeFile(
-        file,
-        (await readFile(file, 'utf8')).replace(
-          '<main id="main-content">',
-          '<footer>https://portfolio.na0aaooq.com/contact.html</footer>\n    <main id="main-content">'
-        )
-      );
-      const results = await validateSiteRepository(root, 'production');
-      assert.ok(
-        results.some(({ message }) => message.includes('ルート言語選択ページと404ページ')),
-        JSON.stringify(results)
-      );
-    });
-  }
+test('rejects footer and contact links on the production 404 page', async (t) => {
+  const root = await createSiteRepositoryCopy(t);
+  const file = path.join(root, 'dist/site/production/404.html');
+  await writeFile(
+    file,
+    (await readFile(file, 'utf8')).replace(
+      '<main id="main-content">',
+      '<footer>https://portfolio.na0aaooq.com/contact.html</footer>\n    <main id="main-content">'
+    )
+  );
+  const results = await validateSiteRepository(root, 'production');
+  assert.ok(
+    results.some(({ message }) => message.includes('404.htmlへフッターや問い合わせ導線')),
+    JSON.stringify(results)
+  );
 });
 
 test('detects mixed old and new privacy sessionStorage wording', async (t) => {

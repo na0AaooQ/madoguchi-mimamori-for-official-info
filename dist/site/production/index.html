@@ -1,27 +1,63 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-text-size="standard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="madoguchi-static-site-v1">
-  <title>言語を選択｜まどぐちみまもり</title>
+  <title>言語を選択 / Choose a language｜まどぐちみまもり</title>
   <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/font-size.js" defer></script>
 </head>
-<body>
+<body class="production-root">
+  <a class="skip-link" href="#main-content">本文へ移動<span lang="en"> / Skip to main content</span></a>
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="site-name">まどぐちみまもり｜<span lang="en">Madoguchi Mimamori</span></span>
+      <div class="header-actions">
+        <fieldset class="font-size-control" data-font-size-control hidden>
+          <legend>文字サイズ<span lang="en"> / Text size</span></legend>
+          <button type="button" data-text-size="standard" aria-pressed="true">標準<span lang="en"> / Standard</span></button>
+          <button type="button" data-text-size="large" aria-pressed="false">大<span lang="en"> / Large</span></button>
+        </fieldset>
+      </div>
+    </div>
+  </header>
   <div class="page">
     <main id="main-content">
-      <h1>まどぐちみまもり｜Madoguchi Mimamori</h1>
-      <p>熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。</p>
+      <h1 class="root-language-heading">表示する言語を選ぶ<br><span lang="en">Choose a language</span></h1>
+      <p class="root-description-ja">熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。</p>
       <p lang="en">A guide to official information published by public institutions and related organizations serving Kumamoto Prefecture and Kumamoto City.</p>
-      <p class="note">行政機関が運営する公式サイトではありません。 <span lang="en">This is not an official government website.</span></p>
+      <p class="note">行政機関が運営する公式サイトではありません。</p>
+      <p class="note" lang="en">This is not an official government website.</p>
       <ul class="section-list">
         <li><a class="section-link" href="/ja/" hreflang="ja" lang="ja"><strong>日本語で見る</strong></a></li>
         <li><a class="section-link" href="/en/" hreflang="en" lang="en"><strong>View in English</strong></a></li>
       </ul>
     </main>
   </div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav aria-label="日本語フッターナビゲーション">
+        <ul class="footer-links">
+          <li><a href="/ja/privacy/">プライバシーポリシー</a></li>
+          <li><a href="https://portfolio.na0aaooq.com/contact.html" target="_blank" rel="noopener noreferrer" aria-label="問い合わせページを新しいタブで開く">問い合わせ</a></li>
+        </ul>
+      </nav>
+      <nav lang="en" aria-label="English footer navigation">
+        <ul class="footer-links">
+          <li><a href="/en/privacy/">Privacy Policy</a></li>
+          <li><a href="https://portfolio.na0aaooq.com/en/contact.html" target="_blank" rel="noopener noreferrer" aria-label="Open the contact page in a new tab">Contact</a></li>
+        </ul>
+      </nav>
+      <p>無料・広告なし・ログイン不要</p>
+      <p lang="en">Free, no ads, and no sign-in required</p>
+      <p>運営者：個人事業主(屋号: こころみまもり)&#x3000;<a href="https://portfolio.na0aaooq.com/about.html" target="_blank" rel="noopener noreferrer" aria-label="青木 直之 (あおき なおひさ)のプロフィールを新しいタブで開く">青木 直之 (あおき なおひさ)</a></p>
+      <p lang="en">Operator: Sole Proprietor (Business name: Kokoro Mimamori)&#x3000;<a href="https://portfolio.na0aaooq.com/en/about.html" target="_blank" rel="noopener noreferrer" aria-label="Open Naohisa Aoki&#39;s profile in a new tab">Naohisa Aoki</a></p>
+      <p class="copyright">© まどぐちみまもり 2026 青木直之 (@na0AaooQ) All Rights Reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>

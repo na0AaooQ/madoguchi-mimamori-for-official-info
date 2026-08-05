@@ -1,0 +1,22 @@
+.production-root .root-language-heading {
+  text-align: center;
+}
+
+@media (min-width: 64rem) {
+  .production-root .root-description-ja {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 34rem) {
+  .production-root .font-size-control legend {
+    float: none;
+    display: block;
+    margin: 0 0 0.35rem;
+    padding-block: 0;
+  }
+
+  .production-root .font-size-control button {
+    margin-inline: 0;
+  }
+}
