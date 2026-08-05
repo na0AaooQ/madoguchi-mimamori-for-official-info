@@ -191,6 +191,21 @@ function previewHtmlContract(source, file, inputs) {
     results.push(siteError('SITE-E005', target, '架空preview注意がありません。'));
   if (socialMetaElements(source).length > 0)
     results.push(siteError('SITE-E005', target, 'previewへOGP・X向けメタ情報を設定できません。'));
+  if (/\bG-[A-Z0-9]+\b/.test(source))
+    results.push(siteError('SITE-E005', target, 'previewへGA4測定IDを出力できません。'));
+  for (const marker of [
+    'googletagmanager.com/gtag/js',
+    'window.dataLayer',
+    'function gtag',
+    "gtag('js'",
+    "gtag('config'",
+    'Google tag (gtag.js)'
+  ]) {
+    if (source.includes(marker))
+      results.push(
+        siteError('SITE-E005', target, `previewへGoogleタグを出力できません: ${marker}`)
+      );
+  }
   const allowedExternalUrls = new Set([ui.privacy.operator_url, ui.footer.contact_url]);
   for (const { href, attributes } of anchorElements(source).filter(({ href }) =>
     /^https:\/\//.test(href)
@@ -493,6 +508,39 @@ function privacyHtmlContract(source, file, inputs) {
     if (source.includes(escapeHtml(value)))
       results.push(siteError('SITE-E005', target, '旧sessionStorage説明が残っています。'));
   }
+  if (inputs.mode === 'production') {
+    const analytics = privacy.analytics;
+    if (countLiteral(source, escapeHtml(analytics.heading)) !== 1)
+      results.push(siteError('SITE-E005', target, 'アクセス解析の見出しは1件必要です。'));
+    for (const paragraph of analytics.paragraphs) {
+      if (countLiteral(source, escapeHtml(paragraph)) !== 1)
+        results.push(siteError('SITE-E005', target, 'アクセス解析の説明がLocaleと一致しません。'));
+    }
+    const analyticsLinks = anchorElements(source).filter(({ href }) =>
+      analytics.links.some(({ url }) => url === href)
+    );
+    if (analyticsLinks.length !== analytics.links.length)
+      results.push(siteError('SITE-E005', target, 'Google公式リンクは3件必要です。'));
+    for (const { label, url } of analytics.links) {
+      const matches = analyticsLinks.filter(({ href }) => href === url);
+      if (matches.length !== 1) {
+        results.push(siteError('SITE-E005', target, `Google公式リンクは1件必要です: ${url}`));
+        continue;
+      }
+      const [link] = matches;
+      if (link.content !== escapeHtml(label))
+        results.push(siteError('SITE-E005', target, `Google公式リンクのラベルが不正です: ${url}`));
+      if (link.attributes.target !== '_blank')
+        results.push(
+          siteError('SITE-E005', target, `Google公式リンクにtargetがありません: ${url}`)
+        );
+      const rel = new Set((link.attributes.rel ?? '').split(/\s+/).filter(Boolean));
+      if (!rel.has('noopener') || !rel.has('noreferrer'))
+        results.push(
+          siteError('SITE-E005', target, `Google公式リンクに安全なrelがありません: ${url}`)
+        );
+    }
+  }
   if (source.includes('undefined') || /<p>\s*<\/p>/.test(source))
     results.push(
       siteError('SITE-E005', target, 'プライバシーポリシーに未定義値または空行があります。')
@@ -504,6 +552,29 @@ function productionHtmlContract(source, file, inputs) {
   const results = [];
   const target = outputFile(inputs, file);
   const isNotFound = file === '404.html';
+  const measurementId = inputs.siteUrl.analytics.measurement_id;
+  const googleScriptUrl = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+  const headEnd = source.indexOf('</head>');
+  const bodyStart = source.indexOf('<body');
+  if (
+    countLiteral(source, '<!-- Google tag (gtag.js) -->') !== 1 ||
+    countLiteral(source, googleScriptUrl) !== 1 ||
+    count(
+      source,
+      /<script\b(?=[^>]*\basync(?:\s|=|>))(?=[^>]*\bsrc="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=[^"]+")[^>]*>/g
+    ) !== 1 ||
+    countLiteral(source, 'window.dataLayer = window.dataLayer || [];') !== 1 ||
+    countLiteral(source, 'function gtag(){dataLayer.push(arguments);}') !== 1 ||
+    countLiteral(source, "gtag('js', new Date());") !== 1 ||
+    countLiteral(source, `gtag('config', '${measurementId}');`) !== 1 ||
+    countLiteral(source, measurementId) !== 2 ||
+    headEnd === -1 ||
+    bodyStart === -1 ||
+    source.indexOf('<!-- Google tag (gtag.js) -->') > headEnd ||
+    source.indexOf('<!-- Google tag (gtag.js) -->') > bodyStart
+  ) {
+    results.push(siteError('SITE-E005', target, 'Googleタグはhead内に標準構成で1組だけ必要です。'));
+  }
   if (isNotFound) {
     if (!source.includes('<meta name="robots" content="noindex">'))
       results.push(siteError('SITE-E005', target, '404.htmlにはnoindexが必要です。'));

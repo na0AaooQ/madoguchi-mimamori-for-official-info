@@ -96,7 +96,7 @@
   },
   "privacy": {
     "established": "制定日: 2026年8月4日",
-    "last_revised": "最終改定日: 2026年8月5日",
+    "last_revised": "最終改定日: 2026年8月6日",
     "operator_heading": "1. 運営者",
     "operator_prefix": "個人事業主(屋号: こころみまもり)",
     "operator_name": "青木 直之 (あおき なおひさ)",
@@ -111,8 +111,8 @@
     "unused_heading": "3. 使用しない機能・サービス",
     "unused_items": [
       "AI、外部API、Web検索、自動取得、RSS、クローリング、スクレイピングを使用しません。",
-      "広告、アフィリエイト、アクセス解析ツールを使用しません。",
-      "CookieとlocalStorageを使用しません。"
+      "広告、アフィリエイト、独自のアクセス解析システムを使用しません。",
+      "localStorageを使用しません。"
     ],
     "session_heading": "4. 文字サイズ設定の一時保存（sessionStorage）",
     "session_items": [
@@ -134,9 +134,36 @@
     "logs_heading": "7. ホスティング・技術情報",
     "logs_items": [
       "本サイトのホスティングにはGitHub Pagesを使用します。ホスティング提供者側で配信に必要なIPアドレス、ユーザーエージェント、閲覧日時などの技術情報が処理される可能性があります。",
-      "運営者は独自のアクセス解析、広告、トラッキングを追加していません。"
+      "運営者は広告目的のトラッキングを追加していません。"
     ],
-    "revision_heading": "8. 改定",
+    "analytics": {
+      "heading": "8. アクセス解析について",
+      "paragraphs": [
+        "当サイトでは、サイトの利用状況を把握し、掲載情報、画面構成、公式情報への案内機能およびメンテナンス計画の改善に役立てるため、Google LLCが提供するGoogle Analytics 4を利用しています。",
+        "Google Analytics 4はCookieを使用し、ページの閲覧状況、当サイトから外部サイトへのリンクのクリック、アクセス日時、アクセス元の概算地域、ブラウザーおよび端末に関する情報などを収集します。",
+        "当サイトからGoogle Analytics 4へ、氏名、メールアドレスその他の特定の個人を直接識別できる情報を送信することはありません。また、収集した情報を特定の個人を直接識別する目的では利用しません。",
+        "Google Analytics 4によって収集された情報は、Googleが定める規約およびプライバシーポリシーに基づいて処理されます。",
+        "当サイトでは、Google Analytics 4を広告配信、広告のパーソナライズ、GoogleシグナルまたはUser-IDには利用しません。当サイトのGoogle Analytics 4プロパティおよびレポートへのアクセス権は、当サイトの運営者のみに付与しています。",
+        "当サイトの運営者は、Google Analytics 4の提供に必要なGoogleによる処理を除き、解析データを第三者へ提供せず、独自のアクセス解析システムへの二次利用も行いません。",
+        "Google Analytics 4のユーザー単位およびイベント単位のデータ保持期間は、14か月に設定しています。",
+        "Google Analyticsによる計測を希望しない場合は、Googleが提供するGoogle アナリティクス オプトアウト アドオンを利用することで、計測を無効にできます。"
+      ],
+      "links": [
+        {
+          "label": "Google のサービスを使用するサイトやアプリから収集した情報の Google による使用",
+          "url": "https://policies.google.com/technologies/partner-sites?hl=ja"
+        },
+        {
+          "label": "Google プライバシー ポリシー",
+          "url": "https://policies.google.com/privacy?hl=ja"
+        },
+        {
+          "label": "Google アナリティクス オプトアウト アドオン",
+          "url": "https://tools.google.com/dlpage/gaoptout?hl=ja"
+        }
+      ]
+    },
+    "revision_heading": "9. 改定",
     "revision_items": ["内容を変更した場合は、本ページ上で案内します。"]
   },
   "footer": {

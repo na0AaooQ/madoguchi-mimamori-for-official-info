@@ -128,6 +128,15 @@ PRをマージした後、利用者が次を実行します。
 10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に11 URLがあること
 11. CSS、文字サイズ、内部リンク、モバイル表示、キーボード操作
 
+Google Analytics 4を含む変更を公開した場合は、運営者だけがGA4管理画面で次も確認します。ローカル生成・自動テストではGoogle AnalyticsやGoogle公式URLへ接続しません。
+
+1. リアルタイムレポートのpage_view
+2. 外部公式リンクのclickイベント、`link_url`、`link_domain`
+3. production 404のpage_view
+4. `_ga`等のCookie
+5. 無効にした拡張イベントが送信されていないこと
+6. タグの二重送信がないこと
+
 ## 初回失敗と修正
 
 2026年8月4日のworkflow実行 #1は、`npm run check`内の`format:check`で失敗しました。Prettierの既存Markdown基準コミット`f9ea011`を`git ls-tree`で参照できず、`actions/checkout`の浅い履歴によって必要な過去コミットを取得していなかったことが原因です。

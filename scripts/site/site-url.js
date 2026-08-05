@@ -51,7 +51,35 @@ export function baseUrlsMatch(configured, actual) {
   }
 }
 
-export async function loadProductionSiteUrl(repoRoot, relativePath = 'site/production.json') {
+export function parseProductionSiteConfig(value) {
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    Array.isArray(value) ||
+    JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(['analytics', 'base_url']) ||
+    !value.analytics ||
+    typeof value.analytics !== 'object' ||
+    Array.isArray(value.analytics) ||
+    JSON.stringify(Object.keys(value.analytics).sort()) !== JSON.stringify(['measurement_id'])
+  ) {
+    throw new TypeError(
+      'production設定はanalytics.measurement_idとbase_urlだけを持つオブジェクトにしてください。'
+    );
+  }
+  const measurementId = value.analytics.measurement_id;
+  if (typeof measurementId !== 'string' || measurementId === '')
+    throw new TypeError('analytics.measurement_idは空でない文字列にしてください。');
+  if (measurementId.trim() !== measurementId)
+    throw new TypeError('analytics.measurement_idの前後に空白を含められません。');
+  if (!/^G-[A-Z0-9]+$/.test(measurementId))
+    throw new TypeError('analytics.measurement_idはGA4測定ID形式にしてください。');
+  return Object.freeze({
+    ...parseProductionBaseUrl(value.base_url),
+    analytics: Object.freeze({ measurement_id: measurementId })
+  });
+}
+
+export async function loadProductionSiteConfig(repoRoot, relativePath = 'site/production.json') {
   let source;
   try {
     source = await readFile(path.join(repoRoot, relativePath), 'utf8');
@@ -74,22 +102,13 @@ export async function loadProductionSiteUrl(repoRoot, relativePath = 'site/produ
       error
     );
   }
-  if (
-    !value ||
-    typeof value !== 'object' ||
-    Array.isArray(value) ||
-    Object.keys(value).length !== 1 ||
-    typeof value.base_url !== 'string'
-  ) {
-    throw new SiteRuntimeError(
-      'SITE-RUN-E002',
-      relativePath,
-      'production設定はbase_urlだけを持つオブジェクトにしてください。'
-    );
-  }
   try {
-    return parseProductionBaseUrl(value.base_url);
+    return parseProductionSiteConfig(value);
   } catch (error) {
     throw new SiteRuntimeError('SITE-RUN-E002', relativePath, error.message, error);
   }
+}
+
+export async function loadProductionSiteUrl(repoRoot, relativePath = 'site/production.json') {
+  return loadProductionSiteConfig(repoRoot, relativePath);
 }

@@ -164,6 +164,50 @@ test('invalid English input preserves the existing generated site', async (t) =>
   assert.equal(await readFile(tracked, 'utf8'), before);
 });
 
+test('invalid production GA4 settings preserve existing production artifacts and are not required for preview', async (t) => {
+  for (const { name, mutate } of [
+    { name: 'missing analytics', mutate: (value) => delete value.analytics },
+    { name: 'empty measurement ID', mutate: (value) => (value.analytics.measurement_id = '') },
+    {
+      name: 'measurement ID with whitespace',
+      mutate: (value) => (value.analytics.measurement_id = ' G-TWRZ1HTRTZ')
+    },
+    {
+      name: 'measurement ID with invalid format',
+      mutate: (value) => (value.analytics.measurement_id = 'G-TWRZ-1')
+    }
+  ]) {
+    await t.test(name, async (t) => {
+      const root = await createSiteRepositoryCopy(t);
+      const tracked = path.join(root, 'dist/site/production/index.html');
+      const before = await readFile(tracked, 'utf8');
+      const config = await readJson(root, 'site/production.json');
+      mutate(config);
+      await writeJson(root, 'site/production.json', config);
+      assert.equal(
+        await runSiteCli(['generate', '--mode', 'production'], {
+          cwd: root,
+          stdout: () => {},
+          stderr: () => {}
+        }),
+        2
+      );
+      assert.equal(await readFile(tracked, 'utf8'), before);
+    });
+  }
+
+  const previewRoot = await createSiteRepositoryCopy(t);
+  await rm(path.join(previewRoot, 'site/production.json'));
+  assert.equal(
+    await runSiteCli(['generate', '--mode', 'preview'], {
+      cwd: previewRoot,
+      stdout: () => {},
+      stderr: () => {}
+    }),
+    0
+  );
+});
+
 test('rejects unsafe anchors and missing destination language notes', async (t) => {
   const unsafeRoot = await createSiteRepositoryCopy(t);
   const japanese = await readJson(unsafeRoot, 'dist/public-data/preview/ja/navigation.json');

@@ -28,5 +28,6 @@
 | [0022](0022-generate-and-track-public-navigation-artifacts.md)              | 採用 | 2026年8月2日 | 公開用navigation成果物を生成・管理する                       |
 | [0023](0023-generate-preview-site-as-static-html.md)                        | 採用 | 2026年8月3日 | preview画面を静的HTMLとして生成する                          |
 | [0024](0024-expand-one-site-nationally-and-defer-regional-url-migration.md) | 採用 | 2026年8月5日 | 同一サイトを全国版へ拡張し、地域別URL移行を2県目追加前に行う |
+| [0025](0025-adopt-minimal-ga4-analytics-for-production.md)                  | 採用 | 2026年8月6日 | productionへ必要最小限のGoogle Analytics 4を導入する         |
 
 設計判断を変更する場合は、元の記録を消去せず、変更理由と影響範囲が追跡できる記録を追加します。

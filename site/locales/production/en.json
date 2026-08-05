@@ -96,7 +96,7 @@
   },
   "privacy": {
     "established": "Established: August 4, 2026",
-    "last_revised": "Last revised: August 5, 2026",
+    "last_revised": "Last revised: August 6, 2026",
     "operator_heading": "1. Operator",
     "operator_prefix": "Sole Proprietor (Business name: Kokoro Mimamori)",
     "operator_name": "Naohisa Aoki",
@@ -111,8 +111,8 @@
     "unused_heading": "3. Features and services not used",
     "unused_items": [
       "The site does not use AI, external APIs, web search, automated collection, RSS, crawling, or scraping.",
-      "The site does not use advertising, affiliate marketing, or analytics tools.",
-      "The site does not use cookies or localStorage."
+      "The site does not use advertising, affiliate marketing, or a separate analytics system.",
+      "The site does not use localStorage."
     ],
     "session_heading": "4. Temporary text-size storage (sessionStorage)",
     "session_items": [
@@ -134,9 +134,36 @@
     "logs_heading": "7. Hosting and technical information",
     "logs_items": [
       "This site is hosted on GitHub Pages. The hosting provider may process technical information required for delivery, such as IP addresses, user agents, and access times.",
-      "The operator has not added independent analytics, advertising, or tracking."
+      "The operator has not added tracking for advertising purposes."
     ],
-    "revision_heading": "8. Revisions",
+    "analytics": {
+      "heading": "8. Website Analytics",
+      "paragraphs": [
+        "This website uses Google Analytics 4, a service provided by Google LLC, to understand how the website is used and to improve its published information, page structure, guidance to official information sources, and maintenance planning.",
+        "Google Analytics 4 uses cookies to collect information such as page views, clicks on links from this website to external websites, access dates and times, approximate geographic location, and browser and device information.",
+        "This website does not send names, email addresses, or other information that directly identifies a specific individual to Google Analytics 4. The collected information is not used by the site operator for the purpose of directly identifying individual users.",
+        "Information collected through Google Analytics 4 is processed in accordance with the terms and privacy policies established by Google.",
+        "This website does not use Google Analytics 4 for advertising, personalized advertising, Google signals, or User-ID. Access to this website's Google Analytics 4 property and reports is granted only to the site operator.",
+        "The site operator does not provide analytics data to third parties or use it in a separate analytics system, except for processing by Google that is necessary to provide Google Analytics 4.",
+        "The retention period for user-level and event-level data in Google Analytics 4 is set to 14 months.",
+        "Users who do not wish to be measured by Google Analytics may disable measurement by using the Google Analytics Opt-out Browser Add-on provided by Google."
+      ],
+      "links": [
+        {
+          "label": "How Google uses information from sites or apps that use our services",
+          "url": "https://policies.google.com/technologies/partner-sites?hl=en-US"
+        },
+        {
+          "label": "Google Privacy Policy",
+          "url": "https://policies.google.com/privacy?hl=en-US"
+        },
+        {
+          "label": "Google Analytics Opt-out Browser Add-on",
+          "url": "https://tools.google.com/dlpage/gaoptout?hl=en-GB"
+        }
+      ]
+    },
+    "revision_heading": "9. Revisions",
     "revision_items": ["Changes to this policy will be announced on this page."]
   },
   "footer": {

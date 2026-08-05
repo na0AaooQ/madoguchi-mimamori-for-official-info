@@ -7,7 +7,8 @@ import {
   absoluteSiteUrl,
   baseUrlsMatch,
   joinSitePath,
-  parseProductionBaseUrl
+  parseProductionBaseUrl,
+  parseProductionSiteConfig
 } from '../../scripts/site/site-url.js';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
@@ -33,6 +34,25 @@ test('rejects unsafe production base URLs', () => {
     'https://example.com/#fragment'
   ]) {
     assert.throws(() => parseProductionBaseUrl(value), TypeError);
+  }
+});
+
+test('requires a valid GA4 measurement ID in the production-only site configuration', () => {
+  const valid = {
+    analytics: { measurement_id: 'G-TWRZ1HTRTZ' },
+    base_url: 'https://madoguchi.example/'
+  };
+  assert.deepEqual(parseProductionSiteConfig(valid).analytics, { measurement_id: 'G-TWRZ1HTRTZ' });
+  for (const value of [
+    {},
+    { analytics: {}, base_url: valid.base_url },
+    { analytics: { measurement_id: '' }, base_url: valid.base_url },
+    { analytics: { measurement_id: ' G-TWRZ1HTRTZ' }, base_url: valid.base_url },
+    { analytics: { measurement_id: 'G-TWRZ1HTRTZ ' }, base_url: valid.base_url },
+    { analytics: { measurement_id: 'g-TWRZ1HTRTZ' }, base_url: valid.base_url },
+    { analytics: { measurement_id: 'G-TWRZ-1' }, base_url: valid.base_url }
+  ]) {
+    assert.throws(() => parseProductionSiteConfig(value), TypeError);
   }
 });
 

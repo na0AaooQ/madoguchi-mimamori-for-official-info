@@ -54,6 +54,55 @@ test('builds the deterministic 19-file production site from production navigatio
   }
 });
 
+test('adds one standard GA4 Google tag to every production HTML and none to preview HTML', () => {
+  const measurementId = inputs.siteUrl.analytics.measurement_id;
+  const googleScriptUrl = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+  const productionHtml = [...buildSiteArtifacts(inputs)].filter(([file]) => file.endsWith('.html'));
+  assert.equal(productionHtml.length, 12);
+  for (const [file, source] of productionHtml) {
+    assert.equal(countLiteral(source, '<!-- Google tag (gtag.js) -->'), 1, file);
+    assert.equal(countLiteral(source, googleScriptUrl), 1, file);
+    assert.equal(
+      [
+        ...source.matchAll(
+          /<script async src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-TWRZ1HTRTZ"><\/script>/g
+        )
+      ].length,
+      1,
+      file
+    );
+    assert.equal(countLiteral(source, 'window.dataLayer = window.dataLayer || [];'), 1, file);
+    assert.equal(countLiteral(source, 'function gtag(){dataLayer.push(arguments);}'), 1, file);
+    assert.equal(countLiteral(source, "gtag('js', new Date());"), 1, file);
+    assert.equal(countLiteral(source, `gtag('config', '${measurementId}');`), 1, file);
+    assert.equal(countLiteral(source, measurementId), 2, file);
+    const headEnd = source.indexOf('</head>');
+    const bodyStart = source.indexOf('<body');
+    const tagStart = source.indexOf('<!-- Google tag (gtag.js) -->');
+    assert.ok(tagStart > source.indexOf('<meta charset="utf-8">'), file);
+    assert.ok(tagStart < headEnd && tagStart < bodyStart, file);
+    assert.ok(tagStart < source.indexOf('<link rel="stylesheet"'), file);
+    assert.doesNotMatch(
+      source,
+      /window\.location\.origin|document\.createElement\(['"]script|GTM-/
+    );
+  }
+  for (const [file, source] of buildSiteArtifacts(previewInputs)) {
+    if (!file.endsWith('.html')) continue;
+    for (const marker of [
+      'G-TWRZ1HTRTZ',
+      'googletagmanager.com/gtag/js',
+      'window.dataLayer',
+      'function gtag',
+      "gtag('js'",
+      "gtag('config'",
+      'Google tag (gtag.js)'
+    ]) {
+      assert.equal(source.includes(marker), false, `${file}: ${marker}`);
+    }
+  }
+});
+
 test('generates the agreed common UI and accessible bilingual production root', () => {
   const root = buildSiteArtifacts(inputs).get('index.html');
   const japaneseUi = inputs.uiLocales.ja;
@@ -192,12 +241,12 @@ test('generates the agreed common UI and accessible bilingual production root', 
   );
 });
 
-test('does not add automatic language redirects or browser storage and network features', () => {
+test('does not add automatic language redirects or browser storage beyond the approved scripts', () => {
   const root = buildSiteArtifacts(inputs).get('index.html');
   assert.doesNotMatch(root, /http-equiv=["']refresh|meta\s+refresh/i);
   assert.doesNotMatch(root, /location\.href|location\.replace/);
-  assert.doesNotMatch(root, /<script(?![^>]*src="\/assets\/font-size\.js")/);
   assert.doesNotMatch(root, /localStorage|document\.cookie|fetch\(|XMLHttpRequest/);
+  assert.doesNotMatch(root, /window\.location\.origin|document\.createElement\(['"]script/);
 });
 
 test('uses one language-specific source for each production root responsibility', async (t) => {
@@ -336,29 +385,54 @@ test('uses language-specific contacts and safe clickable external links', () => 
   }
 });
 
-test('keeps production privacy text outside BL-004 unchanged', () => {
+test('renders the approved production privacy analytics explanations and Google official links', () => {
   const artifacts = buildSiteArtifacts(inputs);
   const japanese = artifacts.get('ja/privacy/index.html');
   const english = artifacts.get('en/privacy/index.html');
   assert.match(japanese, /制定日: 2026年8月4日/);
-  assert.match(japanese, /最終改定日: 2026年8月5日/);
+  assert.match(japanese, /最終改定日: 2026年8月6日/);
   assert.match(japanese, /4\. 文字サイズ設定の一時保存（sessionStorage）/);
-  assert.match(
-    japanese,
-    /公的機関・関係団体の案内先、問い合わせ先、運営者プロフィールは外部サイトです。/
-  );
+  assert.match(japanese, /8\. アクセス解析について/);
+  for (const marker of [
+    'Google Analytics 4を利用しています。',
+    'Google Analytics 4はCookieを使用し、ページの閲覧状況、当サイトから外部サイトへのリンクのクリック、アクセス日時、アクセス元の概算地域、ブラウザーおよび端末に関する情報などを収集します。',
+    '氏名、メールアドレスその他の特定の個人を直接識別できる情報を送信することはありません。',
+    'GoogleシグナルまたはUser-IDには利用しません。',
+    '運営者のみに付与しています。',
+    '解析データを第三者へ提供せず、独自のアクセス解析システムへの二次利用も行いません。',
+    '14か月に設定しています。',
+    'Google アナリティクス オプトアウト アドオン'
+  ]) {
+    assert.match(japanese, new RegExp(marker));
+  }
   assert.match(english, /Established: August 4, 2026/);
-  assert.match(english, /Last revised: August 5, 2026/);
+  assert.match(english, /Last revised: August 6, 2026/);
   assert.match(english, /4\. Temporary text-size storage \(sessionStorage\)/);
-  assert.match(
-    english,
-    /Destinations of public institutions and related organizations, the contact page, and the operator profile are external sites\./
-  );
-  for (const source of [japanese, english]) {
-    assert.doesNotMatch(
-      source,
-      /4\. sessionStorage|sessionStorageを利用できない場合は標準サイズで表示します。|If sessionStorage is unavailable, the site displays the standard text size\./
-    );
+  assert.match(english, /8\. Website Analytics/);
+  for (const marker of [
+    'Google Analytics 4, a service provided by Google LLC',
+    'uses cookies to collect information such as page views, clicks on links from this website to external websites, access dates and times, approximate geographic location, and browser and device information.',
+    'does not send names, email addresses, or other information that directly identifies a specific individual',
+    'Google signals, or User-ID.',
+    'granted only to the site operator.',
+    'does not provide analytics data to third parties or use it in a separate analytics system',
+    '14 months',
+    'Google Analytics Opt-out Browser Add-on'
+  ]) {
+    assert.match(english, new RegExp(marker));
+  }
+  for (const [source, links] of [
+    [japanese, inputs.uiLocales.ja.privacy.analytics.links],
+    [english, inputs.uiLocales.en.privacy.analytics.links]
+  ]) {
+    assert.equal(links.length, 3);
+    for (const { label, url } of links) {
+      const tag = anchorTag(source, url);
+      assert.ok(tag, url);
+      assert.match(tag, /target="_blank"/);
+      assert.match(tag, /rel="noopener noreferrer"/);
+      assert.ok(source.includes(`>${label}</a>`), label);
+    }
   }
 });
 
