@@ -20,6 +20,14 @@
 
 架空previewは`/preview/ja/`と`/preview/en/`へ生成し、productionとは入力、文言、外部リンク方針を分離します。
 
+## OGP画像とSNS共有メタデータ
+
+OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だけBufferとして読み込み、`dist/site/production/ogp-image.png`へバイト列を変更せず生成します。previewでは入力として読み込まず、成果物にも生成しません。正式画像のSHA-256は`7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84`です。
+
+共通画像1枚を、sitemapと同じproduction通常ページ全11ページで使用します。各ページにOpen Graph 10項目とX向け6項目を1件ずつ設定し、`title`、`description`、`og:url`はページごとの既存データと正式URL設定から生成します。ルートは日英共通値、日本語・英語ページは対応するLocaleと公開ナビゲーションを使用します。productionの`404.html`とpreview全HTMLは対象外です。
+
+現在の成果物数はproduction 19件、preview 21件で、sitemapは通常ページと一致する11 URLです。OGP画像はHTMLではないためsitemapへ追加しません。
+
 ## productionルート
 
 現在の`/`は、日本語と英語に共通する言語選択入口です。日本語・英語の選択肢を同じ重みと同じHTML構造で表示し、日本語優先表示、ブラウザー言語による選択、JavaScriptや`meta refresh`による自動転送は行いません。

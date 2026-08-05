@@ -7,6 +7,7 @@ import test from 'node:test';
 import {
   validateAppleTouchIcon,
   validateIcoIcon,
+  validateOgpImage,
   validateSvgIcon
 } from '../../scripts/site/site-icon-validator.js';
 import { loadSiteInputs } from '../../scripts/site/site-input-loader.js';
@@ -41,12 +42,48 @@ test('loads SVG as text and ICO and PNG as byte buffers for both modes', async (
     assert.equal(Buffer.isBuffer(inputs.assets['favicon.ico']), true);
     assert.equal(Buffer.isBuffer(inputs.assets['apple-touch-icon.png']), true);
   }
+  assert.equal('ogp-image.png' in preview.assets, false);
+  assert.equal(Buffer.isBuffer(production.assets['ogp-image.png']), true);
   assert.equal(preview.assets['favicon.ico'].equals(production.assets['favicon.ico']), true);
   assert.equal(preview.assets['favicon.svg'], production.assets['favicon.svg']);
   assert.equal(
     preview.assets['apple-touch-icon.png'].equals(production.assets['apple-touch-icon.png']),
     true
   );
+});
+
+test('loads and validates the approved production-only OGP image', async () => {
+  const source = await readIcon('ogp-image.png');
+  assert.equal(source.length, 564_713);
+  assert.equal(
+    createHash('sha256').update(source).digest('hex'),
+    '7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84'
+  );
+  assert.deepEqual(validateOgpImage(source), []);
+
+  const wrongDimensions = Buffer.from(source);
+  wrongDimensions.writeUInt32BE(1199, 16);
+  assert.match(validateOgpImage(wrongDimensions).join('\n'), /1200x630px/);
+
+  const transparent = Buffer.from(source);
+  transparent[25] = 6;
+  assert.match(validateOgpImage(transparent).join('\n'), /透明チャンネルのないRGB/);
+
+  const idat = source.indexOf(Buffer.from('IDAT'));
+  const badCrc = Buffer.from(source);
+  badCrc[idat + 4] ^= 0xff;
+  assert.match(validateOgpImage(badCrc).join('\n'), /IDATチャンクのCRC/);
+
+  const forbiddenChunk = Buffer.from(source);
+  const profile = forbiddenChunk.indexOf(Buffer.from('iCCP'));
+  forbiddenChunk.write('pHYs', profile, 'ascii');
+  assert.match(validateOgpImage(forbiddenChunk).join('\n'), /許可されていないPNGチャンク/);
+
+  const trailing = Buffer.concat([source, Buffer.from([0])]);
+  assert.match(validateOgpImage(trailing).join('\n'), /IEND後/);
+
+  const truncated = source.subarray(0, source.length - 4);
+  assert.match(validateOgpImage(truncated).join('\n'), /途中で切れています|IEND/);
 });
 
 test('validates the approved SVG safety and square viewBox contract', async () => {

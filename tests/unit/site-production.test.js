@@ -26,19 +26,21 @@ function anchorTag(source, href) {
   return source.match(new RegExp(`<a\\b[^>]*href="${escaped}"[^>]*>`))?.[0];
 }
 
-test('builds the deterministic 18-file production site from production navigation only', () => {
+test('builds the deterministic 19-file production site from production navigation only', () => {
   const first = buildSiteArtifacts(inputs);
   const cloned = structuredClone(inputs);
   cloned.assets['favicon.ico'] = Buffer.from(cloned.assets['favicon.ico']);
   cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
+  cloned.assets['ogp-image.png'] = Buffer.from(cloned.assets['ogp-image.png']);
   const second = buildSiteArtifacts(cloned);
-  assert.equal(first.size, 18);
+  assert.equal(first.size, 19);
   assert.deepEqual([...first], [...second]);
   assert.deepEqual(
     [...first.keys()].sort(),
     expectedSiteArtifactPaths(inputs.navigations, 'production')
   );
   for (const file of ['index.html', '404.html', 'sitemap.xml']) assert.ok(first.has(file));
+  assert.equal(Buffer.isBuffer(first.get('ogp-image.png')), true);
   assert.match(first.get('assets/styles.css'), /\.production-root \.root-language-heading/);
   assert.doesNotMatch(
     buildSiteArtifacts(previewInputs).get('assets/styles.css'),

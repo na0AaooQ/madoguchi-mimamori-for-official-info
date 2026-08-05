@@ -3,6 +3,7 @@ import {
   ROLE_ORDER,
   SITE_GENERATOR_NAME,
   SITE_LOCALES,
+  SITE_OGP_IMAGE_PATH,
   SOURCE_TYPE_CATEGORIES
 } from './site-constants.js';
 import { absoluteSiteUrl, joinSitePath } from './site-url.js';
@@ -478,6 +479,37 @@ function productionPath(inputs, relative = '') {
   return sitePath(inputs, relative);
 }
 
+export function productionSocialMetaTags(
+  inputs,
+  { title, description, pageUrl, siteName, imageAlt }
+) {
+  const imageUrl = absoluteSiteUrl(inputs.siteUrl, SITE_OGP_IMAGE_PATH);
+  const tags = [
+    ['property', 'og:title', title],
+    ['property', 'og:description', description],
+    ['property', 'og:type', 'website'],
+    ['property', 'og:url', pageUrl],
+    ['property', 'og:site_name', siteName],
+    ['property', 'og:image', imageUrl],
+    ['property', 'og:image:type', 'image/png'],
+    ['property', 'og:image:width', '1200'],
+    ['property', 'og:image:height', '630'],
+    ['property', 'og:image:alt', imageAlt],
+    ['name', 'twitter:card', 'summary_large_image'],
+    ['name', 'twitter:site', '@na0AaooQ'],
+    ['name', 'twitter:title', title],
+    ['name', 'twitter:description', description],
+    ['name', 'twitter:image', imageUrl],
+    ['name', 'twitter:image:alt', imageAlt]
+  ];
+  return tags
+    .map(
+      ([attribute, key, content]) =>
+        `  <meta ${escapeHtml(attribute)}="${escapeHtml(key)}" content="${escapeHtml(content)}">`
+    )
+    .join('\n');
+}
+
 function externalAnchor(url, text, ui, extraAttributes = '') {
   const label = `${text}（${ui.destination.external_link_label}）`;
   return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(label)}"${extraAttributes}>${escapeHtml(text)}</a>`;
@@ -525,8 +557,24 @@ function productionFooter(inputs, navigation, ui) {
   </footer>`;
 }
 
-function productionPageShell({ inputs, navigation, ui, title, alternatePath, mainContent }) {
+function productionPageShell({
+  inputs,
+  navigation,
+  ui,
+  title,
+  description,
+  pagePath,
+  alternatePath,
+  mainContent
+}) {
   const pageTitle = `${title}｜${navigation.site.site_name}`;
+  const socialMetadata = productionSocialMetaTags(inputs, {
+    title: pageTitle,
+    description,
+    pageUrl: absoluteSiteUrl(inputs.siteUrl, pagePath),
+    siteName: navigation.site.site_name,
+    imageAlt: ui.social.image_alt
+  });
   return `<!doctype html>
 <html lang="${navigation.locale}" data-text-size="standard">
 <head>
@@ -534,6 +582,7 @@ function productionPageShell({ inputs, navigation, ui, title, alternatePath, mai
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(pageTitle)}</title>
+${socialMetadata}
 ${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
   <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
@@ -577,6 +626,8 @@ ${sectionItems}
     navigation,
     ui,
     title: ui.pages.home_title,
+    description: navigation.site.short_description,
+    pagePath: `${locale}/`,
     alternatePath: productionPath(inputs, `${alternateLocale(locale)}/`),
     mainContent: content
   });
@@ -696,6 +747,8 @@ ${cards}
     navigation,
     ui,
     title: section.title,
+    description: section.short_description,
+    pagePath: `${locale}/sections/${section.anchor_id}/`,
     alternatePath: productionPath(
       inputs,
       `${alternateLocale(locale)}/sections/${section.anchor_id}/`
@@ -758,6 +811,8 @@ ${organizations}`;
     navigation,
     ui,
     title: ui.pages.organizations_title,
+    description: ui.pages.organizations_intro,
+    pagePath: `${locale}/organizations/`,
     alternatePath: productionPath(inputs, `${alternateLocale(locale)}/organizations/`),
     mainContent: content
   });
@@ -791,6 +846,8 @@ ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
     navigation,
     ui,
     title: ui.pages.privacy_title,
+    description: ui.social.privacy_description,
+    pagePath: `${locale}/privacy/`,
     alternatePath: productionPath(inputs, `${alternateLocale(locale)}/privacy/`),
     mainContent: content
   });
@@ -804,6 +861,13 @@ function productionRootPage(inputs) {
   const japaneseSiteName = inputs.navigations.ja.site.site_name;
   const englishSiteName = inputs.navigations.en.site.site_name;
   const pageTitle = `${japaneseRoot.title} / ${englishRoot.title}｜${japaneseSiteName}`;
+  const socialMetadata = productionSocialMetaTags(inputs, {
+    title: `${japaneseSiteName}｜${englishSiteName}`,
+    description: `${japaneseRoot.description} / ${englishRoot.description}`,
+    pageUrl: absoluteSiteUrl(inputs.siteUrl),
+    siteName: `${japaneseSiteName}｜${englishSiteName}`,
+    imageAlt: japaneseUi.social.image_alt
+  });
   return `<!doctype html>
 <html lang="ja" data-text-size="standard">
 <head>
@@ -811,6 +875,7 @@ function productionRootPage(inputs) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(pageTitle)}</title>
+${socialMetadata}
 ${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
   <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
@@ -936,7 +1001,8 @@ function expectedProductionSiteArtifactPaths(navigations) {
     'assets/font-size.js',
     'favicon.svg',
     'favicon.ico',
-    'apple-touch-icon.png'
+    'apple-touch-icon.png',
+    SITE_OGP_IMAGE_PATH
   ]);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);

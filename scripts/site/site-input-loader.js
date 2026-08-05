@@ -19,7 +19,7 @@ import {
   VISIBILITY_CONTEXTS,
   getSiteMode
 } from './site-constants.js';
-import { validateSiteIcon } from './site-icon-validator.js';
+import { validateOgpImage, validateSiteIcon } from './site-icon-validator.js';
 import { loadProductionSiteUrl } from './site-url.js';
 
 const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
@@ -164,6 +164,10 @@ const PRODUCTION_UI_LOCALE_SHAPE = Object.freeze({
     root_link: string,
     japanese_link: string,
     english_link: string
+  },
+  social: {
+    image_alt: string,
+    privacy_description: string
   },
   destination: {
     external_notice: string,
@@ -576,6 +580,11 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   }
   for (const [outputPath, sourcePath] of Object.entries(SITE_BINARY_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath, true);
+  }
+  for (const [outputPath, sourcePath] of Object.entries(config.binaryAssetSourcePaths)) {
+    assets[outputPath] = await readAsset(repoRoot, sourcePath, true);
+    for (const message of validateOgpImage(assets[outputPath]))
+      results.push(siteError('SITE-E001', sourcePath, message));
   }
   for (const icon of SITE_ICON_PATHS) {
     const sourcePath = SITE_TEXT_ASSET_SOURCE_PATHS[icon] ?? SITE_BINARY_ASSET_SOURCE_PATHS[icon];

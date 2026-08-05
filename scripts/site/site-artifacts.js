@@ -14,11 +14,12 @@ import {
   SITE_GENERATOR_NAME,
   SITE_ICON_PATHS,
   SITE_LOCALES,
+  SITE_OGP_IMAGE_PATH,
   SiteRuntimeError
 } from './site-constants.js';
-import { validateSiteIcon } from './site-icon-validator.js';
+import { validateOgpImage, validateSiteIcon } from './site-icon-validator.js';
 import { loadSiteInputs } from './site-input-loader.js';
-import { joinSitePath } from './site-url.js';
+import { absoluteSiteUrl, joinSitePath } from './site-url.js';
 
 const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
 const TEXT_ARTIFACT_EXTENSIONS = new Set(['.html', '.css', '.js', '.xml', '.svg']);
@@ -188,6 +189,8 @@ function previewHtmlContract(source, file, inputs) {
     results.push(siteError('SITE-E005', target, 'previewのrobotsメタ情報がありません。'));
   if (!source.includes(ui.preview_notice.title))
     results.push(siteError('SITE-E005', target, '架空preview注意がありません。'));
+  if (socialMetaElements(source).length > 0)
+    results.push(siteError('SITE-E005', target, 'previewへOGP・X向けメタ情報を設定できません。'));
   const allowedExternalUrls = new Set([ui.privacy.operator_url, ui.footer.contact_url]);
   for (const { href, attributes } of anchorElements(source).filter(({ href }) =>
     /^https:\/\//.test(href)
@@ -233,6 +236,175 @@ function anchorElements(source) {
     const attributes = parseAttributes(match[1]);
     return { href: attributes.href ?? '', attributes, content: match[2] };
   });
+}
+
+function metaElements(source) {
+  return [...source.matchAll(/<meta\b([^>]*)>/g)].map((match) => parseAttributes(match[1]));
+}
+
+function socialMetaElements(source) {
+  return metaElements(source).filter(
+    ({ property = '', name = '' }) => property.startsWith('og:') || name.startsWith('twitter:')
+  );
+}
+
+function expectedProductionSocialMetadata(file, inputs) {
+  if (file === '404.html') return undefined;
+  const imageUrl = absoluteSiteUrl(inputs.siteUrl, SITE_OGP_IMAGE_PATH);
+  if (file === 'index.html') {
+    const japaneseUi = inputs.uiLocales.ja;
+    const englishUi = inputs.uiLocales.en;
+    const japaneseName = inputs.navigations.ja.site.site_name;
+    const englishName = inputs.navigations.en.site.site_name;
+    const title = `${japaneseName}｜${englishName}`;
+    const description = `${japaneseUi.root.description} / ${englishUi.root.description}`;
+    return {
+      title,
+      description,
+      pageUrl: absoluteSiteUrl(inputs.siteUrl),
+      siteName: title,
+      imageUrl,
+      imageAlt: japaneseUi.social.image_alt
+    };
+  }
+
+  const match = /^(ja|en)\/(.*)index\.html$/.exec(file);
+  if (!match) return undefined;
+  const [, locale, rest] = match;
+  const navigation = inputs.navigations[locale];
+  const ui = inputs.uiLocales[locale];
+  let title;
+  let description;
+  let pagePath;
+  if (rest === '') {
+    title = ui.pages.home_title;
+    description = navigation.site.short_description;
+    pagePath = `${locale}/`;
+  } else if (rest === 'organizations/') {
+    title = ui.pages.organizations_title;
+    description = ui.pages.organizations_intro;
+    pagePath = `${locale}/organizations/`;
+  } else if (rest === 'privacy/') {
+    title = ui.pages.privacy_title;
+    description = ui.social.privacy_description;
+    pagePath = `${locale}/privacy/`;
+  } else {
+    const sectionMatch = /^sections\/([^/]+)\/$/.exec(rest);
+    const section = sectionMatch
+      ? navigation.sections.find(({ anchor_id: anchorId }) => anchorId === sectionMatch[1])
+      : undefined;
+    if (!section) return undefined;
+    title = section.title;
+    description = section.short_description;
+    pagePath = `${locale}/sections/${section.anchor_id}/`;
+  }
+  return {
+    title: `${title}｜${navigation.site.site_name}`,
+    description,
+    pageUrl: absoluteSiteUrl(inputs.siteUrl, pagePath),
+    siteName: navigation.site.site_name,
+    imageUrl,
+    imageAlt: ui.social.image_alt
+  };
+}
+
+function forbiddenMetadataContract(source, file, inputs) {
+  const results = [];
+  const target = outputFile(inputs, file);
+  const metas = metaElements(source);
+  for (const key of ['fb:app_id', 'og:image:secure_url', 'og:locale']) {
+    if (metas.some(({ property }) => property === key))
+      results.push(siteError('SITE-E005', target, `${key}は今回の対象外です。`));
+  }
+  if (metas.some(({ name }) => name === 'twitter:creator'))
+    results.push(siteError('SITE-E005', target, 'twitter:creatorは今回の対象外です。'));
+  if (metas.some(({ name }) => name === 'description'))
+    results.push(siteError('SITE-E005', target, '新しいmeta descriptionは追加できません。'));
+  if (linkElements(source).some(({ rel = '' }) => rel.split(/\s+/).includes('canonical')))
+    results.push(siteError('SITE-E005', target, 'canonicalは今回の対象外です。'));
+  if (/<script\b[^>]*type="application\/ld\+json"/i.test(source))
+    results.push(siteError('SITE-E005', target, 'JSON-LDは今回の対象外です。'));
+  return results;
+}
+
+function productionSocialHtmlContract(source, file, inputs) {
+  const results = forbiddenMetadataContract(source, file, inputs);
+  const target = outputFile(inputs, file);
+  const social = socialMetaElements(source);
+  const expectedPage = expectedProductionSocialMetadata(file, inputs);
+  if (!expectedPage) {
+    if (social.length > 0)
+      results.push(
+        siteError('SITE-E005', target, '404.htmlへOGP・X向けメタ情報を設定できません。')
+      );
+    return results;
+  }
+
+  const expected = new Map([
+    ['og:title', expectedPage.title],
+    ['og:description', expectedPage.description],
+    ['og:type', 'website'],
+    ['og:url', expectedPage.pageUrl],
+    ['og:site_name', expectedPage.siteName],
+    ['og:image', expectedPage.imageUrl],
+    ['og:image:type', 'image/png'],
+    ['og:image:width', '1200'],
+    ['og:image:height', '630'],
+    ['og:image:alt', expectedPage.imageAlt],
+    ['twitter:card', 'summary_large_image'],
+    ['twitter:site', '@na0AaooQ'],
+    ['twitter:title', expectedPage.title],
+    ['twitter:description', expectedPage.description],
+    ['twitter:image', expectedPage.imageUrl],
+    ['twitter:image:alt', expectedPage.imageAlt]
+  ]);
+  if (social.length !== expected.size)
+    results.push(siteError('SITE-E005', target, 'OGP・X向けメタ情報は16件必要です。'));
+  for (const [key, value] of expected) {
+    const matches = social.filter(({ property, name }) => property === key || name === key);
+    if (matches.length !== 1) {
+      results.push(siteError('SITE-E005', target, `${key}は1件だけ必要です。`));
+      continue;
+    }
+    const [attributes] = matches;
+    const expectedAttribute = key.startsWith('og:') ? 'property' : 'name';
+    if (!(expectedAttribute in attributes) || attributes.content !== escapeHtml(value))
+      results.push(siteError('SITE-E005', target, `${key}の属性または値が不正です。`));
+  }
+  for (const attributes of social) {
+    const key = attributes.property ?? attributes.name;
+    if (!expected.has(key))
+      results.push(siteError('SITE-E005', target, `想定外のSNSメタ情報があります: ${key}`));
+  }
+  for (const key of ['og:url', 'og:image', 'twitter:image']) {
+    const content = social.find(({ property, name }) => property === key || name === key)?.content;
+    if (!content || !content.startsWith('https://') || /localhost|\/preview\//.test(content))
+      results.push(siteError('SITE-E005', target, `${key}は正式なHTTPS絶対URLにしてください。`));
+  }
+  return results;
+}
+
+function validateProductionSocialUrlSet(htmlByFile, inputs) {
+  const urls = [];
+  for (const [file, source] of htmlByFile) {
+    if (file === '404.html') continue;
+    const meta = socialMetaElements(source).find(({ property }) => property === 'og:url');
+    if (meta?.content) urls.push(meta.content);
+  }
+  const expected = productionSitemapUrls(inputs);
+  if (
+    urls.length !== new Set(urls).size ||
+    JSON.stringify([...urls].sort()) !== JSON.stringify([...expected].sort())
+  ) {
+    return [
+      siteError(
+        'SITE-E005',
+        inputs.config.outputRoot,
+        '通常ページのog:url集合は重複なくsitemap URL集合と一致させてください。'
+      )
+    ];
+  }
+  return [];
 }
 
 function localizedContactHtmlContract(source, file, inputs) {
@@ -377,6 +549,7 @@ function productionHtmlContract(source, file, inputs) {
   }
   if (isNotFound && anchors.some(({ href }) => /^https:\/\//.test(href)))
     results.push(siteError('SITE-E005', target, '404.htmlへ外部リンクを含められません。'));
+  results.push(...productionSocialHtmlContract(source, file, inputs));
   return results;
 }
 
@@ -484,6 +657,10 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
       for (const message of validateSiteIcon(file, source))
         results.push(siteError('SITE-E005', outputFile(inputs, file), message));
     }
+    if (file === SITE_OGP_IMAGE_PATH) {
+      for (const message of validateOgpImage(source))
+        results.push(siteError('SITE-E005', outputFile(inputs, file), message));
+    }
     if (file.endsWith('.html') && expected.has(file)) {
       htmlByFile.set(file, source);
       results.push(...htmlBaseContract(source, file, inputs));
@@ -522,7 +699,10 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
       );
   }
   if (inputs.mode === 'production')
-    results.push(...validateProductionDestinationLinks(htmlByFile, inputs));
+    results.push(
+      ...validateProductionDestinationLinks(htmlByFile, inputs),
+      ...validateProductionSocialUrlSet(htmlByFile, inputs)
+    );
   return sortResults(results);
 }
 

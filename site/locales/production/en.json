@@ -24,6 +24,10 @@
     "japanese_link": "日本語トップへ",
     "english_link": "English home"
   },
+  "social": {
+    "image_alt": "An image with a white open-window symbol and the Madoguchi Mimamori name on a dark green background",
+    "privacy_description": "Explains how this site handles input, temporary storage, external sites, contact, hosting, and related matters."
+  },
   "pages": {
     "home_title": "Home",
     "home_heading": "Find official information to check",
