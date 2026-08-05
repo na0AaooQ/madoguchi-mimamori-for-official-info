@@ -570,6 +570,10 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   for (const [outputPath, sourcePath] of Object.entries(SITE_TEXT_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath);
   }
+  if (config.rootStylePath) {
+    const rootStyles = await readAsset(repoRoot, config.rootStylePath);
+    assets['assets/styles.css'] = `${assets['assets/styles.css'].trimEnd()}\n\n${rootStyles}`;
+  }
   for (const [outputPath, sourcePath] of Object.entries(SITE_BINARY_ASSET_SOURCE_PATHS)) {
     assets[outputPath] = await readAsset(repoRoot, sourcePath, true);
   }

@@ -37,6 +37,7 @@ export const SITE_MODES = Object.freeze({
     mode: 'production',
     artifactType: 'production',
     outputRoot: 'dist/site/production',
+    rootStylePath: 'site/assets/production-root.css',
     productionConfigPath: 'site/production.json',
     navigationPaths: Object.freeze({
       ja: 'dist/public-data/production/ja/navigation.json',

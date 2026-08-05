@@ -815,7 +815,7 @@ ${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">
   <script src="${escapeHtml(productionPath(inputs, 'assets/font-size.js'))}" defer></script>
 </head>
-<body>
+<body class="production-root">
   <a class="skip-link" href="#main-content">${escapeHtml(japaneseUi.skip_link)}<span lang="en"> / ${escapeHtml(englishUi.skip_link)}</span></a>
   <header class="site-header">
     <div class="header-inner">
@@ -831,8 +831,8 @@ ${siteIconLinks(inputs)}
   </header>
   <div class="page">
     <main id="main-content">
-      <h1>${escapeHtml(japaneseRoot.heading)}<br><span lang="en">${escapeHtml(englishRoot.heading)}</span></h1>
-      <p>${escapeHtml(japaneseRoot.description)}</p>
+      <h1 class="root-language-heading">${escapeHtml(japaneseRoot.heading)}<br><span lang="en">${escapeHtml(englishRoot.heading)}</span></h1>
+      <p class="root-description-ja">${escapeHtml(japaneseRoot.description)}</p>
       <p lang="en">${escapeHtml(englishRoot.description)}</p>
       <p class="note">${escapeHtml(japaneseRoot.unofficial)}</p>
       <p class="note" lang="en">${escapeHtml(englishRoot.unofficial)}</p>

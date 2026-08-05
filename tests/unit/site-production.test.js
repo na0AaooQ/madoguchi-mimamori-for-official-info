@@ -14,6 +14,8 @@ import { createSiteRepositoryCopy, readJson, writeJson } from '../helpers/site-g
 const repoRoot = path.resolve(import.meta.dirname, '../..');
 const inputs = await loadSiteInputs(repoRoot, 'production');
 if (inputs.results.length > 0) throw new Error(JSON.stringify(inputs.results));
+const previewInputs = await loadSiteInputs(repoRoot, 'preview');
+if (previewInputs.results.length > 0) throw new Error(JSON.stringify(previewInputs.results));
 
 function countLiteral(source, value) {
   return source.split(value).length - 1;
@@ -37,6 +39,11 @@ test('builds the deterministic 18-file production site from production navigatio
     expectedSiteArtifactPaths(inputs.navigations, 'production')
   );
   for (const file of ['index.html', '404.html', 'sitemap.xml']) assert.ok(first.has(file));
+  assert.match(first.get('assets/styles.css'), /\.production-root \.root-language-heading/);
+  assert.doesNotMatch(
+    buildSiteArtifacts(previewInputs).get('assets/styles.css'),
+    /\.production-root \.root-language-heading/
+  );
   for (const draft of ['life-safety-medical', 'roads-transportation', 'support-recovery']) {
     assert.equal(
       [...first.keys()].some((file) => file.includes(draft)),
@@ -51,6 +58,7 @@ test('generates the agreed common UI and accessible bilingual production root', 
   const englishUi = inputs.uiLocales.en;
 
   assert.match(root, /<html lang="ja" data-text-size="standard">/);
+  assert.match(root, /<body class="production-root">/);
   assert.equal([...root.matchAll(/<h1(?:\s|>)/g)].length, 1);
   assert.match(root, /<title>言語を選択 \/ Choose a language｜まどぐちみまもり<\/title>/);
   assert.match(
@@ -67,10 +75,13 @@ test('generates the agreed common UI and accessible bilingual production root', 
   assert.doesNotMatch(root, /<a\b[^>]*class="site-name"/);
   assert.doesNotMatch(root, /<a\b[^>]*href="\/"/);
 
-  assert.match(root, /<h1>表示する言語を選ぶ<br><span lang="en">Choose a language<\/span><\/h1>/);
   assert.match(
     root,
-    /<p>熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。<\/p>/
+    /<h1 class="root-language-heading">表示する言語を選ぶ<br><span lang="en">Choose a language<\/span><\/h1>/
+  );
+  assert.match(
+    root,
+    /<p class="root-description-ja">熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。<\/p>/
   );
   assert.match(
     root,
