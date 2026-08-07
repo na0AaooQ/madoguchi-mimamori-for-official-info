@@ -177,6 +177,28 @@
       "role": "primary",
       "visibility_context": "always",
       "internal_note": "熊本県内の道路情報を補完する主案内先。表示順は推奨順位を意味しない。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "display_order": 1,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の主案内先。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+      "display_order": 2,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "英語版の主案内先。熊本市公式サイトが提供する英語翻訳ページ。"
     }
   ]
 }

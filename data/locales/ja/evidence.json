@@ -204,6 +204,20 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja-official-page",
+      "description": "熊本市の住家のり災証明書案内ページが、熊本市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en-official-page",
+      "description": "熊本市の住家のり災証明書の英語翻訳ページが、公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

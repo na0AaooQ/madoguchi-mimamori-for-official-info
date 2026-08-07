@@ -49,6 +49,18 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "title": "Check information about residential disaster damage certificates in Kumamoto City",
+      "summary": "Check Kumamoto City's information about applying for and the issuance of a disaster damage certificate when a residence is damaged by a disaster.",
+      "region_label": "Kumamoto City",
+      "emergency_note": "Check the linked destination directly for the latest application methods, reception hours, required documents, and other details.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

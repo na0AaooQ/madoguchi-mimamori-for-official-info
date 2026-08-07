@@ -233,6 +233,22 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja-official-page",
+      "description": "Evidence used to confirm that the residential disaster damage certificate information page is an official page published by Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en-official-page",
+      "description": "Evidence used to confirm that the English translation of the residential disaster damage certificate information page is provided through the official Kumamoto City website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

@@ -41,9 +41,10 @@
       "id": "section-support-recovery",
       "title": "Support and Recovery",
       "short_description": "Find official guidance on disaster damage certificates, housing, welfare, business support, relief donations, and recovery.",
-      "locale_status": "draft",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }
