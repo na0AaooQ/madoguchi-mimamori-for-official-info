@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
@@ -26,14 +27,14 @@ function anchorTag(source, href) {
   return source.match(new RegExp(`<a\\b[^>]*href="${escaped}"[^>]*>`))?.[0];
 }
 
-test('builds the deterministic 19-file production site from production navigation only', () => {
+test('builds the deterministic production site from production navigation only', () => {
   const first = buildSiteArtifacts(inputs);
   const cloned = structuredClone(inputs);
   cloned.assets['favicon.ico'] = Buffer.from(cloned.assets['favicon.ico']);
   cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
   cloned.assets['ogp-image.png'] = Buffer.from(cloned.assets['ogp-image.png']);
   const second = buildSiteArtifacts(cloned);
-  assert.equal(first.size, 19);
+  assert.equal(first.size, expectedSiteArtifactPaths(inputs.navigations, 'production').length);
   assert.deepEqual([...first], [...second]);
   assert.deepEqual(
     [...first.keys()].sort(),
@@ -46,19 +47,26 @@ test('builds the deterministic 19-file production site from production navigatio
     buildSiteArtifacts(previewInputs).get('assets/styles.css'),
     /\.production-root \.root-language-heading/
   );
-  for (const draft of ['life-safety-medical', 'roads-transportation', 'support-recovery']) {
+  for (const draft of ['life-safety-medical', 'support-recovery']) {
     assert.equal(
       [...first.keys()].some((file) => file.includes(draft)),
       false
     );
   }
+  for (const locale of ['ja', 'en'])
+    assert.ok(first.has(`${locale}/sections/roads-transportation/index.html`));
 });
 
 test('adds one standard GA4 Google tag to every production HTML and none to preview HTML', () => {
   const measurementId = inputs.siteUrl.analytics.measurement_id;
   const googleScriptUrl = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
   const productionHtml = [...buildSiteArtifacts(inputs)].filter(([file]) => file.endsWith('.html'));
-  assert.equal(productionHtml.length, 12);
+  assert.equal(
+    productionHtml.length,
+    expectedSiteArtifactPaths(inputs.navigations, 'production').filter((file) =>
+      file.endsWith('.html')
+    ).length
+  );
   for (const [file, source] of productionHtml) {
     assert.equal(countLiteral(source, '<!-- Google tag (gtag.js) -->'), 1, file);
     assert.equal(countLiteral(source, googleScriptUrl), 1, file);
@@ -101,6 +109,107 @@ test('adds one standard GA4 Google tag to every production HTML and none to prev
       assert.equal(source.includes(marker), false, `${file}: ${marker}`);
     }
   }
+});
+
+test('publishes the BL-006-B road-information card with two ordered primary destinations', async () => {
+  const expected = {
+    ja: {
+      title: '熊本県内の道路情報を確認する',
+      summary:
+        '熊本県が提供する道路の通行規制情報と、日本道路交通情報センターが提供する道路交通情報を確認できます。',
+      emergencyNote: '道路の通行規制・交通状況に関する最新情報は、リンク先で直接確認してください。',
+      labels: ['熊本県の道路通行規制情報を見る', '日本道路交通情報センターを見る']
+    },
+    en: {
+      title: 'Check road information for Kumamoto Prefecture',
+      summary:
+        'Check road restriction information provided by Kumamoto Prefecture and road traffic information provided by the Japan Road Traffic Information Center (JARTIC).',
+      emergencyNote:
+        'Check the linked destinations directly for the latest road restrictions and traffic information.',
+      labels: [
+        'View road traffic restriction information from Kumamoto Prefecture',
+        'View the Japan Road Traffic Information Center (JARTIC) in Japanese'
+      ]
+    }
+  };
+  const destinationIds = [
+    'src-kumamoto-prefecture-road-traffic-restrictions',
+    'src-japan-road-traffic-information-center-home'
+  ];
+
+  for (const locale of ['ja', 'en']) {
+    const navigation = inputs.navigations[locale];
+    assert.equal(navigation.sections.length, 3);
+    const section = navigation.sections.find(({ id }) => id === 'section-roads-transportation');
+    assert.ok(section);
+    assert.equal(section.cards.length, 1);
+    const [card] = section.cards;
+    assert.equal(card.id, 'card-kumamoto-prefecture-road-information');
+    assert.equal(card.title, expected[locale].title);
+    assert.equal(card.summary, expected[locale].summary);
+    assert.equal(card.emergency_note, expected[locale].emergencyNote);
+    assert.deepEqual(
+      card.links.map(({ destination }) => destination.id),
+      destinationIds
+    );
+    assert.deepEqual(
+      card.links.map(({ role }) => role),
+      ['primary', 'primary']
+    );
+    assert.deepEqual(
+      card.links.map(({ button_label: buttonLabel }) => buttonLabel),
+      expected[locale].labels
+    );
+  }
+
+  const englishSection = inputs.navigations.en.sections.find(
+    ({ id }) => id === 'section-roads-transportation'
+  );
+  const [prefecture, jartic] = englishSection.cards[0].links;
+  assert.equal(
+    prefecture.destination.url,
+    'https://portal.bousai.pref.kumamoto.jp/?p=traffic&l=99-0&ll=32.63820000000001%2C130.77610000000007&z=9'
+  );
+  assert.deepEqual(prefecture.destination.destination_locales, ['ja', 'en']);
+  assert.equal(
+    prefecture.destination.destination_language_note,
+    'Some information at the destination may be available only in Japanese.'
+  );
+  assert.match(
+    buildSiteArtifacts(inputs).get('en/sections/roads-transportation/index.html'),
+    /href="https:\/\/portal\.bousai\.pref\.kumamoto\.jp\/\?p=traffic&amp;l=99-0&amp;ll=32\.63820000000001%2C130\.77610000000007&amp;z=9"/
+  );
+  assert.equal(jartic.destination.source_type, 'official-homepage');
+  assert.deepEqual(jartic.destination.destination_locales, ['ja']);
+  assert.equal(
+    jartic.destination.destination_language_note,
+    'The destination is available in Japanese only.'
+  );
+
+  const coreSources = JSON.parse(
+    await readFile(path.join(repoRoot, 'data/core/sources.json'), 'utf8')
+  ).items;
+  const coreOrganizations = JSON.parse(
+    await readFile(path.join(repoRoot, 'data/core/organizations.json'), 'utf8')
+  ).items;
+  assert.equal(
+    coreOrganizations.find(({ id }) => id === 'org-japan-road-traffic-information-center')
+      .organization_type,
+    'related-public-organization'
+  );
+  assert.deepEqual(
+    coreSources.find(({ id }) => id === 'src-japan-road-traffic-information-center-home')
+      .primary_official_home_for_locales,
+    ['ja']
+  );
+
+  const organizationsPage = buildSiteArtifacts(inputs).get('en/organizations/index.html');
+  assert.match(organizationsPage, /Japan Road Traffic Information Center \(JARTIC\)/);
+  assert.match(organizationsPage, /Kumamoto Prefecture Road Traffic Restriction Information/);
+  assert.match(organizationsPage, /Japan Road Traffic Information Center \(JARTIC\) \(Japanese\)/);
+  const previewSerialized = JSON.stringify(previewInputs.navigations);
+  assert.equal(previewSerialized.includes('jartic'), false);
+  assert.equal(previewSerialized.includes('portal.bousai.pref.kumamoto.jp'), false);
 });
 
 test('generates the agreed common UI and accessible bilingual production root', () => {
@@ -455,9 +564,10 @@ test('keeps preview, localized production pages, 404, and sitemap scope unchange
   }
 });
 
-test('generates the canonical 11-URL sitemap in deterministic order', () => {
+test('generates the canonical sitemap in deterministic order', () => {
   const urls = productionSitemapUrls(inputs);
-  assert.equal(urls.length, 11);
+  const expectedLength = 1 + ['ja', 'en'].length * (3 + inputs.navigations.ja.sections.length);
+  assert.equal(urls.length, expectedLength);
   assert.equal(urls[0], 'https://madoguchi.kokoromimamori.na0aaooq.com/');
   assert.ok(urls.every((url) => url.startsWith('https://')));
   assert.equal(
@@ -467,5 +577,5 @@ test('generates the canonical 11-URL sitemap in deterministic order', () => {
   const sitemap = buildSiteArtifacts(inputs).get('sitemap.xml');
   assert.ok(sitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n'));
   assert.ok(sitemap.endsWith('\n'));
-  assert.equal([...sitemap.matchAll(/<loc>/g)].length, 11);
+  assert.equal([...sitemap.matchAll(/<loc>/g)].length, expectedLength);
 });

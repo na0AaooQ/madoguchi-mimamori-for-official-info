@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "evidence-kumamoto-prefecture-official-organization",
@@ -169,6 +169,41 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "evidence-jartic-official-organization",
+      "description": "日本道路交通情報センターが公益財団法人として公式に設置・運営されている団体であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-jartic-official-name-ja",
+      "description": "日本道路交通情報センターの日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-jartic-official-name-en",
+      "description": "日本道路交通情報センターの英語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-jartic-home-official-page",
+      "description": "日本道路交通情報センターのホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-road-traffic-restrictions-official-page",
+      "description": "熊本県の道路通行規制情報が熊本県の公式な案内先であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

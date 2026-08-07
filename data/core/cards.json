@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -25,6 +25,14 @@
       "display_order": 1,
       "publication_status": "published",
       "internal_note": "実在情報の試験登録用。熊本市上下水道局の案内先をまとめるカード。"
+    },
+    {
+      "id": "card-kumamoto-prefecture-road-information",
+      "section_id": "section-roads-transportation",
+      "region_ids": ["region-kumamoto-prefecture"],
+      "display_order": 1,
+      "publication_status": "published",
+      "internal_note": "BL-006-B第一公開単位。道路情報に限定し、公共交通は含めない。"
     }
   ]
 }

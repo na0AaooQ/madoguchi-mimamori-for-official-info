@@ -108,9 +108,13 @@ test('loads stable metadata from all 21 implemented array files', async () => {
     sectionData.items.map(({ display_order: displayOrder }) => displayOrder),
     [1, 2, 3, 4, 5]
   );
+  const publishedSections = sectionData.items.filter(
+    ({ publication_status: publicationStatus }) => publicationStatus === 'published'
+  );
+  assert.equal(publishedSections.length, 3);
   assert.deepEqual(
-    sectionData.items.map(({ publication_status: publicationStatus }) => publicationStatus),
-    ['published', 'draft', 'published', 'draft', 'draft']
+    publishedSections.map(({ id }) => id),
+    ['section-public-institutions-disaster', 'section-lifelines', 'section-roads-transportation']
   );
 });
 

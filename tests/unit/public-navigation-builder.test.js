@@ -217,8 +217,9 @@ test('copies social platform and account ID through the public allowlist', async
   assert.equal(destination.account_id, 'fictional-account');
 });
 
-test('emits the English destination language notice only when needed', async () => {
+test('emits a configured English destination language notice even when English is available', async () => {
   const input = await createPreviewInput();
+  input.core.sources[0].destination_locales = ['ja', 'en'];
   const english = build(input, 'en').artifact.sections[0].cards[0].links[0].destination;
   const japanese = build(input, 'ja').artifact.sections[0].cards[0].links[0].destination;
   assert.equal(english.destination_language_note, 'The linked page is available in Japanese only.');

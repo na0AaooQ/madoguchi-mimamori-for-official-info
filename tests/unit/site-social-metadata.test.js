@@ -7,6 +7,7 @@ import { validateSiteRepository } from '../../scripts/site/site-artifacts.js';
 import {
   buildSiteArtifacts,
   escapeHtml,
+  expectedSiteArtifactPaths,
   productionSitemapUrls,
   productionSocialMetaTags
 } from '../../scripts/site/site-builder.js';
@@ -114,7 +115,8 @@ test('generates one complete 16-tag social metadata set for every production pag
   const pages = [...artifacts]
     .filter(([file]) => file.endsWith('.html') && file !== '404.html')
     .sort(([left], [right]) => left.localeCompare(right));
-  assert.equal(pages.length, 11);
+  const sitemapUrls = productionSitemapUrls(productionInputs);
+  assert.equal(pages.length, sitemapUrls.length);
 
   const pageUrls = [];
   for (const [file, source] of pages) {
@@ -165,8 +167,8 @@ test('generates one complete 16-tag social metadata set for every production pag
     pageUrls.push(byKey.get('og:url').content);
   }
 
-  assert.equal(new Set(pageUrls).size, 11);
-  assert.deepEqual([...pageUrls].sort(), [...productionSitemapUrls(productionInputs)].sort());
+  assert.equal(new Set(pageUrls).size, sitemapUrls.length);
+  assert.deepEqual([...pageUrls].sort(), [...sitemapUrls].sort());
 });
 
 test('keeps preview and production 404 outside the social metadata scope', () => {
@@ -178,7 +180,10 @@ test('keeps preview and production 404 outside the social metadata scope', () =>
   }
 
   const production = buildSiteArtifacts(productionInputs);
-  assert.equal(production.size, 19);
+  assert.equal(
+    production.size,
+    expectedSiteArtifactPaths(productionInputs.navigations, 'production').length
+  );
   assert.deepEqual(socialMetadata(production.get('404.html')), []);
   assert.match(production.get('404.html'), /<meta name="robots" content="noindex">/);
   assert.equal(

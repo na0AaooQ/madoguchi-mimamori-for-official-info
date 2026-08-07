@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "section-public-institutions-disaster",
@@ -29,8 +29,9 @@
       "id": "section-roads-transportation",
       "title": "道路・交通",
       "short_description": "道路、高速道路、鉄道、市電、バス、空港・航空便の公式案内を探します。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     },
     {
       "id": "section-support-recovery",

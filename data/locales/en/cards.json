@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -37,6 +37,18 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-kumamoto-prefecture-road-information",
+      "title": "Check road information for Kumamoto Prefecture",
+      "summary": "Check road restriction information provided by Kumamoto Prefecture and road traffic information provided by the Japan Road Traffic Information Center (JARTIC).",
+      "region_label": "Kumamoto Prefecture",
+      "emergency_note": "Check the linked destinations directly for the latest road restrictions and traffic information.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

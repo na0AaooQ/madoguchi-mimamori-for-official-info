@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -117,6 +117,24 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-road-information-prefecture-road-traffic-restrictions",
+      "button_label": "View road traffic restriction information from Kumamoto Prefecture",
+      "public_note": "This destination provides traffic restriction information for roads managed by Kumamoto Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-road-information-jartic",
+      "button_label": "View the Japan Road Traffic Information Center (JARTIC) in Japanese",
+      "public_note": "This destination provides road traffic information including roads managed by the national government, NEXCO, and Kumamoto City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

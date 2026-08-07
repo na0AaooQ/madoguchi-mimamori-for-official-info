@@ -48,7 +48,7 @@
 
 ## 本番用管理データと架空preview
 
-core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルには、第一版の実在管理データを登録しています。現在は地域3件、団体3件、案内先14件、確認根拠24件、5分野、案内カード3件、カード案内先関連14件です。2分野とその対象データをpublishedとし、残る3分野はdraftです。
+core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルには、実在管理データを登録しています。現在は地域3件、団体4件、案内先16件、確認根拠29件、5分野、案内カード4件、カード案内先関連16件です。3分野とその対象データをpublishedとし、「命・安全・医療」と「支援・復旧」はdraftです。
 
 架空previewは`tests/fixtures/`配下へ分離し、予約ドメイン`example.invalid`と明確な架空名称だけを使用します。テストと検証は`example.invalid`や実在する公式サイトへ接続しません。
 

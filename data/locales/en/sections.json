@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "section-public-institutions-disaster",
@@ -32,9 +32,10 @@
       "id": "section-roads-transportation",
       "title": "Roads and Transportation",
       "short_description": "Find official guidance on roads, expressways, railways, trams, buses, airports, and flights.",
-      "locale_status": "draft",
+      "locale_status": "published",
       "content_revision": 1,
-      "based_on_ja_revision": 1
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     },
     {
       "id": "section-support-recovery",
