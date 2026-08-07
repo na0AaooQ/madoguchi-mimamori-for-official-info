@@ -357,6 +357,30 @@
       "status": "confirmed",
       "publication_status": "published",
       "internal_note": "熊本県道路保全課の公式ページから対象の道路通行規制情報への案内と対象範囲を確認する。"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja-official-page",
+      "target_type": "source",
+      "target_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "target_aspect": "official-page",
+      "evidence_type": "official-organization-page",
+      "evidence_source_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "熊本市公式サイト上で、住家のり災証明書の申請・交付に関する案内ページであることを確認する。"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en-official-page",
+      "target_type": "source",
+      "target_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+      "target_aspect": "official-page",
+      "evidence_type": "official-site-link",
+      "evidence_source_id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "日本語公式ページの言語選択導線から英語翻訳ページへ到達できることを確認する。"
     }
   ]
 }

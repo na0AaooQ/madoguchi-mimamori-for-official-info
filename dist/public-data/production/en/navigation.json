@@ -378,6 +378,50 @@
           ]
         }
       ]
+    },
+    {
+      "id": "section-support-recovery",
+      "anchor_id": "support-recovery",
+      "title": "Support and Recovery",
+      "short_description": "Find official guidance on disaster damage certificates, housing, welfare, business support, relief donations, and recovery.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+          "title": "Check information about residential disaster damage certificates in Kumamoto City",
+          "summary": "Check Kumamoto City's information about applying for and the issuance of a disaster damage certificate when a residence is damaged by a disaster.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "Check the linked destination directly for the latest application methods, reception hours, required documents, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Kumamoto City residential disaster damage certificate information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/kiji0032451/index.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Residential Disaster Damage Certificate Information",
+                "purpose": "Check Kumamoto City's information about applying for and the issuance of residential disaster damage certificates.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

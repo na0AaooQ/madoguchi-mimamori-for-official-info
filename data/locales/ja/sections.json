@@ -37,8 +37,9 @@
       "id": "section-support-recovery",
       "title": "支援・復旧",
       "short_description": "り災証明、住まい、福祉、事業者支援、義援金などの公式案内を探します。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

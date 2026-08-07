@@ -277,6 +277,40 @@
       "show_in_official_source_list": true,
       "publication_status": "published",
       "internal_note": "英語版からも案内するが、リンク先は日本語。"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "publisher_organization_id": "org-kumamoto-prefecture-kumamoto-city",
+      "source_type": "information-page",
+      "content_format": "html",
+      "url": "https://www.city.kumamoto.jp/kiji0032451/index.html",
+      "destination_locales": ["ja"],
+      "equivalent_source_group_id": "eqsrc-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "lifecycle_type": "permanent",
+      "destination_status": "confirmed",
+      "destination_checked_on": "2026-08-07",
+      "official_information_status": "confirmed",
+      "official_information_checked_on": "2026-08-07",
+      "show_in_official_source_list": true,
+      "publication_status": "published",
+      "internal_note": "熊本市の住家のり災証明書に関する常設案内ページ。受付日時・必要書類・臨時窓口等の変動情報は転載しない。"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+      "publisher_organization_id": "org-kumamoto-prefecture-kumamoto-city",
+      "source_type": "information-page",
+      "content_format": "html",
+      "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/kiji0032451/index.html",
+      "destination_locales": ["en"],
+      "equivalent_source_group_id": "eqsrc-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "lifecycle_type": "permanent",
+      "destination_status": "confirmed",
+      "destination_checked_on": "2026-08-07",
+      "official_information_status": "confirmed",
+      "official_information_checked_on": "2026-08-07",
+      "show_in_official_source_list": true,
+      "publication_status": "published",
+      "internal_note": "熊本市公式サイトが提供する英語翻訳ページ。日本語ページが原文。受付日時・必要書類・臨時窓口等の変動情報は転載しない。"
     }
   ]
 }

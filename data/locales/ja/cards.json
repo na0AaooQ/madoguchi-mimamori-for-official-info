@@ -45,6 +45,17 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+      "title": "熊本市の住家のり災証明書について確認する",
+      "summary": "熊本市で災害により住家に被害を受けた場合の、り災証明書の申請・交付に関する案内を確認できます。",
+      "region_label": "熊本市",
+      "emergency_note": "申請方法、受付日時、必要書類などの最新情報は、リンク先で直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

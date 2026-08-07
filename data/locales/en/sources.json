@@ -160,6 +160,26 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja",
+      "display_title": "Kumamoto City Residential Disaster Damage Certificate Information (Japanese)",
+      "purpose": "Check Kumamoto City's information about applying for and the issuance of residential disaster damage certificates.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+      "display_title": "Kumamoto City Residential Disaster Damage Certificate Information",
+      "purpose": "Check Kumamoto City's information about applying for and the issuance of residential disaster damage certificates.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

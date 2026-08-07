@@ -47,14 +47,16 @@ test('builds the deterministic production site from production navigation only',
     buildSiteArtifacts(previewInputs).get('assets/styles.css'),
     /\.production-root \.root-language-heading/
   );
-  for (const draft of ['life-safety-medical', 'support-recovery']) {
+  for (const draft of ['life-safety-medical']) {
     assert.equal(
       [...first.keys()].some((file) => file.includes(draft)),
       false
     );
   }
-  for (const locale of ['ja', 'en'])
+  for (const locale of ['ja', 'en']) {
     assert.ok(first.has(`${locale}/sections/roads-transportation/index.html`));
+    assert.ok(first.has(`${locale}/sections/support-recovery/index.html`));
+  }
 });
 
 test('adds one standard GA4 Google tag to every production HTML and none to preview HTML', () => {
@@ -139,7 +141,7 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
 
   for (const locale of ['ja', 'en']) {
     const navigation = inputs.navigations[locale];
-    assert.equal(navigation.sections.length, 3);
+    assert.equal(navigation.sections.length, 4);
     const section = navigation.sections.find(({ id }) => id === 'section-roads-transportation');
     assert.ok(section);
     assert.equal(section.cards.length, 1);
@@ -210,6 +212,65 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
   const previewSerialized = JSON.stringify(previewInputs.navigations);
   assert.equal(previewSerialized.includes('jartic'), false);
   assert.equal(previewSerialized.includes('portal.bousai.pref.kumamoto.jp'), false);
+});
+
+test('publishes the BL-006-C residential disaster damage certificate card with one locale-specific primary destination', () => {
+  const expected = {
+    ja: {
+      title: '熊本市の住家のり災証明書について確認する',
+      summary:
+        '熊本市で災害により住家に被害を受けた場合の、り災証明書の申請・交付に関する案内を確認できます。',
+      regionLabel: '熊本市',
+      emergencyNote:
+        '申請方法、受付日時、必要書類などの最新情報は、リンク先で直接確認してください。',
+      buttonLabel: '熊本市の住家のり災証明書の案内を見る',
+      sourceId: 'src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-ja',
+      url: 'https://www.city.kumamoto.jp/kiji0032451/index.html',
+      destinationLocales: ['ja']
+    },
+    en: {
+      title: 'Check information about residential disaster damage certificates in Kumamoto City',
+      summary:
+        "Check Kumamoto City's information about applying for and the issuance of a disaster damage certificate when a residence is damaged by a disaster.",
+      regionLabel: 'Kumamoto City',
+      emergencyNote:
+        'Check the linked destination directly for the latest application methods, reception hours, required documents, and other details.',
+      buttonLabel: 'View Kumamoto City residential disaster damage certificate information',
+      sourceId: 'src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en',
+      url: 'https://www.city.kumamoto.jp.e.fm.hp.transer.com/kiji0032451/index.html',
+      destinationLocales: ['en'],
+      publicNote:
+        'This is an English translation page provided through the official website. The Japanese page is the original source.'
+    }
+  };
+
+  for (const locale of ['ja', 'en']) {
+    const section = inputs.navigations[locale].sections.find(
+      ({ id }) => id === 'section-support-recovery'
+    );
+    assert.ok(section);
+    assert.equal(section.cards.length, 1);
+    const [card] = section.cards;
+    const [link] = card.links;
+    assert.equal(
+      card.id,
+      'card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate'
+    );
+    assert.equal(card.title, expected[locale].title);
+    assert.equal(card.summary, expected[locale].summary);
+    assert.equal(card.region_label, expected[locale].regionLabel);
+    assert.equal(card.emergency_note, expected[locale].emergencyNote);
+    assert.equal(card.links.length, 1);
+    assert.equal(link.role, 'primary');
+    assert.equal(link.visibility_context, 'always');
+    assert.equal(link.button_label, expected[locale].buttonLabel);
+    assert.equal(link.destination.id, expected[locale].sourceId);
+    assert.equal(link.destination.source_type, 'information-page');
+    assert.equal(link.destination.url, expected[locale].url);
+    assert.deepEqual(link.destination.destination_locales, expected[locale].destinationLocales);
+    assert.equal(link.destination.organization.id, 'org-kumamoto-prefecture-kumamoto-city');
+    assert.equal(link.destination.public_note, expected[locale].publicNote);
+  }
 });
 
 test('generates the agreed common UI and accessible bilingual production root', () => {
