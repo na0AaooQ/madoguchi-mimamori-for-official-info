@@ -4,7 +4,7 @@
 
 この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-2Aと工程3-2Bの管理Schema・意味検証から拡張し、通常カードの日英公開生成、実在管理データからのproduction生成、静的画面生成、検証、再現性確認を実装しています。
 
-品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。本番用の40データファイル、管理用27 Schema、工程3-2A・3-2Bの意味検証、公開用1 Schema、published架空fixture、第一版の実在管理データ、公開対象抽出、preview・production生成、検証、鮮度比較を実装済みです。現在のproductionは2分野・3カード・14案内先です。
+品質管理基盤では、Node.js、`node:test`、Ajv、ESLint、Prettierと独自検証を採用しています。本番用の40データファイル、管理用27 Schema、工程3-2A・3-2Bの意味検証、公開用1 Schema、published架空fixture、実在管理データ、公開対象抽出、preview・production生成、検証、鮮度比較を実装済みです。リポジトリ内のproduction成果物は3分野・4カード・16案内先です。GitHub Pagesへの反映は手動デプロイ後です。
 
 ## 基本原則
 

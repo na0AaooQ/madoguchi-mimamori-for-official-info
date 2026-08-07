@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "evidence-kumamoto-prefecture-official-organization",
@@ -295,6 +295,68 @@
       "status": "confirmed",
       "publication_status": "published",
       "internal_note": "公式ドメイン、団体名、所在地、フッター等を確認する。"
+    },
+    {
+      "id": "evidence-jartic-official-organization",
+      "target_type": "organization",
+      "target_id": "org-japan-road-traffic-information-center",
+      "target_aspect": "official-organization",
+      "evidence_type": "official-organization-page",
+      "evidence_url": "https://www.jartic.or.jp/s/about/organization/overview/",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "公式の組織概要ページで団体名称、法人区分、所在地、事業内容等を確認する。"
+    },
+    {
+      "id": "evidence-jartic-official-name-ja",
+      "target_type": "organization",
+      "target_id": "org-japan-road-traffic-information-center",
+      "target_aspect": "official-name",
+      "target_locale": "ja",
+      "evidence_type": "official-organization-page",
+      "evidence_url": "https://www.jartic.or.jp/s/about/organization/overview/",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "日本語正式名称「公益財団法人 日本道路交通情報センター」を確認する。"
+    },
+    {
+      "id": "evidence-jartic-official-name-en",
+      "target_type": "organization",
+      "target_id": "org-japan-road-traffic-information-center",
+      "target_aspect": "official-name",
+      "target_locale": "en",
+      "evidence_type": "official-organization-page",
+      "evidence_url": "https://www.jartic.or.jp/s/about/organization/overview/",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "英語名称「Japan Road Traffic Information Center」を確認する。"
+    },
+    {
+      "id": "evidence-jartic-home-official-page",
+      "target_type": "source",
+      "target_id": "src-japan-road-traffic-information-center-home",
+      "target_aspect": "official-page",
+      "evidence_type": "official-organization-page",
+      "evidence_source_id": "src-japan-road-traffic-information-center-home",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "公式ホームページ上の団体名、組織情報、提供サービス等を確認する。"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-road-traffic-restrictions-official-page",
+      "target_type": "source",
+      "target_id": "src-kumamoto-prefecture-road-traffic-restrictions",
+      "target_aspect": "official-page",
+      "evidence_type": "official-site-link",
+      "evidence_url": "https://www.pref.kumamoto.jp/soshiki/102/247195.html",
+      "checked_on": "2026-08-07",
+      "status": "confirmed",
+      "publication_status": "published",
+      "internal_note": "熊本県道路保全課の公式ページから対象の道路通行規制情報への案内と対象範囲を確認する。"
     }
   ]
 }

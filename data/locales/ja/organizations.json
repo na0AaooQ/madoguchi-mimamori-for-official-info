@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "org-kumamoto-prefecture",
@@ -31,6 +31,16 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "org-japan-road-traffic-information-center",
+      "official_name": "公益財団法人 日本道路交通情報センター",
+      "display_name": "日本道路交通情報センター",
+      "name_kind": "official-ja",
+      "summary": "道路・道路交通に関する情報の収集・提供などを行う公益財団法人です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

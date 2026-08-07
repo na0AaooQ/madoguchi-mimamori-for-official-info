@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -155,6 +155,28 @@
       "role": "primary",
       "visibility_context": "always",
       "internal_note": "日英両画面の主案内先。リンク先は日本語。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-road-information-prefecture-road-traffic-restrictions",
+      "card_id": "card-kumamoto-prefecture-road-information",
+      "source_id": "src-kumamoto-prefecture-road-traffic-restrictions",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "熊本県が管理する道路の通行規制情報を確認する主案内先。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-road-information-jartic",
+      "card_id": "card-kumamoto-prefecture-road-information",
+      "source_id": "src-japan-road-traffic-information-center-home",
+      "display_order": 2,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "熊本県内の道路情報を補完する主案内先。表示順は推奨順位を意味しない。"
     }
   ]
 }

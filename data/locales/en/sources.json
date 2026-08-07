@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "src-kumamoto-prefecture-home-ja",
@@ -140,6 +140,26 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "src-kumamoto-prefecture-road-traffic-restrictions",
+      "display_title": "Kumamoto Prefecture Road Traffic Restriction Information",
+      "purpose": "Check current and upcoming traffic restrictions on roads managed by Kumamoto Prefecture.",
+      "destination_language_note": "Some information at the destination may be available only in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "src-japan-road-traffic-information-center-home",
+      "display_title": "Japan Road Traffic Information Center (JARTIC) (Japanese)",
+      "purpose": "Check road traffic information for expressways, urban expressways, and general roads.",
+      "destination_language_note": "The destination is available in Japanese only.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

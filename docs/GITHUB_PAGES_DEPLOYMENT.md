@@ -36,7 +36,7 @@ node --version
 npm --version
 npm ci
 npm run validate:data
-npm run generate:public -- --as-of 2026-08-04
+npm run generate:public -- --as-of 2026-08-07
 npm run validate:public
 npm run verify:public
 ```
@@ -84,7 +84,7 @@ npm run serve:site:production
 - 404: <http://127.0.0.1:4173/404.html>
 - sitemap: <http://127.0.0.1:4173/sitemap.xml>
 
-公開中の2分野、3カード、全団体・14案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。
+リポジトリ内で生成した3分野、4カード、全団体・16案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。GitHub Pagesへの反映は、このPRのマージ後に手動workflowを実行してからです。
 
 ## 手動workflowの実行
 
@@ -118,14 +118,14 @@ PRをマージした後、利用者が次を実行します。
 
 1. ルートの言語選択ページ
 2. 日本語・英語トップ
-3. 日英それぞれの公開中2分野
-4. 3カードと14案内先
+3. 日英それぞれの公開中3分野
+4. 4カードと16案内先
 5. 全団体・案内先一覧
 6. 日英プライバシーポリシー
 7. 日本語問い合わせURLと英語問い合わせURLの分離
 8. 外部リンクの新しいタブと安全な`rel`
 9. 存在しないパスで日本語・英語併記の404が表示されること
-10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に11 URLがあること
+10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に13 URLがあること
 11. CSS、文字サイズ、内部リンク、モバイル表示、キーボード操作
 
 Google Analytics 4を含む変更を公開した場合は、運営者だけがGA4管理画面で次も確認します。ローカル生成・自動テストではGoogle AnalyticsやGoogle公式URLへ接続しません。

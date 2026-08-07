@@ -84,7 +84,7 @@ function buildOrganization(core, localized) {
   return organization;
 }
 
-function buildDestination(source, localized, organization, locale) {
+function buildDestination(source, localized, organization) {
   const destination = {
     id: source.id,
     source_type: source.source_type,
@@ -97,9 +97,7 @@ function buildDestination(source, localized, organization, locale) {
   destination.display_title = localized.display_title;
   destination.purpose = localized.purpose;
   addOptional(destination, 'public_note', localized.public_note);
-  if (!source.destination_locales.includes(locale)) {
-    addOptional(destination, 'destination_language_note', localized.destination_language_note);
-  }
+  addOptional(destination, 'destination_language_note', localized.destination_language_note);
   destination.destination_checked_on = source.destination_checked_on;
   destination.official_information_checked_on = source.official_information_checked_on;
   destination.organization = organization;
@@ -167,8 +165,7 @@ function buildLink(input, link, locale, indexes) {
   output.destination = buildDestination(
     source,
     sourceLocale,
-    buildOrganization(publisher, publisherLocale),
-    locale
+    buildOrganization(publisher, publisherLocale)
   );
   return output;
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "org-kumamoto-prefecture",
@@ -34,6 +34,17 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "org-japan-road-traffic-information-center",
+      "official_name": "Japan Road Traffic Information Center",
+      "display_name": "Japan Road Traffic Information Center (JARTIC)",
+      "name_kind": "official-en",
+      "summary": "An organization that collects and provides road and road traffic information.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-07"
     }
   ]
 }

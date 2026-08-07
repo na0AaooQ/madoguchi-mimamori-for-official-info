@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "artifact_type": "production",
   "locale": "en",
-  "generated_for_date": "2026-08-04",
+  "generated_for_date": "2026-08-07",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -299,6 +299,79 @@
                   "official_name": "Kumamoto City Waterworks and Sewerage Bureau",
                   "name_kind": "official-en",
                   "summary": "An organization responsible for water supply and sewerage services in Kumamoto City."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-roads-transportation",
+      "anchor_id": "roads-transportation",
+      "title": "Roads and Transportation",
+      "short_description": "Find official guidance on roads, expressways, railways, trams, buses, airports, and flights.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-road-information",
+          "title": "Check road information for Kumamoto Prefecture",
+          "summary": "Check road restriction information provided by Kumamoto Prefecture and road traffic information provided by the Japan Road Traffic Information Center (JARTIC).",
+          "region_label": "Kumamoto Prefecture",
+          "emergency_note": "Check the linked destinations directly for the latest road restrictions and traffic information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-prefecture-road-traffic-restrictions",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View road traffic restriction information from Kumamoto Prefecture",
+              "public_note": "This destination provides traffic restriction information for roads managed by Kumamoto Prefecture.",
+              "destination": {
+                "id": "src-kumamoto-prefecture-road-traffic-restrictions",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://portal.bousai.pref.kumamoto.jp/?p=traffic&l=99-0&ll=32.63820000000001%2C130.77610000000007&z=9",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Road Traffic Restriction Information",
+                "purpose": "Check current and upcoming traffic restrictions on roads managed by Kumamoto Prefecture.",
+                "destination_language_note": "Some information at the destination may be available only in Japanese.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-jartic",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Japan Road Traffic Information Center (JARTIC) in Japanese",
+              "public_note": "This destination provides road traffic information including roads managed by the national government, NEXCO, and Kumamoto City.",
+              "destination": {
+                "id": "src-japan-road-traffic-information-center-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.jartic.or.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Japan Road Traffic Information Center (JARTIC) (Japanese)",
+                "purpose": "Check road traffic information for expressways, urban expressways, and general roads.",
+                "destination_language_note": "The destination is available in Japanese only.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-japan-road-traffic-information-center",
+                  "official_name": "Japan Road Traffic Information Center",
+                  "name_kind": "official-en",
+                  "summary": "An organization that collects and provides road and road traffic information."
                 }
               }
             }

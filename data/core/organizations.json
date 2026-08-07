@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "org-kumamoto-prefecture",
@@ -23,6 +23,13 @@
       "parent_organization_id": "org-kumamoto-prefecture-kumamoto-city",
       "publication_status": "published",
       "internal_note": "実在情報の試験登録対象。熊本市との組織関係と英語公式名称は確認根拠シートで管理する。"
+    },
+    {
+      "id": "org-japan-road-traffic-information-center",
+      "organization_type": "related-public-organization",
+      "region_ids": ["region-japan"],
+      "publication_status": "published",
+      "internal_note": "公式性・日英正式名称は確認根拠で管理する。"
     }
   ]
 }

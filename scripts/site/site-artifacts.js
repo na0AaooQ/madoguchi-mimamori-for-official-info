@@ -228,12 +228,12 @@ function previewHtmlContract(source, file, inputs) {
     for (const section of navigation.sections) {
       for (const card of section.cards) {
         for (const link of card.links) {
-          if (source.includes(`href="${link.destination.url}"`))
+          if (source.includes(`href="${escapeHtml(link.destination.url)}"`))
             results.push(siteError('SITE-E005', target, '架空の案内先URLがリンク化されています。'));
         }
       }
     }
-    if (source.includes(`href="${navigation.site.contact_url}"`))
+    if (source.includes(`href="${escapeHtml(navigation.site.contact_url)}"`))
       results.push(siteError('SITE-E005', target, '架空の問い合わせURLがリンク化されています。'));
   }
   return results;
@@ -673,7 +673,7 @@ function validateProductionDestinationLinks(htmlByFile, inputs) {
       for (const card of section.cards)
         for (const link of card.links) urls.add(link.destination.url);
     for (const url of urls) {
-      if (!localizedHtml.includes(`href="${url}"`))
+      if (!localizedHtml.includes(`href="${escapeHtml(url)}"`))
         results.push(
           siteError(
             'SITE-E005',

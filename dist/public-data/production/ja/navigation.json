@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "artifact_type": "production",
   "locale": "ja",
-  "generated_for_date": "2026-08-04",
+  "generated_for_date": "2026-08-07",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -291,6 +291,77 @@
                   "official_name": "熊本市上下水道局",
                   "name_kind": "official-ja",
                   "summary": "熊本市の水道・下水道事業を担う組織です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-roads-transportation",
+      "anchor_id": "roads-transportation",
+      "title": "道路・交通",
+      "short_description": "道路、高速道路、鉄道、市電、バス、空港・航空便の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-road-information",
+          "title": "熊本県内の道路情報を確認する",
+          "summary": "熊本県が提供する道路の通行規制情報と、日本道路交通情報センターが提供する道路交通情報を確認できます。",
+          "region_label": "熊本県全域",
+          "emergency_note": "道路の通行規制・交通状況に関する最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-prefecture-road-traffic-restrictions",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本県の道路通行規制情報を見る",
+              "public_note": "熊本県が管理する道路の通行規制情報です。",
+              "destination": {
+                "id": "src-kumamoto-prefecture-road-traffic-restrictions",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://portal.bousai.pref.kumamoto.jp/?p=traffic&l=99-0&ll=32.63820000000001%2C130.77610000000007&z=9",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "熊本県 道路通行規制情報",
+                "purpose": "熊本県が管理する道路の現在・今後の通行規制情報を確認できます。",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-jartic",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "日本道路交通情報センターを見る",
+              "public_note": "国・NEXCO・熊本市が管理する道路を含む道路交通情報の確認先です。",
+              "destination": {
+                "id": "src-japan-road-traffic-information-center-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.jartic.or.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "日本道路交通情報センター（JARTIC）",
+                "purpose": "高速道路・都市高速道路・一般道路の道路交通情報を確認できます。",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-japan-road-traffic-information-center",
+                  "official_name": "公益財団法人 日本道路交通情報センター",
+                  "name_kind": "official-ja",
+                  "summary": "道路・道路交通に関する情報の収集・提供などを行う公益財団法人です。"
                 }
               }
             }

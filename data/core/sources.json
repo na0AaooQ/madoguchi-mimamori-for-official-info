@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-04",
+  "data_updated_on": "2026-08-07",
   "items": [
     {
       "id": "src-kumamoto-prefecture-home-ja",
@@ -244,6 +244,39 @@
       "show_in_official_source_list": true,
       "publication_status": "published",
       "internal_note": "同じURLを通常時・災害時の複数カードから共通参照する。"
+    },
+    {
+      "id": "src-kumamoto-prefecture-road-traffic-restrictions",
+      "publisher_organization_id": "org-kumamoto-prefecture",
+      "source_type": "information-page",
+      "content_format": "html",
+      "url": "https://portal.bousai.pref.kumamoto.jp/?p=traffic&l=99-0&ll=32.63820000000001%2C130.77610000000007&z=9",
+      "destination_locales": ["ja", "en"],
+      "lifecycle_type": "permanent",
+      "destination_status": "confirmed",
+      "destination_checked_on": "2026-08-07",
+      "official_information_status": "confirmed",
+      "official_information_checked_on": "2026-08-07",
+      "show_in_official_source_list": true,
+      "publication_status": "published",
+      "internal_note": "日本語・英語は同一URL。表示言語はリンク先サイトの言語選択状態に依存する。"
+    },
+    {
+      "id": "src-japan-road-traffic-information-center-home",
+      "publisher_organization_id": "org-japan-road-traffic-information-center",
+      "source_type": "official-homepage",
+      "content_format": "html",
+      "url": "https://www.jartic.or.jp/",
+      "destination_locales": ["ja"],
+      "primary_official_home_for_locales": ["ja"],
+      "lifecycle_type": "permanent",
+      "destination_status": "confirmed",
+      "destination_checked_on": "2026-08-07",
+      "official_information_status": "confirmed",
+      "official_information_checked_on": "2026-08-07",
+      "show_in_official_source_list": true,
+      "publication_status": "published",
+      "internal_note": "英語版からも案内するが、リンク先は日本語。"
     }
   ]
 }
