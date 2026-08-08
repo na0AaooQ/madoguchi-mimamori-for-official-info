@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-07",
+  "data_updated_on": "2026-08-09",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -41,6 +41,14 @@
       "display_order": 1,
       "publication_status": "published",
       "internal_note": "BL-006-C第一公開単位。熊本市の住家のり災証明書に限定し、受付日時・必要書類等の変動情報は転載しない。"
+    },
+    {
+      "id": "card-kumamoto-prefecture-relief-donation",
+      "section_id": "section-support-recovery",
+      "region_ids": ["region-kumamoto-prefecture"],
+      "display_order": 2,
+      "publication_status": "published",
+      "internal_note": "BL-006-C第二公開単位。熊本県が案内する期間限定の義援金情報に限定し、受付期間・口座番号・送金方法・手数料等の変動情報は転載しない。公開終了は自動判定せず、人による確認で判断する。"
     }
   ]
 }

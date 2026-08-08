@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-07",
+  "data_updated_on": "2026-08-09",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -133,6 +133,20 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-relief-donation-ja",
+      "button_label": "熊本県の義援金の案内を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-relief-donation-en",
+      "button_label": "熊本県の義援金の案内（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }
