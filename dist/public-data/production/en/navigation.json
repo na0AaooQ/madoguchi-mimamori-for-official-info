@@ -432,7 +432,7 @@
             {
               "id": "card-source-kumamoto-prefecture-relief-donation-en",
               "role": "primary",
-              "visibility_context": "always",
+              "visibility_context": "disaster",
               "button_label": "View Kumamoto Prefecture relief donation information",
               "destination": {
                 "id": "src-kumamoto-prefecture-relief-donation-en",

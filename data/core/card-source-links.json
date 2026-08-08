@@ -208,7 +208,7 @@
       "display_locales": ["ja"],
       "publication_status": "published",
       "role": "primary",
-      "visibility_context": "always",
+      "visibility_context": "disaster",
       "internal_note": "日本語版の主案内先。期間限定sourceだが表示終了日は自動設定せず、人による確認で公開状態を変更する。"
     },
     {
@@ -219,7 +219,7 @@
       "display_locales": ["en"],
       "publication_status": "published",
       "role": "primary",
-      "visibility_context": "always",
+      "visibility_context": "disaster",
       "internal_note": "英語版の主案内先。熊本県公式サイトが提供する英語翻訳ページ。期間限定sourceだが表示終了日は自動設定せず、人による確認で公開状態を変更する。"
     }
   ]

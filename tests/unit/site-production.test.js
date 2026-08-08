@@ -271,6 +271,67 @@ test('publishes the BL-006-C residential disaster damage certificate card with o
   }
 });
 
+test('publishes the BL-006-C relief donation card with disaster-only bilingual destinations', () => {
+  const expected = {
+    ja: {
+      regionLabel: '熊本県全域',
+      linkId: 'card-source-kumamoto-prefecture-relief-donation-ja',
+      sourceId: 'src-kumamoto-prefecture-relief-donation-ja',
+      destinationLocales: ['ja'],
+      url: 'https://www.pref.kumamoto.jp/soshiki/27/274572.html'
+    },
+    en: {
+      regionLabel: 'Kumamoto Prefecture',
+      linkId: 'card-source-kumamoto-prefecture-relief-donation-en',
+      sourceId: 'src-kumamoto-prefecture-relief-donation-en',
+      destinationLocales: ['en'],
+      url: 'https://www.pref.kumamoto.jp.e.qp.hp.transer.com/soshiki/27/274572.html'
+    }
+  };
+
+  for (const locale of ['ja', 'en']) {
+    const section = inputs.navigations[locale].sections.find(
+      ({ id }) => id === 'section-support-recovery'
+    );
+    assert.ok(section);
+    const card = section.cards.find(({ id }) => id === 'card-kumamoto-prefecture-relief-donation');
+    assert.ok(card);
+    assert.equal(card.region_label, expected[locale].regionLabel);
+    assert.equal(card.links.length, 1);
+    const [link] = card.links;
+    assert.equal(link.id, expected[locale].linkId);
+    assert.equal(link.role, 'primary');
+    assert.equal(link.visibility_context, 'disaster');
+    assert.equal(link.destination.id, expected[locale].sourceId);
+    assert.deepEqual(link.destination.destination_locales, expected[locale].destinationLocales);
+    assert.equal(link.destination.url, expected[locale].url);
+  }
+
+  const cardHtml = (html, title) => {
+    const start = html.indexOf(`<span class="card-summary-title">${title}</span>`);
+    assert.ok(start >= 0);
+    const end = html.indexOf('</article>', start);
+    assert.ok(end >= 0);
+    return html.slice(start, end);
+  };
+  const japaneseReliefHtml = cardHtml(
+    buildSiteArtifacts(inputs).get('ja/sections/support-recovery/index.html'),
+    '熊本県が案内する義援金を確認する'
+  );
+  assert.match(japaneseReliefHtml, /<dd>災害時<\/dd>/);
+  assert.doesNotMatch(japaneseReliefHtml, /平常時/);
+  const englishReliefHtml = cardHtml(
+    buildSiteArtifacts(inputs).get('en/sections/support-recovery/index.html'),
+    'Check Kumamoto Prefecture relief donation information'
+  );
+  assert.match(englishReliefHtml, /<dd>Disaster situations<\/dd>/);
+  assert.doesNotMatch(englishReliefHtml, /Normal and disaster situations/);
+
+  const japaneseOrganizations = buildSiteArtifacts(inputs).get('ja/organizations/index.html');
+  assert.match(japaneseOrganizations, /<dt>対象地域<\/dt>\s*<dd>熊本県全域<\/dd>/);
+  assert.doesNotMatch(japaneseOrganizations, /熊本県全域 \/ 熊本県/);
+});
+
 test('generates the agreed common UI and accessible bilingual production root', () => {
   const root = buildSiteArtifacts(inputs).get('index.html');
   const japaneseUi = inputs.uiLocales.ja;

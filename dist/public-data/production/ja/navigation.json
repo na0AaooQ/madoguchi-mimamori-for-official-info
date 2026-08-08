@@ -414,14 +414,14 @@
           "id": "card-kumamoto-prefecture-relief-donation",
           "title": "熊本県が案内する義援金を確認する",
           "summary": "熊本県が案内する、令和8年熊本地震で被害を受けた方を支援するための義援金について確認できます。",
-          "region_label": "熊本県",
+          "region_label": "熊本県全域",
           "emergency_note": "最新の受付状況や送金方法などは、リンク先で直接確認してください。",
           "details_label": "案内先の詳細を見る",
           "links": [
             {
               "id": "card-source-kumamoto-prefecture-relief-donation-ja",
               "role": "primary",
-              "visibility_context": "always",
+              "visibility_context": "disaster",
               "button_label": "熊本県の義援金の案内を見る",
               "destination": {
                 "id": "src-kumamoto-prefecture-relief-donation-ja",
