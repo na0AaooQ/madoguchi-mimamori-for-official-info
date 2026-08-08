@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-07",
+  "data_updated_on": "2026-08-09",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -151,6 +151,22 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-relief-donation-ja",
+      "button_label": "View Kumamoto Prefecture relief donation information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-relief-donation-en",
+      "button_label": "View Kumamoto Prefecture relief donation information",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

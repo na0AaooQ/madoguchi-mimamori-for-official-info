@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "artifact_type": "production",
   "locale": "en",
-  "generated_for_date": "2026-08-07",
+  "generated_for_date": "2026-08-09",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -416,6 +416,42 @@
                   "official_name": "Kumamoto City",
                   "name_kind": "official-en",
                   "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-kumamoto-prefecture-relief-donation",
+          "title": "Check Kumamoto Prefecture relief donation information",
+          "summary": "Check Kumamoto Prefecture's information about relief donations to support people affected by the earthquake in Kumamoto in 2026.",
+          "region_label": "Kumamoto Prefecture",
+          "emergency_note": "Check the linked destination directly for the latest acceptance status, donation methods, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-relief-donation-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Kumamoto Prefecture relief donation information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-relief-donation-en",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp.e.qp.hp.transer.com/soshiki/27/274572.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Relief Donation Information",
+                "purpose": "Check Kumamoto Prefecture's relief donation information, including the latest acceptance status and donation methods.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
                 }
               }
             }

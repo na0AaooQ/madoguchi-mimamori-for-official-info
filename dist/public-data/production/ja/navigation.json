@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "artifact_type": "production",
   "locale": "ja",
-  "generated_for_date": "2026-08-07",
+  "generated_for_date": "2026-08-09",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -405,6 +405,41 @@
                   "official_name": "熊本市",
                   "name_kind": "official-ja",
                   "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-kumamoto-prefecture-relief-donation",
+          "title": "熊本県が案内する義援金を確認する",
+          "summary": "熊本県が案内する、令和8年熊本地震で被害を受けた方を支援するための義援金について確認できます。",
+          "region_label": "熊本県",
+          "emergency_note": "最新の受付状況や送金方法などは、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-relief-donation-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本県の義援金の案内を見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-relief-donation-ja",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp/soshiki/27/274572.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本県 令和8年熊本地震に係る義援金の受付について",
+                "purpose": "熊本県が案内する義援金について、最新の受付状況や送金方法などを確認できます。",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "熊本県",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県の行政を担う地方公共団体です。"
                 }
               }
             }

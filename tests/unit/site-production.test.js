@@ -249,13 +249,11 @@ test('publishes the BL-006-C residential disaster damage certificate card with o
       ({ id }) => id === 'section-support-recovery'
     );
     assert.ok(section);
-    assert.equal(section.cards.length, 1);
-    const [card] = section.cards;
-    const [link] = card.links;
-    assert.equal(
-      card.id,
-      'card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate'
+    const card = section.cards.find(
+      ({ id }) => id === 'card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate'
     );
+    assert.ok(card);
+    const [link] = card.links;
     assert.equal(card.title, expected[locale].title);
     assert.equal(card.summary, expected[locale].summary);
     assert.equal(card.region_label, expected[locale].regionLabel);
