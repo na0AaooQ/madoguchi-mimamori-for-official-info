@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-07",
+  "data_updated_on": "2026-08-09",
   "items": [
     {
       "id": "section-public-institutions-disaster",
@@ -14,8 +14,9 @@
       "id": "section-life-safety-medical",
       "title": "命・安全・医療",
       "short_description": "警察、消防・救急、医療機関や救急相談の公式案内を探します。",
-      "locale_status": "draft",
-      "content_revision": 1
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     },
     {
       "id": "section-lifelines",

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-07",
+  "data_updated_on": "2026-08-09",
   "items": [
     {
       "id": "section-public-institutions-disaster",
@@ -13,7 +13,7 @@
       "id": "section-life-safety-medical",
       "anchor_id": "life-safety-medical",
       "display_order": 2,
-      "publication_status": "draft",
+      "publication_status": "published",
       "internal_note": "第一版の分類構造と画面表示を確認するための分野データです。"
     },
     {

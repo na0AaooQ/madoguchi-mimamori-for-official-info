@@ -256,6 +256,74 @@
       ]
     },
     {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "title": "命・安全・医療",
+      "short_description": "警察、消防・救急、医療機関や救急相談の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+          "title": "熊本市の救急医療情報を確認する",
+          "summary": "熊本市が案内する救急医療、休日・夜間の受診先、医療相談などの情報を確認できます。",
+          "region_label": "熊本市",
+          "emergency_note": "命に関わるなど明らかに緊急を要する場合は、119番通報してください。受診できる医療機関、診療時間、相談窓口などの最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "熊本市の救急医療情報を見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp/list04206.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市 救急医療体制",
+                "purpose": "熊本市が案内する救急医療、休日・夜間の受診先、医療相談などの情報を確認できます。",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "救急安心センター（#7119）の案内を見る",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp/kiji00365705/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "熊本市 救急安心センター事業（#7119）",
+                "purpose": "急な病気やけがに関する救急医療相談と、明らかに緊急を要する場合の119番通報について確認できます。",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "熊本市",
+                  "name_kind": "official-ja",
+                  "summary": "熊本県熊本市の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "section-lifelines",
       "anchor_id": "lifelines",
       "title": "ライフライン",
@@ -440,6 +508,41 @@
                   "official_name": "熊本県",
                   "name_kind": "official-ja",
                   "summary": "熊本県の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+          "title": "防衛省・自衛隊の災害派遣情報を確認する",
+          "summary": "防衛省・自衛隊による災害派遣の概要と、災害時の最新情報への案内を確認できます。",
+          "region_label": "日本全国",
+          "emergency_note": "実施中の支援内容、場所、利用日時などの最新情報は、リンク先から案内される公式情報で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+              "role": "primary",
+              "visibility_context": "disaster",
+              "button_label": "防衛省・自衛隊の災害派遣情報を見る",
+              "destination": {
+                "id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.mod.go.jp/j/approach/defense/saigai/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "防衛省・自衛隊 災害派遣について",
+                "purpose": "防衛省・自衛隊の災害派遣の概要と、災害時の最新情報への案内を確認できます。",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-japan-ministry-of-defense-self-defense-forces",
+                  "official_name": "防衛省・自衛隊",
+                  "name_kind": "official-ja",
+                  "summary": "日本の防衛を担い、災害時には地方公共団体などと連携・協力して災害派遣などの活動を行う国の機関です。"
                 }
               }
             }

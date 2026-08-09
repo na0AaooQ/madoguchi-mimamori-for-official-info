@@ -49,6 +49,22 @@
       "display_order": 2,
       "publication_status": "published",
       "internal_note": "BL-006-C第二公開単位。熊本県が案内する期間限定の義援金情報に限定し、受付期間・口座番号・送金方法・手数料等の変動情報は転載しない。公開終了は自動判定せず、人による確認で判断する。"
+    },
+    {
+      "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "section_id": "section-support-recovery",
+      "region_ids": ["region-japan"],
+      "display_order": 3,
+      "publication_status": "published",
+      "internal_note": "BL-006-C第三公開単位。防衛省・自衛隊の災害派遣情報への入口に限定し、実施中の入浴・給水・休憩場所・利用日時等の変動情報は転載しない。"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+      "section_id": "section-life-safety-medical",
+      "region_ids": ["region-kumamoto-prefecture-kumamoto-city"],
+      "display_order": 1,
+      "publication_status": "published",
+      "internal_note": "BL-006-A第一公開単位。熊本市の救急医療体制への入口として案内する。特定医療機関の推奨、当番医・診療時間等の変動情報の転載、症状・緊急度の判定は行わない。119の案内は熊本市公式の救急安心センター事業ページを根拠とする。"
     }
   ]
 }

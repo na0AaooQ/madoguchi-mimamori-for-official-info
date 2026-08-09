@@ -168,6 +168,39 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "display_title": "防衛省・自衛隊 災害派遣について",
+      "purpose": "防衛省・自衛隊の災害派遣の概要と、災害時の最新情報への案内を確認できます。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+      "display_title": "熊本市 救急医療体制",
+      "purpose": "熊本市が案内する救急医療、休日・夜間の受診先、医療相談などの情報を確認できます。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+      "display_title": "熊本市 救急医療体制（英語）",
+      "purpose": "熊本市の救急医療、休日・夜間の受診先、医療相談などについて、英語翻訳ページで確認できます。",
+      "public_note": "公式サイトが提供する英語翻訳ページです。日本語ページが原文です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+      "display_title": "熊本市 救急安心センター事業（#7119）",
+      "purpose": "急な病気やけがに関する救急医療相談と、明らかに緊急を要する場合の119番通報について確認できます。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }
