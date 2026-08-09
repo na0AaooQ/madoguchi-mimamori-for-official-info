@@ -167,6 +167,38 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "button_label": "View MOD/SDF disaster relief dispatch information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+      "button_label": "View Kumamoto City emergency medical care information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+      "button_label": "View Kumamoto City emergency medical care information",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+      "button_label": "View Kumamoto City emergency medical consultation information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

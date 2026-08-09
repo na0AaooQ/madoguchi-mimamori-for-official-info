@@ -47,13 +47,9 @@ test('builds the deterministic production site from production navigation only',
     buildSiteArtifacts(previewInputs).get('assets/styles.css'),
     /\.production-root \.root-language-heading/
   );
-  for (const draft of ['life-safety-medical']) {
-    assert.equal(
-      [...first.keys()].some((file) => file.includes(draft)),
-      false
-    );
-  }
   for (const locale of ['ja', 'en']) {
+    assert.equal(inputs.navigations[locale].sections.length, 5);
+    assert.ok(first.has(`${locale}/sections/life-safety-medical/index.html`));
     assert.ok(first.has(`${locale}/sections/roads-transportation/index.html`));
     assert.ok(first.has(`${locale}/sections/support-recovery/index.html`));
   }
@@ -141,7 +137,7 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
 
   for (const locale of ['ja', 'en']) {
     const navigation = inputs.navigations[locale];
-    assert.equal(navigation.sections.length, 4);
+    assert.equal(navigation.sections.length, 5);
     const section = navigation.sections.find(({ id }) => id === 'section-roads-transportation');
     assert.ok(section);
     assert.equal(section.cards.length, 1);
@@ -302,7 +298,8 @@ test('publishes the BL-006-C relief donation card with one locale-specific disas
       section.cards.map(({ id }) => id),
       [
         'card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate',
-        'card-kumamoto-prefecture-relief-donation'
+        'card-kumamoto-prefecture-relief-donation',
+        'card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch'
       ]
     );
     const card = section.cards.find(({ id }) => id === 'card-kumamoto-prefecture-relief-donation');
@@ -354,6 +351,166 @@ test('publishes the BL-006-C relief donation card with one locale-specific disas
   const japaneseOrganizations = artifacts.get('ja/organizations/index.html');
   assert.match(japaneseOrganizations, /<dt>対象地域<\/dt>\s*<dd>熊本県全域<\/dd>/);
   assert.doesNotMatch(japaneseOrganizations, /熊本県全域 \/ 熊本県/);
+});
+
+test('publishes BL-006-C third and BL-006-A first release units with safe bilingual source display', () => {
+  const expected = {
+    mod: {
+      ja: {
+        title: '防衛省・自衛隊の災害派遣情報を確認する',
+        summary: '防衛省・自衛隊による災害派遣の概要と、災害時の最新情報への案内を確認できます。',
+        regionLabel: '日本全国',
+        emergencyNote:
+          '実施中の支援内容、場所、利用日時などの最新情報は、リンク先から案内される公式情報で直接確認してください。',
+        buttonLabel: '防衛省・自衛隊の災害派遣情報を見る'
+      },
+      en: {
+        title: 'Check MOD/SDF disaster relief dispatch information',
+        summary:
+          "Check information about disaster relief dispatches by Japan's Ministry of Defense and Self-Defense Forces, including links to the latest official updates during disasters.",
+        regionLabel: 'Japan',
+        emergencyNote:
+          'For the latest support activities, locations, hours, and other details, check the official information linked from the destination.',
+        buttonLabel: 'View MOD/SDF disaster relief dispatch information in Japanese'
+      }
+    },
+    medical: {
+      ja: {
+        title: '熊本市の救急医療情報を確認する',
+        summary: '熊本市が案内する救急医療、休日・夜間の受診先、医療相談などの情報を確認できます。',
+        regionLabel: '熊本市',
+        emergencyNote:
+          '命に関わるなど明らかに緊急を要する場合は、119番通報してください。受診できる医療機関、診療時間、相談窓口などの最新情報は、リンク先で直接確認してください。',
+        detailsLabel: '案内先の詳細を見る'
+      },
+      en: {
+        title: 'Check emergency medical care information for Kumamoto City',
+        summary:
+          "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+        regionLabel: 'Kumamoto City',
+        emergencyNote:
+          'If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destination directly for the latest available medical facilities, consultation hours, and other details.',
+        detailsLabel: 'View destination details'
+      }
+    }
+  };
+  const modSourceId = 'src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch';
+  const medicalCardId = 'card-kumamoto-prefecture-kumamoto-city-emergency-medical-care';
+  const medicalJaSourceId = 'src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja';
+  const medicalEnSourceId = 'src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en';
+  const consultationSourceId =
+    'src-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja';
+  const artifacts = buildSiteArtifacts(inputs);
+
+  for (const locale of ['ja', 'en']) {
+    const navigation = inputs.navigations[locale];
+    assert.equal(navigation.sections.length, 5);
+
+    const lifeSafety = navigation.sections.find(({ id }) => id === 'section-life-safety-medical');
+    assert.ok(lifeSafety);
+    assert.deepEqual(
+      lifeSafety.cards.map(({ id }) => id),
+      [medicalCardId]
+    );
+    assert.ok(artifacts.has(`${locale}/sections/life-safety-medical/index.html`));
+
+    const supportRecovery = navigation.sections.find(({ id }) => id === 'section-support-recovery');
+    assert.ok(supportRecovery);
+    assert.deepEqual(
+      supportRecovery.cards.map(({ id }) => id),
+      [
+        'card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate',
+        'card-kumamoto-prefecture-relief-donation',
+        'card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch'
+      ]
+    );
+
+    const modCard = supportRecovery.cards.find(
+      ({ id }) =>
+        id === 'card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch'
+    );
+    assert.ok(modCard);
+    assert.equal(modCard.title, expected.mod[locale].title);
+    assert.equal(modCard.summary, expected.mod[locale].summary);
+    assert.equal(modCard.region_label, expected.mod[locale].regionLabel);
+    assert.equal(modCard.emergency_note, expected.mod[locale].emergencyNote);
+    assert.equal(modCard.links.length, 1);
+    const [modLink] = modCard.links;
+    assert.equal(modLink.destination.id, modSourceId);
+    assert.equal(modLink.role, 'primary');
+    assert.equal(modLink.visibility_context, 'disaster');
+    assert.equal(
+      modLink.destination.url,
+      'https://www.mod.go.jp/j/approach/defense/saigai/index.html'
+    );
+    assert.equal(modLink.button_label, expected.mod[locale].buttonLabel);
+    if (locale === 'en') {
+      assert.equal(
+        modLink.destination.destination_language_note,
+        'The destination is available in Japanese.'
+      );
+    } else {
+      assert.equal(Object.hasOwn(modLink.destination, 'destination_language_note'), false);
+    }
+
+    const medicalCard = lifeSafety.cards[0];
+    assert.equal(medicalCard.title, expected.medical[locale].title);
+    assert.equal(medicalCard.summary, expected.medical[locale].summary);
+    assert.equal(medicalCard.region_label, expected.medical[locale].regionLabel);
+    assert.equal(medicalCard.emergency_note, expected.medical[locale].emergencyNote);
+    assert.equal(medicalCard.details_label, expected.medical[locale].detailsLabel);
+    assert.ok(medicalCard.emergency_note.includes('119'));
+
+    if (locale === 'ja') {
+      assert.deepEqual(
+        medicalCard.links.map(({ destination }) => destination.id),
+        [medicalJaSourceId, consultationSourceId]
+      );
+      assert.deepEqual(
+        medicalCard.links.map(({ role, visibility_context }) => ({ role, visibility_context })),
+        [
+          { role: 'primary', visibility_context: 'always' },
+          { role: 'secondary', visibility_context: 'always' }
+        ]
+      );
+      assert.equal(
+        medicalCard.links[0].destination.url,
+        'https://www.city.kumamoto.jp/list04206.html'
+      );
+      assert.equal(
+        medicalCard.links[1].destination.url,
+        'https://www.city.kumamoto.jp/kiji00365705/index.html'
+      );
+      assert.deepEqual(
+        medicalCard.links.map(({ button_label }) => button_label),
+        ['熊本市の救急医療情報を見る', '救急安心センター（#7119）の案内を見る']
+      );
+    } else {
+      assert.deepEqual(
+        medicalCard.links.map(({ destination }) => destination.id),
+        [medicalEnSourceId]
+      );
+      assert.equal(medicalCard.links[0].role, 'primary');
+      assert.equal(medicalCard.links[0].visibility_context, 'always');
+      assert.equal(
+        medicalCard.links[0].destination.url,
+        'https://www.city.kumamoto.jp.e.fm.hp.transer.com/list04206.html'
+      );
+      assert.equal(
+        medicalCard.links[0].destination.public_note,
+        'This is an English translation page provided through the official website. The Japanese page is the original source.'
+      );
+      assert.doesNotMatch(JSON.stringify(medicalCard), /7119/);
+    }
+  }
+
+  const modEnglishHtml = artifacts.get('en/sections/support-recovery/index.html');
+  assert.ok(modEnglishHtml.includes('The destination is available in Japanese.'));
+  assert.doesNotMatch(modEnglishHtml, /入浴支援|給水|休憩場所/);
+  for (const [file, source] of artifacts) {
+    if (!file.endsWith('.html')) continue;
+    assert.doesNotMatch(source, /href="tel:/);
+  }
 });
 
 test('generates the agreed common UI and accessible bilingual production root', () => {

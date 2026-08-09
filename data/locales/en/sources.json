@@ -200,6 +200,46 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "display_title": "Ministry of Defense / Self-Defense Forces Disaster Relief Dispatch Information (Japanese)",
+      "purpose": "Check information about MOD/SDF disaster relief dispatches and links to the latest official updates.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+      "display_title": "Kumamoto City Emergency Medical Care Information (Japanese)",
+      "purpose": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+      "display_title": "Kumamoto City Emergency Medical Care Information",
+      "purpose": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+      "display_title": "Kumamoto City Emergency Medical Consultation (#7119) (Japanese)",
+      "purpose": "Check Kumamoto City's emergency medical consultation service and guidance to call 119 in clearly urgent situations.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

@@ -73,6 +73,30 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "title": "Check MOD/SDF disaster relief dispatch information",
+      "summary": "Check information about disaster relief dispatches by Japan's Ministry of Defense and Self-Defense Forces, including links to the latest official updates during disasters.",
+      "region_label": "Japan",
+      "emergency_note": "For the latest support activities, locations, hours, and other details, check the official information linked from the destination.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+      "title": "Check emergency medical care information for Kumamoto City",
+      "summary": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+      "region_label": "Kumamoto City",
+      "emergency_note": "If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destination directly for the latest available medical facilities, consultation hours, and other details.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

@@ -221,6 +221,50 @@
       "role": "primary",
       "visibility_context": "disaster",
       "internal_note": "英語版の主案内先。熊本県公式サイトが提供する英語翻訳ページ。期間限定sourceだが表示終了日は自動設定せず、人による確認で公開状態を変更する。"
+    },
+    {
+      "id": "card-source-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "card_id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "source_id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "disaster",
+      "internal_note": "日英両画面の主案内先。リンク先は日本語。災害時向けの案内先として表示し、表示期間は自動設定しない。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja",
+      "display_order": 1,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の主案内先。熊本市公式の救急医療体制ページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+      "display_order": 2,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "英語版の主案内先。熊本市公式サイトが提供する英語翻訳ページ。"
+    },
+    {
+      "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+      "card_id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+      "source_id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja",
+      "display_order": 3,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の補助案内先。救急医療相談と119番の緊急導線を確認するための熊本市公式ページ。英語版カードには表示しない。"
     }
   ]
 }

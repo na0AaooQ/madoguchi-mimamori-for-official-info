@@ -232,6 +232,55 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-japan-ministry-of-defense-self-defense-forces-official-organization",
+      "description": "防衛省・自衛隊が公式な国の機関であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-japan-ministry-of-defense-self-defense-forces-official-name-ja",
+      "description": "防衛省・自衛隊の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-japan-ministry-of-defense-self-defense-forces-official-name-en",
+      "description": "防衛省・自衛隊の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch-official-page",
+      "description": "防衛省・自衛隊の「災害派遣について」ページが、防衛省自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-emergency-medical-care-ja-official-page",
+      "description": "熊本市の「救急医療体制」ページが、熊本市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en-official-page",
+      "description": "熊本市の「救急医療体制」の英語翻訳ページが、公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-kumamoto-prefecture-kumamoto-city-emergency-medical-consultation-7119-ja-official-page",
+      "description": "熊本市の救急安心センター事業（#7119）ページが、熊本市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

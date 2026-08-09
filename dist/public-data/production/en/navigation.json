@@ -263,6 +263,50 @@
       ]
     },
     {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "title": "Life, Safety, and Medical Care",
+      "short_description": "Find official guidance on police, fire and ambulance services, medical care, and emergency consultation.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+          "title": "Check emergency medical care information for Kumamoto City",
+          "summary": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destination directly for the latest available medical facilities, consultation hours, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Kumamoto City emergency medical care information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/list04206.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Emergency Medical Care Information",
+                "purpose": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "section-lifelines",
       "anchor_id": "lifelines",
       "title": "Lifelines",
@@ -452,6 +496,42 @@
                   "official_name": "Kumamoto Prefecture",
                   "name_kind": "official-en",
                   "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+          "title": "Check MOD/SDF disaster relief dispatch information",
+          "summary": "Check information about disaster relief dispatches by Japan's Ministry of Defense and Self-Defense Forces, including links to the latest official updates during disasters.",
+          "region_label": "Japan",
+          "emergency_note": "For the latest support activities, locations, hours, and other details, check the official information linked from the destination.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+              "role": "primary",
+              "visibility_context": "disaster",
+              "button_label": "View MOD/SDF disaster relief dispatch information in Japanese",
+              "destination": {
+                "id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.mod.go.jp/j/approach/defense/saigai/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Ministry of Defense / Self-Defense Forces Disaster Relief Dispatch Information (Japanese)",
+                "purpose": "Check information about MOD/SDF disaster relief dispatches and links to the latest official updates.",
+                "destination_language_note": "The destination is available in Japanese.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-japan-ministry-of-defense-self-defense-forces",
+                  "official_name": "Ministry of Defense (MOD)/Self-Defense Forces (SDF)",
+                  "name_kind": "official-en",
+                  "summary": "A national government organization responsible for Japan's defense and disaster relief activities in cooperation with local governments during disasters."
                 }
               }
             }

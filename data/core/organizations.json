@@ -30,6 +30,13 @@
       "region_ids": ["region-japan"],
       "publication_status": "published",
       "internal_note": "公式性・日英正式名称は確認根拠で管理する。"
+    },
+    {
+      "id": "org-japan-ministry-of-defense-self-defense-forces",
+      "organization_type": "national-government",
+      "region_ids": ["region-japan"],
+      "publication_status": "published",
+      "internal_note": "防衛省と自衛隊は同一の組織を指すという防衛省公式説明を根拠に、一つの団体として管理する。公式性・日英名称は確認根拠で管理する。"
     }
   ]
 }

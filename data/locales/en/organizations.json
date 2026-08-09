@@ -45,6 +45,17 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "org-japan-ministry-of-defense-self-defense-forces",
+      "official_name": "Ministry of Defense (MOD)/Self-Defense Forces (SDF)",
+      "display_name": "Ministry of Defense / Self-Defense Forces (MOD/SDF)",
+      "name_kind": "official-en",
+      "summary": "A national government organization responsible for Japan's defense and disaster relief activities in cooperation with local governments during disasters.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }

@@ -41,6 +41,16 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-07"
+    },
+    {
+      "id": "org-japan-ministry-of-defense-self-defense-forces",
+      "official_name": "防衛省・自衛隊",
+      "display_name": "防衛省・自衛隊",
+      "name_kind": "official-ja",
+      "summary": "日本の防衛を担い、災害時には地方公共団体などと連携・協力して災害派遣などの活動を行う国の機関です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-09"
     }
   ]
 }
