@@ -10,7 +10,7 @@
 
 ## 現在の公開状態
 
-第一版productionは2026年8月4日に公開済みです。正式URLは <https://madoguchi.kokoromimamori.na0aaooq.com/> で、日本語・英語、2分野、3カード、14案内先を提供しています。GitHub Pages、カスタムドメイン、HTTPS、`workflow_dispatch`だけの手動デプロイworkflowを使用します。
+第一版productionは2026年8月4日に公開済みです。正式URLは <https://madoguchi.kokoromimamori.na0aaooq.com/> で、日本語・英語、5分野、8カード、24案内先を提供しています。未公開の分野はありません。GitHub Pages、カスタムドメイン、HTTPS、`workflow_dispatch`だけの手動デプロイworkflowを使用します。
 
 公開後の改善、継続運用、将来構想は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)を参照してください。バックログ項目は実装済み・公開済みとは扱いません。
 
