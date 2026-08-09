@@ -74,7 +74,7 @@ sections、同一sectionのcards、同一cardのlinksは`display_order`昇順、
 
 previewはpublished架空fixtureを基準日`2026-08-02`で生成し、`artifact_type: fictional-preview`とします。実在する団体、制度、URL、個人情報を含みません。
 
-productionは本番用`data/`から明示的な`--as-of`で生成します。正本siteはpublishedで、2026年8月4日を基準日とする日英成果物を一組としてGit管理します。正本が非公開へ戻ったのにproductionが残る場合は`PUB-E007`とし、自動削除せず削除差分を人が確認します。
+productionは本番用`data/`から人が明示した`--as-of YYYY-MM-DD`で生成します。実行端末の現在日時は自動使用しません。tracked productionの現在基準日は2026年8月9日で、PR #31ではこの日付を使用しました。基準日は更新内容に応じて将来変わります。正本siteはpublishedで、正本が非公開へ戻ったのにproductionが残る場合は`PUB-E007`とし、自動削除せず削除差分を人が確認します。
 
 ## Git管理、直接編集禁止、鮮度検証
 

@@ -20,12 +20,16 @@
 | 初回成功実行     | 2026-08-04のworkflow実行 #2                               |
 | 公開対象コミット | `cf033acd5034aa9163f9a8ba8d41f9e6a1ed66f4`                |
 | 公開後の手動確認 | 正式URLで画面、リンク、アセット、404、sitemap等を確認済み |
+| 現在のproduction | 5分野、8カード、24案内先、JAリンク16件、ENリンク15件      |
+| 最新公開反映     | PR #31を2026-08-09にマージし、手動Pagesデプロイ成功       |
 
 GitHubの`Static HTML > Configure`は使用せず、本リポジトリの`.github/workflows/deploy-pages.yml`だけを使用します。`CNAME`ファイルも使用しません。
 
 ## 初回公開記録
 
 2026年8月4日のworkflow実行 #2でbuildとdeployが成功しました。対象コミットは`cf033acd5034aa9163f9a8ba8d41f9e6a1ed66f4`です。公開後、正式URLでルート言語選択、日本語・英語トップ、日英の公開中2分野、3カード、14案内先、全団体・案内先一覧、プライバシーポリシー、問い合わせ導線、404、11 URLの`sitemap.xml`、CSS、文字サイズ、内部・外部リンク、HTTPS、カスタムドメインを手動確認しました。
+
+PR #31は2026年8月9日にマージされ、BL-006-C第三公開単位とBL-006-A第一公開単位を含むproductionの手動Pagesデプロイと公開後確認が成功しました。現在は5分野、8カード、24案内先を公開しています。
 
 ## production成果物の生成
 
@@ -36,10 +40,12 @@ node --version
 npm --version
 npm ci
 npm run validate:data
-npm run generate:public -- --as-of 2026-08-07
+npm run generate:public -- --as-of 2026-08-09
 npm run validate:public
 npm run verify:public
 ```
+
+`--as-of`は実行端末の現在日時ではなく、対象更新日に対応する基準日を人が明示します。PR #31のproduction生成では`2026-08-09`を指定しました。将来は更新内容に対応する基準日へ置き換えます。
 
 公開データは次の2ファイルです。日英を一組として生成し、直接編集しません。
 
@@ -84,7 +90,7 @@ npm run serve:site:production
 - 404: <http://127.0.0.1:4173/404.html>
 - sitemap: <http://127.0.0.1:4173/sitemap.xml>
 
-リポジトリ内で生成した3分野、4カード、全団体・16案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。GitHub Pagesへの反映は、このPRのマージ後に手動workflowを実行してからです。
+リポジトリ内で生成した5分野、8カード、全団体・24案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。production成果物は25ファイル、HTMLは通常17ページと404の計18件、sitemapは17 URLです。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。GitHub Pagesへの反映は、対象更新日に対応する基準日を明示した生成物を手動workflowでデプロイしてからです。
 
 ## 手動workflowの実行
 
@@ -114,19 +120,30 @@ PRをマージした後、利用者が次を実行します。
 
 ## 公開後の確認
 
-`page_url`と正式URLで最低限次を確認します。初回公開時はすべて確認済みです。
+`page_url`と正式URLで最低限次を確認します。初回公開時の確認に加え、PR #31の本番デプロイ後にも確認済みです。
 
 1. ルートの言語選択ページ
 2. 日本語・英語トップ
-3. 日英それぞれの公開中3分野
-4. 4カードと16案内先
+3. 日英それぞれの公開中5分野
+4. 8カードと24案内先
 5. 全団体・案内先一覧
 6. 日英プライバシーポリシー
 7. 日本語問い合わせURLと英語問い合わせURLの分離
 8. 外部リンクの新しいタブと安全な`rel`
 9. 存在しないパスで日本語・英語併記の404が表示されること
-10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に13 URLがあること
+10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に17 URLがあること
 11. CSS、文字サイズ、内部リンク、モバイル表示、キーボード操作
+
+公開後確認済みの代表URLは次のとおりです。
+
+- `/`
+- `/ja/`
+- `/en/`
+- `/ja/sections/life-safety-medical/`
+- `/en/sections/life-safety-medical/`
+- `/ja/organizations/`
+- `/en/organizations/`
+- `/sitemap.xml`
 
 Google Analytics 4を含む変更を公開した場合は、運営者だけがGA4管理画面で次も確認します。ローカル生成・自動テストではGoogle AnalyticsやGoogle公式URLへ接続しません。
 

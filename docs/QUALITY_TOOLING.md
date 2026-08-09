@@ -195,7 +195,7 @@ JSON構文エラーは検証対象の不正として終了コード`1`にしま�
 
 `IMPLEMENTED_ARRAY_DATA_LAYOUT`は21件、`EMPTY_DATA_LAYOUT`は16件です。管理用`SCHEMA_LAYOUT`は27件を維持し、公開成果物Schemaは`contracts/public/`へ分離します。通常カードの基準日による期間判定と公開後検証は実装済みです。災害・出来事・履歴のID・参照、URL正規化後の重複、確認期限は未実装です。
 
-本番用管理データには人が確認した実在情報を登録し、Core・日本語・英語のsiteと公開対象データを`published`にしています。「命・安全・医療」と「支援・復旧」の2分野は`draft`でproduction対象外です。`npm run validate:data`の現在の正常時はError 0、Warning 0、Info 0です。架空itemは本番用`data/`ではなくfixtureへ分離します。
+本番用管理データには人が確認した実在情報を登録し、Core・日本語・英語のsiteと5分野の公開対象データを`published`にしています。`npm run validate:data`の現在の正常時はError 0、Warning 0、Info 0です。架空itemは本番用`data/`ではなくfixtureへ分離します。
 
 ## 文書固有検証
 
