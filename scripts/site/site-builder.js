@@ -606,6 +606,7 @@ function productionPageShell({
   navigation,
   ui,
   title,
+  documentTitle,
   description,
   pagePath,
   alternatePath,
@@ -621,7 +622,7 @@ function productionPageShell({
   });
   return `<!doctype html>
 <html lang="${navigation.locale}" data-text-size="standard">
-${productionHead({ inputs, title: pageTitle, socialMetadata })}
+${productionHead({ inputs, title: documentTitle ?? pageTitle, socialMetadata })}
 <body>
   <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${productionHeader(inputs, navigation, ui, alternatePath)}
   <div class="page">
@@ -636,6 +637,11 @@ ${mainContent}${commonDetails(navigation.site, ui)}
 
 function productionHomePage(inputs, navigation, ui) {
   const locale = navigation.locale;
+  const siteIdentity =
+    locale === 'ja'
+      ? `      <p><strong>${escapeHtml(navigation.site.site_name)}</strong>｜${escapeHtml(navigation.site.subtitle)}</p>
+`
+      : '';
   const sectionItems = navigation.sections
     .map(
       (section) => `        <li>
@@ -645,7 +651,7 @@ function productionHomePage(inputs, navigation, ui) {
         </li>`
     )
     .join('\n');
-  const content = `      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
+  const content = `${siteIdentity}      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
       <p>${escapeHtml(navigation.site.short_description)}</p>
       <p>${escapeHtml(navigation.site.purpose)}</p>
       <section aria-labelledby="sections-heading">
@@ -661,6 +667,10 @@ ${sectionItems}
     navigation,
     ui,
     title: ui.pages.home_title,
+    documentTitle:
+      navigation.locale === 'ja'
+        ? `${navigation.site.site_name}｜${navigation.site.subtitle}`
+        : undefined,
     description: navigation.site.short_description,
     pagePath: `${locale}/`,
     alternatePath: productionPath(inputs, `${alternateLocale(locale)}/`),
@@ -899,9 +909,11 @@ function productionRootPage(inputs) {
   const englishUi = inputs.uiLocales.en;
   const japaneseRoot = japaneseUi.root;
   const englishRoot = englishUi.root;
+  const japaneseSite = inputs.navigations.ja.site;
   const japaneseSiteName = inputs.navigations.ja.site.site_name;
+  const japaneseSiteSubtitle = japaneseSite.subtitle;
   const englishSiteName = inputs.navigations.en.site.site_name;
-  const pageTitle = `${japaneseRoot.title} / ${englishRoot.title}｜${japaneseSiteName}`;
+  const documentTitle = `${japaneseSiteName}｜${japaneseSiteSubtitle}｜${japaneseRoot.title}`;
   const socialMetadata = productionSocialMetaTags(inputs, {
     title: `${japaneseSiteName}｜${englishSiteName}`,
     description: `${japaneseRoot.description} / ${englishRoot.description}`,
@@ -911,7 +923,7 @@ function productionRootPage(inputs) {
   });
   return `<!doctype html>
 <html lang="ja" data-text-size="standard">
-${productionHead({ inputs, title: pageTitle, socialMetadata })}
+${productionHead({ inputs, title: documentTitle, socialMetadata })}
 <body class="production-root">
   <a class="skip-link" href="#main-content">${escapeHtml(japaneseUi.skip_link)}<span lang="en"> / ${escapeHtml(englishUi.skip_link)}</span></a>
   <header class="site-header">
@@ -928,6 +940,7 @@ ${productionHead({ inputs, title: pageTitle, socialMetadata })}
   </header>
   <div class="page">
     <main id="main-content">
+      <p><strong>${escapeHtml(japaneseSiteName)}</strong>｜${escapeHtml(japaneseSiteSubtitle)}</p>
       <h1 class="root-language-heading">${escapeHtml(japaneseRoot.heading)}<br><span lang="en">${escapeHtml(englishRoot.heading)}</span></h1>
       <p class="root-description-ja">${escapeHtml(japaneseRoot.description)}</p>
       <p lang="en">${escapeHtml(englishRoot.description)}</p>
