@@ -521,7 +521,7 @@ test('generates the agreed common UI and accessible bilingual production root', 
   assert.match(root, /<html lang="ja" data-text-size="standard">/);
   assert.match(root, /<body class="production-root">/);
   assert.equal([...root.matchAll(/<h1(?:\s|>)/g)].length, 1);
-  assert.match(root, /<title>言語を選択 \/ Choose a language｜まどぐちみまもり<\/title>/);
+  assert.match(root, /<title>まどぐちみまもり｜熊本県・熊本市の公式情報案内｜言語を選択<\/title>/);
   assert.match(
     root,
     /<a class="skip-link" href="#main-content">本文へ移動<span lang="en"> \/ Skip to main content<\/span><\/a>/
@@ -539,6 +539,12 @@ test('generates the agreed common UI and accessible bilingual production root', 
   assert.match(
     root,
     /<h1 class="root-language-heading">表示する言語を選ぶ<br><span lang="en">Choose a language<\/span><\/h1>/
+  );
+  assert.match(
+    root,
+    new RegExp(
+      `<p><strong>${escapeHtml(inputs.navigations.ja.site.site_name)}</strong>｜${escapeHtml(inputs.navigations.ja.site.subtitle)}</p>`
+    )
   );
   assert.match(
     root,
@@ -651,6 +657,33 @@ test('generates the agreed common UI and accessible bilingual production root', 
   );
 });
 
+test('keeps the approved production home titles, visible site identity, and h1 contracts', () => {
+  const artifacts = buildSiteArtifacts(inputs);
+  const japanese = artifacts.get('ja/index.html');
+  const english = artifacts.get('en/index.html');
+  const site = inputs.navigations.ja.site;
+
+  assert.match(japanese, /<title>まどぐちみまもり｜熊本県・熊本市の公式情報案内<\/title>/);
+  assert.match(
+    japanese,
+    new RegExp(
+      `<p><strong>${escapeHtml(site.site_name)}</strong>｜${escapeHtml(site.subtitle)}</p>`
+    )
+  );
+  assert.match(japanese, /<h1>確認したい公式情報を探す<\/h1>/);
+  assert.equal([...japanese.matchAll(/<h1(?:\s|>)/g)].length, 1);
+
+  assert.match(english, /<title>Home｜Madoguchi Mimamori<\/title>/);
+  assert.match(english, /<h1>Find official information to check<\/h1>/);
+  assert.equal([...english.matchAll(/<h1(?:\s|>)/g)].length, 1);
+  assert.doesNotMatch(
+    english,
+    new RegExp(
+      `<p><strong>${escapeHtml(site.site_name)}</strong>｜${escapeHtml(site.subtitle)}</p>`
+    )
+  );
+});
+
 test('does not add automatic language redirects or browser storage beyond the approved scripts', () => {
   const root = buildSiteArtifacts(inputs).get('index.html');
   assert.doesNotMatch(root, /http-equiv=["']refresh|meta\s+refresh/i);
@@ -691,8 +724,10 @@ test('uses one language-specific source for each production root responsibility'
   const changedInputs = await loadSiteInputs(changedRoot, 'production');
   assert.deepEqual(changedInputs.results, []);
   const changedHtml = buildSiteArtifacts(changedInputs).get('index.html');
-  for (const marker of Object.values(changedEnglish.root))
-    assert.match(changedHtml, new RegExp(marker));
+  for (const [key, marker] of Object.entries(changedEnglish.root)) {
+    if (key === 'title') assert.doesNotMatch(changedHtml, new RegExp(marker));
+    else assert.match(changedHtml, new RegExp(marker));
+  }
 
   const strictRoot = await createSiteRepositoryCopy(t);
   const strictEnglish = await readJson(strictRoot, englishPath);
