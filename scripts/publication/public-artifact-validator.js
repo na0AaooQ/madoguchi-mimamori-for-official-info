@@ -9,6 +9,8 @@ import {
   FORBIDDEN_PUBLIC_KEYS,
   PUBLIC_ARTIFACT_PATHS,
   PUBLIC_SCHEMA_PATH,
+  NATIONAL_PUBLIC_SCHEMA_PATH,
+  REGIONAL_PUBLIC_SCHEMA_PATH,
   PublicRuntimeError
 } from './public-constants.js';
 
@@ -37,6 +39,29 @@ export async function loadPublicSchema(repoRoot) {
       error
     );
   }
+}
+
+async function loadSchema(repoRoot, schemaPath) {
+  try {
+    const schema = JSON.parse(await readFile(path.join(repoRoot, schemaPath), 'utf8'));
+    return { schema, validate: compileSchema(schema, { schemaFile: schemaPath }) };
+  } catch (error) {
+    throw new PublicRuntimeError(
+      'PUB-RUN-E002',
+      schemaPath,
+      `公開Schemaを読み込めません: ${error.message}`,
+      error
+    );
+  }
+}
+
+export async function loadPublicSchemas(repoRoot) {
+  const [legacy, national, regional] = await Promise.all([
+    loadSchema(repoRoot, PUBLIC_SCHEMA_PATH),
+    loadSchema(repoRoot, NATIONAL_PUBLIC_SCHEMA_PATH),
+    loadSchema(repoRoot, REGIONAL_PUBLIC_SCHEMA_PATH)
+  ]);
+  return { legacy, national, regional };
 }
 
 function collectForbiddenKeys(value, currentPath = '$', findings = []) {
@@ -132,11 +157,24 @@ function canonicalLocaleOrder(locales) {
 
 export function validatePublicArtifact(
   artifact,
-  { validateSchema, file, expectedMode, expectedLocale }
+  {
+    validateSchema,
+    validateNationalSchema,
+    validateRegionalSchema,
+    file,
+    expectedMode,
+    expectedLocale
+  }
 ) {
   const results = [];
-  if (!validateSchema(artifact)) {
-    for (const error of validateSchema.errors ?? []) {
+  const selectedSchema =
+    artifact?.artifact_scope === 'national'
+      ? (validateNationalSchema ?? validateSchema)
+      : artifact?.artifact_scope === 'region'
+        ? (validateRegionalSchema ?? validateSchema)
+        : validateSchema;
+  if (!selectedSchema(artifact)) {
+    for (const error of selectedSchema.errors ?? []) {
       results.push(
         publicError(
           'PUB-E004',
@@ -155,6 +193,32 @@ export function validatePublicArtifact(
   }
   if (artifact?.locale !== expectedLocale) {
     results.push(publicError('PUB-E004', file, 'localeが出力パスと一致しません。', 'locale'));
+  }
+  if (artifact?.artifact_scope === 'national' && artifact.locale) {
+    for (const entry of artifact.regions ?? []) {
+      if (entry.path !== `/${artifact.locale}/regions/${entry.region_slug}/`)
+        results.push(
+          publicError(
+            'PUB-E004',
+            file,
+            '全国トップのregion pathが共通URL規則と一致しません。',
+            'regions.path'
+          )
+        );
+    }
+  }
+  if (
+    artifact?.artifact_scope === 'region' &&
+    artifact.region?.path !== `/${artifact.locale}/regions/${artifact.region.region_slug}/`
+  ) {
+    results.push(
+      publicError(
+        'PUB-E004',
+        file,
+        '地域成果物のregion pathが共通URL規則と一致しません。',
+        'region.path'
+      )
+    );
   }
   for (const forbiddenPath of collectForbiddenKeys(artifact)) {
     results.push(

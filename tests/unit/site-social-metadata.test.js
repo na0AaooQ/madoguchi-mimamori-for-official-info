@@ -173,7 +173,7 @@ test('generates one complete 16-tag social metadata set for every production pag
 
 test('keeps preview and production 404 outside the social metadata scope', () => {
   const preview = buildSiteArtifacts(previewInputs);
-  assert.equal(preview.size, 21);
+  assert.equal(preview.size, 19);
   assert.equal(preview.has('ogp-image.png'), false);
   for (const [file, source] of preview) {
     if (file.endsWith('.html')) assert.deepEqual(socialMetadata(source), [], file);

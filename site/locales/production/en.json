@@ -39,7 +39,11 @@
     "section_back": "Return to the home page",
     "empty_section": "There is currently no guidance to display in this topic. Return to the home page to check another topic.",
     "organizations_link": "Find information in the full organization and destination list",
-    "situation_notice": "This site does not determine current disaster conditions or whether information is true."
+    "situation_notice": "This site does not determine current disaster conditions or whether information is true.",
+    "regions_heading": "Choose a published region",
+    "regions_intro": "Choose a region currently covered by this site. The site does not cover every region nationwide.",
+    "region_back": "Back to the region home",
+    "national_home_link": "Back to the national home"
   },
   "roles": {
     "primary": "Main destinations",

@@ -37,6 +37,10 @@ export const SITE_MODES = Object.freeze({
       ja: 'dist/public-data/preview/ja/navigation.json',
       en: 'dist/public-data/preview/en/navigation.json'
     }),
+    regionalNavigationRoots: Object.freeze({
+      ja: 'dist/public-data/preview/ja/regions',
+      en: 'dist/public-data/preview/en/regions'
+    }),
     uiLocalePaths: Object.freeze({
       ja: 'site/locales/ja.json',
       en: 'site/locales/en.json'
@@ -53,6 +57,7 @@ export const SITE_MODES = Object.freeze({
       ja: 'dist/public-data/production/ja/navigation.json',
       en: 'dist/public-data/production/en/navigation.json'
     }),
+    regionalNavigationRoots: Object.freeze({}),
     uiLocalePaths: Object.freeze({
       ja: 'site/locales/production/ja.json',
       en: 'site/locales/production/en.json'

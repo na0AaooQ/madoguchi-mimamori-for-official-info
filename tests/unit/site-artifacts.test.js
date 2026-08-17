@@ -210,9 +210,16 @@ test('invalid production GA4 settings preserve existing production artifacts and
 
 test('rejects unsafe anchors and missing destination language notes', async (t) => {
   const unsafeRoot = await createSiteRepositoryCopy(t);
-  const japanese = await readJson(unsafeRoot, 'dist/public-data/preview/ja/navigation.json');
-  japanese.sections[0].anchor_id = '..';
-  await writeJson(unsafeRoot, 'dist/public-data/preview/ja/navigation.json', japanese);
+  const japaneseRegional = await readJson(
+    unsafeRoot,
+    'dist/public-data/preview/ja/regions/example/navigation.json'
+  );
+  japaneseRegional.sections[0].anchor_id = '..';
+  await writeJson(
+    unsafeRoot,
+    'dist/public-data/preview/ja/regions/example/navigation.json',
+    japaneseRegional
+  );
   assert.ok(
     (await validateSiteRepository(unsafeRoot)).some(({ code }) =>
       ['PUB-E004', 'SITE-E002'].includes(code)
@@ -220,9 +227,16 @@ test('rejects unsafe anchors and missing destination language notes', async (t) 
   );
 
   const languageRoot = await createSiteRepositoryCopy(t);
-  const english = await readJson(languageRoot, 'dist/public-data/preview/en/navigation.json');
-  delete english.sections[0].cards[0].links[0].destination.destination_language_note;
-  await writeJson(languageRoot, 'dist/public-data/preview/en/navigation.json', english);
+  const englishRegional = await readJson(
+    languageRoot,
+    'dist/public-data/preview/en/regions/example/navigation.json'
+  );
+  delete englishRegional.sections[0].cards[0].links[0].destination.destination_language_note;
+  await writeJson(
+    languageRoot,
+    'dist/public-data/preview/en/regions/example/navigation.json',
+    englishRegional
+  );
   assert.ok(
     (await validateSiteRepository(languageRoot)).some(({ code }) =>
       ['PUB-E004', 'SITE-E003'].includes(code)

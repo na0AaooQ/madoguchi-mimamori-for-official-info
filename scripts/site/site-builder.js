@@ -7,6 +7,14 @@ import {
   SOURCE_TYPE_CATEGORIES
 } from './site-constants.js';
 import { absoluteSiteUrl, joinSitePath } from './site-url.js';
+import {
+  nationalPath,
+  privacyPath,
+  publicRootPath,
+  regionOrganizationsPath,
+  regionPath,
+  regionSectionPath
+} from '../shared/public-url.js';
 
 export function escapeHtml(value) {
   return String(value)
@@ -69,110 +77,6 @@ ${list(ui.usage.items)}
           <p>${escapeHtml(site.external_site_notice)}</p>
         </div>
       </details>`;
-}
-
-function header(navigation, ui, alternatePath) {
-  const locale = navigation.locale;
-  const otherLocale = alternateLocale(locale);
-  return `
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="site-name" href="/preview/${locale}/">${escapeHtml(navigation.site.site_name)}</a>
-      <div class="header-actions">
-        <nav aria-label="${escapeHtml(ui.navigation_label)}">
-          <a class="language-link" href="${escapeHtml(alternatePath)}" hreflang="${otherLocale}" lang="${otherLocale}" aria-label="${escapeHtml(ui.language_switch_label)}">${escapeHtml(ui.alternate_language_name)}</a>
-        </nav>
-        <fieldset class="font-size-control" data-font-size-control hidden>
-          <legend>${escapeHtml(ui.font_size.label)}</legend>
-          <button type="button" data-text-size="standard" aria-pressed="true">${escapeHtml(ui.font_size.standard)}</button>
-          <button type="button" data-text-size="large" aria-pressed="false">${escapeHtml(ui.font_size.large)}</button>
-        </fieldset>
-      </div>
-    </div>
-  </header>`;
-}
-
-function footer(navigation, ui) {
-  const locale = navigation.locale;
-  const operatorLang = locale === 'en' ? ' lang="ja"' : '';
-  const contact = footerContactAnchor(ui);
-  return `
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <nav aria-label="${escapeHtml(ui.navigation_label)}">
-        <ul class="footer-links">
-          <li><a href="/preview/${locale}/">${escapeHtml(ui.footer.home)}</a></li>
-          <li><a href="/preview/${locale}/organizations/">${escapeHtml(ui.footer.organizations)}</a></li>
-          <li><a href="/preview/${locale}/privacy/">${escapeHtml(ui.footer.privacy)}</a></li>
-          <li>${contact}</li>
-        </ul>
-      </nav>
-      <p>${escapeHtml(ui.footer.free_notice)}</p>
-      <p class="copyright"${operatorLang}>${escapeHtml(ui.footer.copyright)}</p>
-    </div>
-  </footer>`;
-}
-
-function pageShell({ inputs, navigation, ui, title, alternatePath, mainContent }) {
-  const pageTitle = `${title}｜${navigation.site.site_name}`;
-  return `<!doctype html>
-<html lang="${navigation.locale}" data-text-size="standard">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow, noarchive">
-  <meta name="generator" content="${SITE_GENERATOR_NAME}">
-  <title>${escapeHtml(pageTitle)}</title>
-${siteIconLinks(inputs)}
-  <link rel="stylesheet" href="/preview/assets/styles.css">
-  <script src="/preview/assets/font-size.js" defer></script>
-</head>
-<body>
-  <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${header(navigation, ui, alternatePath)}
-  <div class="page">
-    <aside class="preview-notice" aria-label="${escapeHtml(ui.preview_notice.title)}">
-      <strong>${escapeHtml(ui.preview_notice.title)}</strong>
-      <p>${escapeHtml(ui.preview_notice.body)}</p>
-    </aside>
-    <main id="main-content">
-${mainContent}${commonDetails(navigation.site, ui)}
-    </main>
-  </div>${footer(navigation, ui)}
-</body>
-</html>
-`;
-}
-
-function homePage(inputs, navigation, ui) {
-  const locale = navigation.locale;
-  const sectionItems = navigation.sections
-    .map(
-      (section) => `        <li>
-          <a class="section-link" href="/preview/${locale}/sections/${escapeHtml(section.anchor_id)}/">
-            <strong>${escapeHtml(section.title)}</strong>${section.short_description ? `\n            <span>${escapeHtml(section.short_description)}</span>` : ''}
-          </a>
-        </li>`
-    )
-    .join('\n');
-  const content = `      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
-      <p>${escapeHtml(navigation.site.short_description)}</p>
-      <p>${escapeHtml(navigation.site.purpose)}</p>
-      <section aria-labelledby="sections-heading">
-        <h2 id="sections-heading">${escapeHtml(ui.pages.sections_heading)}</h2>
-        <p>${escapeHtml(ui.pages.sections_intro)}</p>
-        <ul class="section-list">
-${sectionItems}
-        </ul>
-      </section>
-      <a class="primary-link" href="/preview/${locale}/organizations/">${escapeHtml(ui.pages.organizations_link)}</a>`;
-  return pageShell({
-    inputs,
-    navigation,
-    ui,
-    title: ui.pages.home_title,
-    alternatePath: `/preview/${alternateLocale(locale)}/`,
-    mainContent: content
-  });
 }
 
 function displayOrganizationName(organization, locale) {
@@ -279,27 +183,6 @@ ${links
       </details>`;
 }
 
-function sectionPage(inputs, navigation, ui, section) {
-  const locale = navigation.locale;
-  const cards =
-    section.cards.length > 0
-      ? section.cards.map((card) => renderCard(card, locale, ui)).join('\n')
-      : `      <p class="note">${escapeHtml(ui.pages.empty_section)}</p>`;
-  const content = `      <a class="back-link" href="/preview/${locale}/">${escapeHtml(ui.pages.section_back)}</a>
-      <h1>${escapeHtml(section.title)}</h1>${section.short_description ? `\n      <p>${escapeHtml(section.short_description)}</p>` : ''}
-      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
-${cards}
-      <a class="back-link" href="/preview/${locale}/">${escapeHtml(ui.pages.section_back)}</a>`;
-  return pageShell({
-    inputs,
-    navigation,
-    ui,
-    title: section.title,
-    alternatePath: `/preview/${alternateLocale(locale)}/sections/${section.anchor_id}/`,
-    mainContent: content
-  });
-}
-
 export function aggregateOrganizations(navigation) {
   const organizations = [];
   const byId = new Map();
@@ -344,8 +227,230 @@ export function aggregateVisibility(contexts) {
   return 'disaster';
 }
 
-function organizationsPage(inputs, navigation, ui) {
+function privacySection(heading, items) {
+  return `      <section>
+        <h2>${escapeHtml(heading)}</h2>
+${list(items)}
+      </section>`;
+}
+
+function privacyParagraphSection(heading, paragraphs, links, ui) {
+  return `      <section>
+        <h2>${escapeHtml(heading)}</h2>
+${paragraphs.map((paragraph) => `        <p>${escapeHtml(paragraph)}</p>`).join('\n')}
+        <ul>
+${links.map(({ label, url }) => `          <li>${externalAnchor(url, label, ui)}</li>`).join('\n')}
+        </ul>
+      </section>`;
+}
+
+function previewLogicalPath(inputs, logicalPath) {
+  return sitePath(inputs, logicalPath.replace(/^\//, ''));
+}
+
+function previewNavigationHeader(inputs, navigation, ui, alternatePath) {
   const locale = navigation.locale;
+  const otherLocale = alternateLocale(locale);
+  return `
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="site-name" href="${escapeHtml(previewLogicalPath(inputs, nationalPath(locale)))}">${escapeHtml(navigation.site.site_name)}</a>
+      <div class="header-actions">
+        <nav aria-label="${escapeHtml(ui.navigation_label)}">
+          <a class="language-link" href="${escapeHtml(alternatePath)}" hreflang="${otherLocale}" lang="${otherLocale}" aria-label="${escapeHtml(ui.language_switch_label)}">${escapeHtml(ui.alternate_language_name)}</a>
+        </nav>
+        <fieldset class="font-size-control" data-font-size-control hidden>
+          <legend>${escapeHtml(ui.font_size.label)}</legend>
+          <button type="button" data-text-size="standard" aria-pressed="true">${escapeHtml(ui.font_size.standard)}</button>
+          <button type="button" data-text-size="large" aria-pressed="false">${escapeHtml(ui.font_size.large)}</button>
+        </fieldset>
+      </div>
+    </div>
+  </header>`;
+}
+
+function previewNavigationFooter(inputs, navigation, ui, regionSlug) {
+  const locale = navigation.locale;
+  const home = regionSlug
+    ? previewLogicalPath(inputs, regionPath(locale, regionSlug))
+    : previewLogicalPath(inputs, nationalPath(locale));
+  const national = previewLogicalPath(inputs, nationalPath(locale));
+  const privacy = previewLogicalPath(inputs, privacyPath(locale));
+  const links = [
+    `<li><a href="${escapeHtml(home)}">${escapeHtml(ui.footer.home)}</a></li>`,
+    ...(regionSlug
+      ? [
+          `<li><a href="${escapeHtml(national)}">${escapeHtml(ui.pages.national_home_link)}</a></li>`,
+          `<li><a href="${escapeHtml(previewLogicalPath(inputs, regionOrganizationsPath(locale, regionSlug)))}">${escapeHtml(ui.footer.organizations)}</a></li>`
+        ]
+      : []),
+    `<li><a href="${escapeHtml(privacy)}">${escapeHtml(ui.footer.privacy)}</a></li>`,
+    `<li>${footerContactAnchor(ui)}</li>`
+  ].join('\n          ');
+  return `
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav aria-label="${escapeHtml(ui.navigation_label)}">
+        <ul class="footer-links">
+          ${links}
+        </ul>
+      </nav>
+      <p>${escapeHtml(ui.footer.free_notice)}</p>
+      <p class="copyright"${locale === 'en' ? ' lang="ja"' : ''}>${escapeHtml(ui.footer.copyright)}</p>
+    </div>
+  </footer>`;
+}
+
+function previewHreflangLinks(currentPath, alternatePath) {
+  const locale = currentPath.match(/^\/(?:preview\/)?(ja|en)\//)?.[1] ?? 'ja';
+  const alternateLocaleValue = alternateLocale(locale);
+  return `  <link rel="alternate" hreflang="${locale}" href="${escapeHtml(currentPath)}">
+  <link rel="alternate" hreflang="${alternateLocaleValue}" href="${escapeHtml(alternatePath)}">`;
+}
+
+function regionalPreviewPageShell({
+  inputs,
+  navigation,
+  ui,
+  title,
+  currentPath,
+  alternatePath,
+  mainContent,
+  regionSlug
+}) {
+  const pageTitle = `${title}｜${navigation.site.site_name}`;
+  return `<!doctype html>
+<html lang="${navigation.locale}" data-text-size="standard">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="generator" content="${SITE_GENERATOR_NAME}">
+  <title>${escapeHtml(pageTitle)}</title>
+${previewHreflangLinks(currentPath, alternatePath)}
+${siteIconLinks(inputs)}
+  <link rel="stylesheet" href="${escapeHtml(sitePath(inputs, 'assets/styles.css'))}">
+  <script src="${escapeHtml(sitePath(inputs, 'assets/font-size.js'))}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${previewNavigationHeader(inputs, navigation, ui, alternatePath)}
+  <div class="page">
+    <aside class="preview-notice" aria-label="${escapeHtml(ui.preview_notice.title)}">
+      <strong>${escapeHtml(ui.preview_notice.title)}</strong>
+      <p>${escapeHtml(ui.preview_notice.body)}</p>
+    </aside>
+    <main id="main-content">
+${mainContent}${commonDetails(navigation.site, ui)}
+    </main>
+  </div>${previewNavigationFooter(inputs, navigation, ui, regionSlug)}
+</body>
+</html>
+`;
+}
+
+function previewNationalPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const regions = (navigation.regions ?? [])
+    .map(
+      (region) => `        <li>
+          <a class="section-link" href="${escapeHtml(previewLogicalPath(inputs, region.path))}">
+            <strong>${escapeHtml(region.navigation_label)}</strong>${region.scope_note ? `\n            <span>${escapeHtml(region.scope_note)}</span>` : ''}
+          </a>
+        </li>`
+    )
+    .join('\n');
+  const content = `      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
+      <p>${escapeHtml(navigation.site.short_description)}</p>
+      <p>${escapeHtml(navigation.site.purpose)}</p>
+      <section aria-labelledby="regions-heading">
+        <h2 id="regions-heading">${escapeHtml(ui.pages.regions_heading)}</h2>
+        <p>${escapeHtml(ui.pages.regions_intro)}</p>
+        <ul class="section-list">
+${regions}
+        </ul>
+      </section>`;
+  const currentPath = previewLogicalPath(inputs, nationalPath(locale));
+  return regionalPreviewPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: ui.pages.home_title,
+    currentPath,
+    alternatePath: previewLogicalPath(inputs, nationalPath(alternateLocale(locale))),
+    mainContent: content
+  });
+}
+
+function previewRegionPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const region = navigation.region;
+  const sectionItems = navigation.sections
+    .map(
+      (section) => `        <li>
+          <a class="section-link" href="${escapeHtml(previewLogicalPath(inputs, regionSectionPath(locale, region.region_slug, section.anchor_id)))}">
+            <strong>${escapeHtml(section.title)}</strong>${section.short_description ? `\n            <span>${escapeHtml(section.short_description)}</span>` : ''}
+          </a>
+        </li>`
+    )
+    .join('\n');
+  const content = `      <a class="back-link" href="${escapeHtml(previewLogicalPath(inputs, nationalPath(locale)))}">${escapeHtml(ui.pages.national_home_link)}</a>
+      <h1>${escapeHtml(region.region_name)}</h1>${region.scope_note ? `\n      <p>${escapeHtml(region.scope_note)}</p>` : ''}
+      <p>${escapeHtml(navigation.site.purpose)}</p>
+      <section aria-labelledby="sections-heading">
+        <h2 id="sections-heading">${escapeHtml(ui.pages.sections_heading)}</h2>
+        <p>${escapeHtml(ui.pages.sections_intro)}</p>
+        <ul class="section-list">
+${sectionItems}
+        </ul>
+      </section>
+      <a class="primary-link" href="${escapeHtml(previewLogicalPath(inputs, regionOrganizationsPath(locale, region.region_slug)))}">${escapeHtml(ui.pages.organizations_link)}</a>`;
+  const currentPath = previewLogicalPath(inputs, regionPath(locale, region.region_slug));
+  return regionalPreviewPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: region.region_name,
+    currentPath,
+    alternatePath: previewLogicalPath(
+      inputs,
+      regionPath(alternateLocale(locale), region.region_slug)
+    ),
+    mainContent: content,
+    regionSlug: region.region_slug
+  });
+}
+
+function previewRegionSectionPage(inputs, navigation, ui, section) {
+  const locale = navigation.locale;
+  const slug = navigation.region.region_slug;
+  const cards =
+    section.cards.length > 0
+      ? section.cards.map((card) => renderCard(card, locale, ui)).join('\n')
+      : `      <p class="note">${escapeHtml(ui.pages.empty_section)}</p>`;
+  const regionHome = previewLogicalPath(inputs, regionPath(locale, slug));
+  const content = `      <a class="back-link" href="${escapeHtml(regionHome)}">${escapeHtml(ui.pages.region_back)}</a>
+      <h1>${escapeHtml(section.title)}</h1>${section.short_description ? `\n      <p>${escapeHtml(section.short_description)}</p>` : ''}
+      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
+${cards}
+      <a class="back-link" href="${escapeHtml(regionHome)}">${escapeHtml(ui.pages.region_back)}</a>`;
+  return regionalPreviewPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: section.title,
+    currentPath: previewLogicalPath(inputs, regionSectionPath(locale, slug, section.anchor_id)),
+    alternatePath: previewLogicalPath(
+      inputs,
+      regionSectionPath(alternateLocale(locale), slug, section.anchor_id)
+    ),
+    mainContent: content,
+    regionSlug: slug
+  });
+}
+
+function previewRegionOrganizationsPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const slug = navigation.region.region_slug;
   const organizations = aggregateOrganizations(navigation)
     .map(({ organization, regions, destinations }) => {
       const fallback =
@@ -367,60 +472,34 @@ function organizationsPage(inputs, navigation, ui) {
       ])
         .filter(([, entries]) => entries.length > 0)
         .map(
-          ([category, entries]) => `
-        <section>
-          <h3>${escapeHtml(ui.destination_categories[category])}</h3>
-${entries
-  .map(({ destination, contexts }) =>
-    renderDestination({
-      destination,
-      locale,
-      ui,
-      visibility: ui.visibility[aggregateVisibility(contexts)],
-      showOrganization: false
-    })
-  )
-  .join('\n')}
-        </section>`
+          ([category, entries]) =>
+            `\n        <section>\n          <h3>${escapeHtml(ui.destination_categories[category])}</h3>\n${entries.map(({ destination, contexts }) => renderDestination({ destination, locale, ui, visibility: ui.visibility[aggregateVisibility(contexts)], showOrganization: false })).join('\n')}\n        </section>`
         )
         .join('');
-      return `      <article class="organization">
-        <h2${languageAttributes(organization.official_name, locale, organization.name_kind === 'official-ja-fallback')}>${escapeHtml(organization.official_name)}</h2>${fallback}${summary}${regionText}${categories}
-      </article>`;
+      return `      <article class="organization">\n        <h2${languageAttributes(organization.official_name, locale, organization.name_kind === 'official-ja-fallback')}>${escapeHtml(organization.official_name)}</h2>${fallback}${summary}${regionText}${categories}\n      </article>`;
     })
     .join('\n');
-  const content = `      <h1>${escapeHtml(ui.pages.organizations_title)}</h1>
+  const content = `      <a class="back-link" href="${escapeHtml(previewLogicalPath(inputs, regionPath(locale, slug)))}">${escapeHtml(ui.pages.region_back)}</a>
+      <h1>${escapeHtml(ui.pages.organizations_title)}</h1>
       <p>${escapeHtml(ui.pages.organizations_intro)}</p>
       <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
 ${organizations}`;
-  return pageShell({
+  return regionalPreviewPageShell({
     inputs,
     navigation,
     ui,
     title: ui.pages.organizations_title,
-    alternatePath: `/preview/${alternateLocale(locale)}/organizations/`,
-    mainContent: content
+    currentPath: previewLogicalPath(inputs, regionOrganizationsPath(locale, slug)),
+    alternatePath: previewLogicalPath(
+      inputs,
+      regionOrganizationsPath(alternateLocale(locale), slug)
+    ),
+    mainContent: content,
+    regionSlug: slug
   });
 }
 
-function privacySection(heading, items) {
-  return `      <section>
-        <h2>${escapeHtml(heading)}</h2>
-${list(items)}
-      </section>`;
-}
-
-function privacyParagraphSection(heading, paragraphs, links, ui) {
-  return `      <section>
-        <h2>${escapeHtml(heading)}</h2>
-${paragraphs.map((paragraph) => `        <p>${escapeHtml(paragraph)}</p>`).join('\n')}
-        <ul>
-${links.map(({ label, url }) => `          <li>${externalAnchor(url, label, ui)}</li>`).join('\n')}
-        </ul>
-      </section>`;
-}
-
-function privacyPage(inputs, navigation, ui) {
+function previewPrivacyPage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const privacy = ui.privacy;
   const content = `      <h1>${escapeHtml(ui.pages.privacy_title)}</h1>
@@ -437,17 +516,18 @@ ${privacySection(privacy.external_heading, privacy.external_items)}
 ${privacySection(privacy.contact_heading, privacy.contact_items)}
 ${privacySection(privacy.logs_heading, privacy.logs_items)}
 ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
-  return pageShell({
+  return regionalPreviewPageShell({
     inputs,
     navigation,
     ui,
     title: ui.pages.privacy_title,
-    alternatePath: `/preview/${alternateLocale(locale)}/privacy/`,
+    currentPath: previewLogicalPath(inputs, privacyPath(locale)),
+    alternatePath: previewLogicalPath(inputs, privacyPath(alternateLocale(locale))),
     mainContent: content
   });
 }
 
-function expectedPreviewSiteArtifactPaths(navigations) {
+function expectedPreviewSiteArtifactPaths(navigations, regionalNavigations = {}) {
   const paths = new Set([
     'assets/styles.css',
     'assets/font-size.js',
@@ -457,29 +537,43 @@ function expectedPreviewSiteArtifactPaths(navigations) {
   ]);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);
-    paths.add(`${locale}/organizations/index.html`);
     paths.add(`${locale}/privacy/index.html`);
-    for (const section of navigations[locale].sections) {
-      paths.add(`${locale}/sections/${section.anchor_id}/index.html`);
+    for (const navigation of Object.values(regionalNavigations[locale] ?? {})) {
+      const slug = navigation.region.region_slug;
+      paths.add(`${locale}/regions/${slug}/index.html`);
+      paths.add(`${locale}/regions/${slug}/organizations/index.html`);
+      for (const section of navigation.sections) {
+        paths.add(`${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`);
+      }
     }
   }
   return [...paths].sort();
 }
 
 function buildPreviewSiteArtifacts(inputs) {
-  const { navigations, uiLocales, assets } = inputs;
+  const { navigations, regionalNavigations, uiLocales, assets } = inputs;
   const artifacts = new Map(Object.entries(assets));
   for (const locale of SITE_LOCALES) {
-    const navigation = navigations[locale];
+    const national = navigations[locale];
     const ui = uiLocales[locale];
-    artifacts.set(`${locale}/index.html`, homePage(inputs, navigation, ui));
-    artifacts.set(`${locale}/organizations/index.html`, organizationsPage(inputs, navigation, ui));
-    artifacts.set(`${locale}/privacy/index.html`, privacyPage(inputs, navigation, ui));
-    for (const section of navigation.sections) {
+    artifacts.set(`${locale}/index.html`, previewNationalPage(inputs, national, ui));
+    artifacts.set(`${locale}/privacy/index.html`, previewPrivacyPage(inputs, national, ui));
+    for (const navigation of Object.values(regionalNavigations[locale] ?? {})) {
+      const slug = navigation.region.region_slug;
       artifacts.set(
-        `${locale}/sections/${section.anchor_id}/index.html`,
-        sectionPage(inputs, navigation, ui, section)
+        `${locale}/regions/${slug}/index.html`,
+        previewRegionPage(inputs, navigation, ui)
       );
+      artifacts.set(
+        `${locale}/regions/${slug}/organizations/index.html`,
+        previewRegionOrganizationsPage(inputs, navigation, ui)
+      );
+      for (const section of navigation.sections) {
+        artifacts.set(
+          `${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`,
+          previewRegionSectionPage(inputs, navigation, ui, section)
+        );
+      }
     }
   }
   return artifacts;
@@ -1023,6 +1117,23 @@ export function productionSitemapUrls(inputs) {
   return urls;
 }
 
+export function regionalSitemapUrls(inputs) {
+  const paths = [publicRootPath()];
+  for (const locale of SITE_LOCALES) paths.push(nationalPath(locale));
+  for (const locale of SITE_LOCALES) {
+    for (const navigation of Object.values(inputs.regionalNavigations?.[locale] ?? {})) {
+      const slug = navigation.region.region_slug;
+      paths.push(regionPath(locale, slug));
+      for (const section of navigation.sections) {
+        paths.push(regionSectionPath(locale, slug, section.anchor_id));
+      }
+      paths.push(regionOrganizationsPath(locale, slug));
+    }
+  }
+  for (const locale of SITE_LOCALES) paths.push(privacyPath(locale));
+  return paths.map((pathname) => absoluteSiteUrl(inputs.siteUrl, pathname.replace(/^\//, '')));
+}
+
 function productionSitemap(inputs) {
   const entries = productionSitemapUrls(inputs)
     .map((url) => `  <url><loc>${escapeHtml(url)}</loc></url>`)
@@ -1080,10 +1191,10 @@ function buildProductionSiteArtifacts(inputs) {
   return artifacts;
 }
 
-export function expectedSiteArtifactPaths(navigations, mode = 'preview') {
+export function expectedSiteArtifactPaths(navigations, mode = 'preview', regionalNavigations = {}) {
   return mode === 'production'
     ? expectedProductionSiteArtifactPaths(navigations)
-    : expectedPreviewSiteArtifactPaths(navigations);
+    : expectedPreviewSiteArtifactPaths(navigations, regionalNavigations);
 }
 
 export function buildSiteArtifacts(inputs) {

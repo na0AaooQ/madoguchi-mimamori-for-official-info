@@ -5,6 +5,7 @@ import { TextDecoder } from 'node:util';
 import { createResult, sortResults } from '../validation/result.js';
 import {
   loadPublicSchema,
+  loadPublicSchemas,
   validatePublicArtifact
 } from '../publication/public-artifact-validator.js';
 import {
@@ -95,7 +96,11 @@ const UI_LOCALE_SHAPE = Object.freeze({
     section_back: string,
     empty_section: string,
     organizations_link: string,
-    situation_notice: string
+    situation_notice: string,
+    regions_heading: string,
+    regions_intro: string,
+    region_back: string,
+    national_home_link: string
   },
   roles: { primary: string, 'temporary-highlight': string, secondary: string },
   visibility: { always: string, normal: string, disaster: string },
@@ -433,7 +438,49 @@ function validateNavigation(navigation, locale, file, config) {
   return results;
 }
 
-function validatePair(navigations, uiLocales, config) {
+function validateNationalNavigation(navigation, locale, file) {
+  const results = [];
+  if (navigation?.artifact_scope !== 'national')
+    results.push(
+      siteError('SITE-E001', file, '全国トップ用成果物ではありません。', 'artifact_scope')
+    );
+  const seen = new Set();
+  for (const region of navigation?.regions ?? []) {
+    if (seen.has(region.region_slug))
+      results.push(
+        siteError(
+          'SITE-E002',
+          file,
+          '全国トップのregion_slugが重複しています。',
+          'regions.region_slug'
+        )
+      );
+    seen.add(region.region_slug);
+    if (region.path !== `/${locale}/regions/${region.region_slug}/`)
+      results.push(
+        siteError(
+          'SITE-E002',
+          file,
+          '全国トップのregion pathがlocaleと一致しません。',
+          'regions.path'
+        )
+      );
+  }
+  return results;
+}
+
+function validateRegionalNavigation(navigation, locale, file, config) {
+  const results = validateNavigation(navigation, locale, file, config);
+  if (navigation?.artifact_scope !== 'region')
+    results.push(siteError('SITE-E001', file, '地域用成果物ではありません。', 'artifact_scope'));
+  if (navigation?.region?.path !== `/${locale}/regions/${navigation?.region?.region_slug}/`)
+    results.push(
+      siteError('SITE-E002', file, '地域成果物のregion pathがlocaleと一致しません。', 'region.path')
+    );
+  return results;
+}
+
+function validatePair(navigations, uiLocales, config, regionalNavigations = {}) {
   const results = [];
   const japanese = navigations.ja;
   const english = navigations.en;
@@ -443,22 +490,69 @@ function validatePair(navigations, uiLocales, config) {
       siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsite_idが一致しません。')
     );
   }
-  if ((japanese.sections?.length ?? -1) !== (english.sections?.length ?? -2)) {
+  if (config.mode === 'preview') {
+    const jaRegions = Object.keys(regionalNavigations.ja ?? {}).sort();
+    const enRegions = Object.keys(regionalNavigations.en ?? {}).sort();
+    if (JSON.stringify(jaRegions) !== JSON.stringify(enRegions))
+      results.push(
+        siteError(
+          'SITE-E001',
+          `dist/public-data/${config.mode}`,
+          '日英の公開region一覧が一致しません。'
+        )
+      );
+    for (const slug of jaRegions) {
+      const ja = regionalNavigations.ja[slug];
+      const en = regionalNavigations.en[slug];
+      if (
+        ja?.region?.region_id !== en?.region?.region_id ||
+        ja?.region?.region_slug !== en?.region?.region_slug
+      )
+        results.push(
+          siteError(
+            'SITE-E001',
+            `dist/public-data/${config.mode}`,
+            `日英のregion対応が一致しません: ${slug}`
+          )
+        );
+      if ((ja?.sections?.length ?? -1) !== (en?.sections?.length ?? -2))
+        results.push(
+          siteError(
+            'SITE-E001',
+            `dist/public-data/${config.mode}`,
+            `日英の地域section件数が一致しません: ${slug}`
+          )
+        );
+      for (const [index, section] of (ja?.sections ?? []).entries()) {
+        const counterpart = en.sections[index];
+        if (section.id !== counterpart?.id || section.anchor_id !== counterpart?.anchor_id)
+          results.push(
+            siteError(
+              'SITE-E001',
+              `dist/public-data/${config.mode}`,
+              `日英の地域section対応が一致しません: ${slug}`
+            )
+          );
+      }
+    }
+  } else if ((japanese.sections?.length ?? -1) !== (english.sections?.length ?? -2)) {
     results.push(
       siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsection件数が一致しません。')
     );
     return results;
   }
-  for (const [index, section] of japanese.sections.entries()) {
-    const counterpart = english.sections[index];
-    if (section.id !== counterpart.id || section.anchor_id !== counterpart.anchor_id) {
-      results.push(
-        siteError(
-          'SITE-E001',
-          `dist/public-data/${config.mode}`,
-          `日英のsection対応が一致しません（位置${index + 1}）。`
-        )
-      );
+  if (config.mode !== 'preview') {
+    for (const [index, section] of japanese.sections.entries()) {
+      const counterpart = english.sections[index];
+      if (section.id !== counterpart.id || section.anchor_id !== counterpart.anchor_id) {
+        results.push(
+          siteError(
+            'SITE-E001',
+            `dist/public-data/${config.mode}`,
+            `日英のsection対応が一致しません（位置${index + 1}）。`
+          )
+        );
+      }
     }
   }
   const revisedDates = {};
@@ -519,7 +613,11 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   const results = [];
   const navigations = {};
   const uiLocales = {};
-  const { validate } = await loadPublicSchema(repoRoot);
+  const schemas =
+    mode === 'preview'
+      ? await loadPublicSchemas(repoRoot)
+      : { legacy: await loadPublicSchema(repoRoot) };
+  const regionalNavigations = Object.fromEntries(SITE_LOCALES.map((locale) => [locale, {}]));
 
   for (const locale of SITE_LOCALES) {
     const navigationPath = config.navigationPaths[locale];
@@ -529,13 +627,40 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
       navigations[locale] = navigation;
       results.push(
         ...validatePublicArtifact(navigation, {
-          validateSchema: validate,
+          validateSchema: schemas.legacy.validate,
+          validateNationalSchema: schemas.national?.validate,
+          validateRegionalSchema: schemas.regional?.validate,
           file: navigationPath,
           expectedMode: mode,
           expectedLocale: locale
-        }),
-        ...validateNavigation(navigation, locale, navigationPath, config)
+        })
       );
+      results.push(
+        ...(mode === 'preview'
+          ? validateNationalNavigation(navigation, locale, navigationPath, config)
+          : validateNavigation(navigation, locale, navigationPath, config))
+      );
+      if (mode === 'preview') {
+        for (const entry of navigation.regions ?? []) {
+          const regionalPath = `${config.regionalNavigationRoots[locale]}/${entry.region_slug}/navigation.json`;
+          const regional = await readJson(repoRoot, regionalPath);
+          if (regional.parseError) results.push(regional.parseError);
+          else {
+            regionalNavigations[locale][entry.region_slug] = regional;
+            results.push(
+              ...validatePublicArtifact(regional, {
+                validateSchema: schemas.legacy.validate,
+                validateNationalSchema: schemas.national.validate,
+                validateRegionalSchema: schemas.regional.validate,
+                file: regionalPath,
+                expectedMode: mode,
+                expectedLocale: locale
+              }),
+              ...validateRegionalNavigation(regional, locale, regionalPath, config)
+            );
+          }
+        }
+      }
     }
 
     const uiLocalePath = config.uiLocalePaths[locale];
@@ -577,7 +702,7 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
       }
     }
   }
-  results.push(...validatePair(navigations, uiLocales, config));
+  results.push(...validatePair(navigations, uiLocales, config, regionalNavigations));
 
   const assets = {};
   for (const [outputPath, sourcePath] of Object.entries(SITE_TEXT_ASSET_SOURCE_PATHS)) {
@@ -611,6 +736,7 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
     config,
     siteUrl,
     navigations,
+    regionalNavigations,
     uiLocales,
     assets,
     results: sortResults(results)

@@ -40,6 +40,8 @@ const regionItems = [
     id: 'region-example-prefecture',
     region_type: 'prefecture',
     parent_region_id: 'region-example-country',
+    region_slug: 'example',
+    display_order: 1,
     publication_status: 'draft'
   }
 ];
@@ -150,6 +152,16 @@ test('accepts HTTPS source and evidence URLs', () => {
     'evidence',
     envelope([{ ...draftEvidence, evidence_url: 'https://example.invalid/' }])
   );
+});
+
+test('enforces prefecture-only regional routing fields', () => {
+  const missingSlug = structuredClone(regionItems);
+  delete missingSlug[1].region_slug;
+  assertInvalid('regions', envelope(missingSlug));
+
+  const countryWithSlug = structuredClone(regionItems);
+  countryWithSlug[0].region_slug = 'country';
+  assertInvalid('regions', envelope(countryWithSlug));
 });
 
 test('rejects common invalid item shapes', async (t) => {

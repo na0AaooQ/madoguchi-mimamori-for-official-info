@@ -26,6 +26,14 @@
             "type": "string",
             "enum": ["country", "nationwide", "prefecture", "municipality", "service-area"]
           },
+          "region_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "display_order": {
+            "type": "integer",
+            "minimum": 1
+          },
           "parent_region_id": {
             "type": "string",
             "pattern": "^region-[a-z0-9]+(?:-[a-z0-9]+)*$"
@@ -44,6 +52,29 @@
           }
         },
         "required": ["id", "region_type", "publication_status"],
+        "allOf": [
+          {
+            "if": {
+              "properties": { "region_type": { "const": "prefecture" } },
+              "required": ["region_type"]
+            },
+            "then": {
+              "properties": { "region_slug": {}, "display_order": {} },
+              "required": ["region_slug", "display_order"]
+            }
+          },
+          {
+            "if": {
+              "properties": { "region_type": { "not": { "const": "prefecture" } } },
+              "required": ["region_type"]
+            },
+            "then": {
+              "not": {
+                "anyOf": [{ "required": ["region_slug"] }, { "required": ["display_order"] }]
+              }
+            }
+          }
+        ],
         "additionalProperties": false
       }
     }

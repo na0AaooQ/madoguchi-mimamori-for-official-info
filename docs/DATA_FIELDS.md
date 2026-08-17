@@ -116,14 +116,16 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/regions.json`
 
-| 項目                 | 型     | 必須条件             | 意味                    |
-| -------------------- | ------ | -------------------- | ----------------------- |
-| `id`                 | string | 必須                 | `region-`で始まる不変ID |
-| `region_type`        | string | 必須                 | 地域区分                |
-| `parent_region_id`   | string | 地域階層上必要な場合 | 親地域ID                |
-| `official_code`      | string | 任意                 | 公的な地域コード        |
-| `publication_status` | string | 必須                 | 公開状態                |
-| `internal_note`      | string | 任意・内部専用       | 運用メモ                |
+| 項目                 | 型      | 必須条件                  | 意味                      |
+| -------------------- | ------- | ------------------------- | ------------------------- |
+| `id`                 | string  | 必須                      | `region-`で始まる不変ID   |
+| `region_type`        | string  | 必須                      | 地域区分                  |
+| `parent_region_id`   | string  | 地域階層上必要な場合      | 親地域ID                  |
+| `region_slug`        | string  | prefectureでは必須        | 地域ページの公開URL識別子 |
+| `display_order`      | integer | prefectureでは必須・1以上 | 全国トップの地域表示順    |
+| `official_code`      | string  | 任意                      | 公的な地域コード          |
+| `publication_status` | string  | 必須                      | 公開状態                  |
+| `internal_note`      | string  | 任意・内部専用            | 運用メモ                  |
 
 `region_type`：
 
@@ -139,6 +141,9 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 - `municipality`は原則として`prefecture`を親に持つ
 - `prefecture`は原則として`country`を親に持つ
 - `service-area`を行政区域として表示しない
+- `region_slug`は小文字英数字とハイフンだけで構成し、prefecture間で一意にする
+- `region_slug`は`region_id`から自動生成せず、公開後に原則変更しない
+- `display_order`は推奨順位・重要度・災害規模を意味せず、同値時は`region_id`で安定化する
 
 ### `data/core/organizations.json`
 
@@ -345,18 +350,18 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### `data/core/cards.json`
 
-| 項目                 | 型       | 必須条件       | 意味                  |
-| -------------------- | -------- | -------------- | --------------------- |
-| `id`                 | string   | 必須           | `card-`で始まる不変ID |
-| `section_id`         | string   | 必須           | 所属分野ID            |
-| `region_ids`         | string[] | 任意           | 対象地域ID            |
-| `display_order`      | integer  | 必須・1以上    | 分野内の表示順        |
-| `publication_status` | string   | 必須           | 公開状態              |
-| `internal_note`      | string   | 任意・内部専用 | 運用メモ              |
+| 項目                 | 型       | 必須条件                   | 意味                  |
+| -------------------- | -------- | -------------------------- | --------------------- |
+| `id`                 | string   | 必須                       | `card-`で始まる不変ID |
+| `section_id`         | string   | 必須                       | 所属分野ID            |
+| `region_ids`         | string[] | publishedでは必須・1件以上 | 対象地域ID            |
+| `display_order`      | integer  | 必須・1以上                | 分野内の表示順        |
+| `publication_status` | string   | 必須                       | 公開状態              |
+| `internal_note`      | string   | 任意・内部専用             | 運用メモ              |
 
 カードには、URL、団体名、案内先確認日、ボタン文言を直接持たせません。
 
-`publication_status: published`のカードは、現在日時による期間判定を除く公開条件を満たす`role: primary`のカード関連を最低1件必要とします。主案内先の最大件数は固定しません。
+`publication_status: published`のカードは、現在日時による期間判定を除く公開条件を満たす`role: primary`のカード関連を最低1件必要とします。主案内先の最大件数は固定しません。全国版の地域成果物へ出す公開カードは、全地域への暗黙適用を避けるため`region_ids`を1件以上明示します。
 
 ### `data/core/disasters.json`
 
@@ -699,13 +704,14 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 
 ### 言語別`regions.json`
 
-| 項目           | 型     | 必須条件                 | 意味                            |
-| -------------- | ------ | ------------------------ | ------------------------------- |
-| `id`           | string | 必須                     | 対応する地域ID                  |
-| `name`         | string | 必須                     | 表示名称                        |
-| `short_name`   | string | 任意                     | 短縮表示名                      |
-| `scope_note`   | string | 任意                     | 範囲の公開用補足                |
-| locale共通項目 | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報 |
+| 項目               | 型     | 必須条件                 | 意味                                 |
+| ------------------ | ------ | ------------------------ | ------------------------------------ |
+| `id`               | string | 必須                     | 対応する地域ID                       |
+| `name`             | string | 必須                     | 表示名称                             |
+| `short_name`       | string | 任意                     | 短縮表示名                           |
+| `navigation_label` | string | 公開prefectureでは必須   | 全国トップで選択肢として表示する名称 |
+| `scope_note`       | string | 任意                     | 範囲の公開用補足                     |
+| locale共通項目     | -      | 必須条件は共通定義に従う | `locale_status`、改訂・確認情報      |
 
 ### 言語別`organizations.json`
 
@@ -740,7 +746,7 @@ coreとlocaleの`site.json`は`items`を持たない単一オブジェクトと�
 | `public_note`               | string | 任意                                             | 公開用補足                      |
 | locale共通項目              | -      | 必須条件は共通定義に従う                         | `locale_status`、改訂・確認情報 |
 
-`destination_language_note`は言語別の関連データへ重複させず、言語別`sources.json`だけで管理します。
+`destination_language_note`は言語別の関連データへ重複させず、言語別`sources.json`だけで管理します。地域の掲載範囲の説明には`scope_note`を再利用し、`scope_description`は追加しません。
 
 ### 言語別`evidence.json`
 

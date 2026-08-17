@@ -1,5 +1,17 @@
 # データモデル
 
+## 全国版regionモデル（BL-009工程A）
+
+`REGION`は管理用正本の地域階層です。`region_id`は不変の内部参照ID、`region_slug`は公開URL識別子、localeの`name`は地域名称、`navigation_label`は全国トップの選択肢表示、`scope_note`は掲載対象範囲の補足です。`region_id`から`region_slug`を自動生成しません。
+
+第一段階の公開ルーティング対象は`region_type: prefecture`だけです。prefectureにはURL安全な小文字ASCIIの`region_slug`と全国トップ表示順の`display_order`をcoreで持たせ、同じslugをprefecture間で重複させません。`display_order`は評価・推奨・重要度を意味せず、同値時は`region_id`昇順で安定化します。`scope_description`は追加せず、既存の`scope_note`を再利用します。
+
+`parent_region_id`は地域階層の1:N自己参照です。municipalityはprefectureの配下に置きます。カードの`region_ids`は対象地域の明示的なN:N参照で、publishedカードは1件以上必須です。地域成果物は対象prefecture自身と配下regionのsubtreeに交差するカードだけを収録します。`country`や`nationwide`だけの指定を全prefectureへの自動掲載として解釈しません。
+
+地域成果物のsource・organizationは、収録カードから`card-source-links`をたどって到達できる公開可能なものだけを非正規化します。管理データで同一sourceやorganizationを地域ごとに重複登録しません。空sectionは地域成果物へ出力しません。
+
+公開成果物と正本エンティティの関係、生成フローは[データリレーション](DATA_RELATIONSHIPS.md)に記録します。
+
 ## 文書の位置付け
 
 この文書は、第一版の管理データの正本と、各ファイルの責務・参照関係を定めます。各ファイルの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)に記録します。本番用の40データファイルと27 Schemaを配置済みで、工程3-2Aと工程3-2Bでは地域・団体・案内先・確認根拠・分野・案内カード・カードと案内先の関連の14 Schemaと21データファイルを正式化しています。

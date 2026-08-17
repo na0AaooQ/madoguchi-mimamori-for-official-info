@@ -1,5 +1,5 @@
 架空fixtureの説明1
 架空fixtureの説明2
-	No	region_id	region_type	parent_region_id	official_code	publication_status	name_ja	short_name_ja	scope_note_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	name_en	short_name_en	scope_note_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
-	2	region-example-country	country		00123	draft	架空国		データ構造確認用の架空国です。	draft	1		Example Country		A fictional country.	draft	1	1		架空fixture用の内部メモです。
-	1	region-example-prefecture	prefecture	region-example-country	04567	draft	架空県		データ構造確認用の架空県です。	draft	1		Example Prefecture		A fictional prefecture.	draft	1	1		架空fixture用の内部メモです。
+	No	region_id	region_type	parent_region_id	region_slug	display_order	official_code	publication_status	name_ja	short_name_ja	scope_note_ja	navigation_label_ja	locale_status_ja	content_revision_ja	content_reviewed_on_ja	name_en	short_name_en	scope_note_en	navigation_label_en	locale_status_en	content_revision_en	based_on_ja_revision_en	content_reviewed_on_en	internal_note
+	2	region-example-country	country				00123	draft	架空国		データ構造確認用の架空国です。		draft	1		Example Country		A fictional country.		draft	1	1		架空fixture用の内部メモです。
+	1	region-example-prefecture	prefecture	region-example-country	example	1	04567	draft	架空県		データ構造確認用の架空県です。	架空県（例）	draft	1		Example Prefecture		A fictional prefecture.	Example Prefecture	draft	1	1		架空fixture用の内部メモです。

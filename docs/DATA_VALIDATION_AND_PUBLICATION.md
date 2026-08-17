@@ -1,5 +1,15 @@
 # データ検証・公開生成方針
 
+## 全国版の地域抽出と再現性
+
+BL-009工程Aでは、管理coreとlocaleをSchema検証・意味検証してから公開生成します。published prefectureについて日英のlocaleと`navigation_label`を確認し、`display_order`昇順・同値なら`region_id`昇順で全国トップを決定します。入力配列の物理順や`official_code`を表示順に使いません。
+
+地域成果物は、対象prefecture自身と`parent_region_id`で到達できる配下regionのsubtreeを作り、publishedカードの明示`region_ids`との交差で抽出します。カードの所属地域ラベルは書き換えず、municipalityカードは「対象：市町村」のまま表示します。country/nationwideだけでは自動掲載せず、service-area等の複雑な地域集合は工程Aで一般化しません。
+
+収録後にカードからsource、organizationへ到達可能かを確認し、空sectionを除外します。publication status、locale status、source確認状態、evidence、表示期間、primary link、official informationの既存公開条件は地域判定で置換せず、追加フィルターとして維持します。全国トップ成果物には管理状態・根拠・カード等の禁止キーを出しません。
+
+負の検証では、slug重複・大文字・不正ハイフン、navigation_label欠損、日英region欠損、親参照・循環・municipality所属不正、region_ids欠損・未知ID、country/nationwideのみのカード自動掲載、旧URL・未公開region・別region hreflangを検出して停止します。同一入力・同一基準日から公開JSON、HTML、sitemapを決定的に再生成し、preview fixtureでproductionと同じ生成規則を確認します。
+
 ## 文書の位置付け
 
 この文書は、管理データを公開成果物へ変換する前後の検証責務、結果区分、停止条件、人による最終確認を定めます。各JSONの確定フィールド仕様は[データフィールド定義](DATA_FIELDS.md)を参照してください。工程3-2Aと工程3-2Bの管理Schema・意味検証から拡張し、通常カードの日英公開生成、実在管理データからのproduction生成、静的画面生成、検証、再現性確認を実装しています。

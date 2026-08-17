@@ -13,6 +13,7 @@
     {
       "id": "region-kumamoto-prefecture",
       "name": "熊本県",
+      "navigation_label": "熊本県・熊本市",
       "scope_note": "熊本県全域を対象とする地域です。",
       "locale_status": "published",
       "content_revision": 1,

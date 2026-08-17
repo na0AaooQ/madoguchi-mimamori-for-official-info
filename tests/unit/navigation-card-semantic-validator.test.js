@@ -27,7 +27,45 @@ test('accepts the complete fictional draft and published navigation slices', () 
   assert.deepEqual(validateNavigationCardData(createPublishedNavigationCardData()), []);
   const withoutCardRegions = createPublishedNavigationCardData();
   delete withoutCardRegions.core.cards[0].region_ids;
-  assert.deepEqual(validateNavigationCardData(withoutCardRegions), []);
+  assert.ok(
+    hasResult(validateNavigationCardData(withoutCardRegions), 'E020', undefined, 'region_ids')
+  );
+});
+
+test('validates prefecture URL fields and locale navigation labels', async (t) => {
+  const cases = [
+    ['uppercase slug', (input) => (input.core.regions[1].region_slug = 'Example'), 'region_slug'],
+    [
+      'duplicate slug',
+      (input) =>
+        input.core.regions.push({
+          ...input.core.regions[1],
+          id: 'region-example-second-prefecture'
+        }),
+      'region_slug'
+    ],
+    [
+      'non-prefecture slug',
+      (input) => (input.core.regions[0].region_slug = 'country'),
+      'region_slug'
+    ],
+    [
+      'missing display order',
+      (input) => delete input.core.regions[1].display_order,
+      'display_order'
+    ],
+    [
+      'missing English navigation label',
+      (input) => delete input.locales.en.regions[1].navigation_label,
+      'navigation_label'
+    ]
+  ];
+  for (const [name, mutate, field] of cases) {
+    await t.test(name, () => {
+      const results = validateMutation(mutate);
+      assert.ok(hasResult(results, 'E020', undefined, field));
+    });
+  }
 });
 
 test('does not mutate navigation validation input', () => {

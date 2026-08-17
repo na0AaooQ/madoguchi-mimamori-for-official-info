@@ -24,7 +24,7 @@ test('loads the published preview fixture through existing management validation
   assert.equal(loaded.input.core.sections.length, 5);
   assert.equal(loaded.input.core.cards.length, 1);
   assert.equal(loaded.input.core.cardSourceLinks.length, 1);
-  assert.equal(loaded.input.core.regions.length, 2);
+  assert.equal(loaded.input.core.regions.length, 3);
   assert.equal(loaded.input.core.organizations.length, 1);
   assert.equal(loaded.input.core.sources.length, 1);
   assert.equal(loaded.input.core.evidence.length, 3);

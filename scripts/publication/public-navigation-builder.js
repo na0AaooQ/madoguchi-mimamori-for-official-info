@@ -1,5 +1,6 @@
 import { isStructurallyPublishableOfficialSource } from '../validation/official-source-semantic-validator.js';
 import { createResult, sortResults } from '../validation/result.js';
+import { regionPath } from '../shared/public-url.js';
 import { PUBLIC_LOCALES } from './public-constants.js';
 
 const LOCALE_ORDER = new Map(PUBLIC_LOCALES.map((locale, index) => [locale, index]));
@@ -72,6 +73,45 @@ function regionIsPublishable(regionId, locale, indexes, visited = new Set()) {
   const nextVisited = new Set(visited);
   nextVisited.add(regionId);
   return regionIsPublishable(region.parent_region_id, locale, indexes, nextVisited);
+}
+
+function regionSubtreeIds(regionId, indexes) {
+  const subtree = new Set([regionId]);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const region of indexes.core.regions.values()) {
+      if (
+        region.parent_region_id &&
+        subtree.has(region.parent_region_id) &&
+        !subtree.has(region.id)
+      ) {
+        subtree.add(region.id);
+        changed = true;
+      }
+    }
+  }
+  return subtree;
+}
+
+function cardBelongsToRegion(card, regionId, indexes) {
+  if (!regionId) return true;
+  const subtree = regionSubtreeIds(regionId, indexes);
+  return (card.region_ids ?? []).some((candidate) => subtree.has(candidate));
+}
+
+function publishedPrefectures(locale, indexes) {
+  return [...indexes.core.regions.values()]
+    .filter(
+      (region) =>
+        region.region_type === 'prefecture' &&
+        region.publication_status === 'published' &&
+        regionIsPublishable(region.id, locale, indexes) &&
+        typeof region.region_slug === 'string'
+    )
+    .sort(
+      (left, right) => left.display_order - right.display_order || left.id.localeCompare(right.id)
+    );
 }
 
 function buildOrganization(core, localized) {
@@ -170,7 +210,7 @@ function buildLink(input, link, locale, indexes) {
   return output;
 }
 
-export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
+export function buildPublicNavigation(input, { locale, artifactType, asOf, regionId } = {}) {
   const file = `<generated:${artifactType}:${locale}>`;
   const results = [];
   if (!PUBLIC_LOCALES.includes(locale) || !isValidDateOnly(asOf)) {
@@ -223,6 +263,7 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
         (card) =>
           card.publication_status === 'published' &&
           card.section_id === section.id &&
+          cardBelongsToRegion(card, regionId, indexes) &&
           indexes.locales[locale].cards.get(card.id)?.locale_status === 'published'
       )
     );
@@ -280,7 +321,7 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
     };
     addOptional(outputSection, 'short_description', localizedSection.short_description);
     outputSection.cards = cards;
-    sections.push(outputSection);
+    if (!regionId || cards.length > 0) sections.push(outputSection);
   }
 
   if (results.length > 0) return { artifact: undefined, results: sortResults(results) };
@@ -288,6 +329,7 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
     artifact: {
       schema_version: '1.0.0',
       artifact_type: artifactType,
+      ...(regionId ? { artifact_scope: 'region' } : {}),
       locale,
       generated_for_date: asOf,
       site: {
@@ -303,10 +345,125 @@ export function buildPublicNavigation(input, { locale, artifactType, asOf }) {
         disclaimer_summary: siteLocale.disclaimer_summary,
         contact_url: siteLocale.contact_url ?? siteCore.contact_url
       },
-      sections
+      sections,
+      ...(regionId
+        ? {
+            region: (() => {
+              const region = indexes.core.regions.get(regionId);
+              const localized = indexes.locales[locale].regions.get(regionId);
+              return {
+                region_id: region.id,
+                region_slug: region.region_slug,
+                region_name: localized.name,
+                ...(localized.scope_note ? { scope_note: localized.scope_note } : {}),
+                path: regionPath(locale, region.region_slug)
+              };
+            })()
+          }
+        : {})
     },
     results: []
   };
+}
+
+export function buildRegionalNavigation(input, options) {
+  return buildPublicNavigation(input, options);
+}
+
+export function buildNationalNavigation(input, { locale, artifactType, asOf }) {
+  const file = `<generated:${artifactType}:${locale}:national>`;
+  const results = [];
+  if (!PUBLIC_LOCALES.includes(locale) || !isValidDateOnly(asOf)) {
+    results.push(
+      publicationError(
+        'PUB-E002',
+        file,
+        '対象言語または基準日を解決できません。',
+        undefined,
+        'locale'
+      )
+    );
+    return { artifact: undefined, results };
+  }
+  const indexes = createIndexes(input);
+  const siteCore = input.site.core;
+  const siteLocale = input.site.locales[locale];
+  if (
+    siteCore?.site_publication_status !== 'published' ||
+    siteLocale?.locale_status !== 'published' ||
+    !siteCore?.supported_locales?.includes(locale) ||
+    !siteCore?.site_last_checked_on ||
+    !(siteLocale?.contact_url || siteCore?.contact_url)
+  ) {
+    results.push(
+      publicationError(
+        'PUB-E001',
+        file,
+        `${locale}のsiteは公開可能な状態ではありません。`,
+        siteCore?.site_id,
+        'site_publication_status'
+      )
+    );
+    return { artifact: undefined, results };
+  }
+  const regions = publishedPrefectures(locale, indexes).map((region) => {
+    const localized = indexes.locales[locale].regions.get(region.id);
+    return {
+      region_id: region.id,
+      region_slug: region.region_slug,
+      navigation_label: localized.navigation_label,
+      ...(localized.scope_note ? { scope_note: localized.scope_note } : {}),
+      path: regionPath(locale, region.region_slug)
+    };
+  });
+  return {
+    artifact: {
+      schema_version: '1.0.0',
+      artifact_type: artifactType,
+      artifact_scope: 'national',
+      locale,
+      generated_for_date: asOf,
+      site: {
+        site_id: siteCore.site_id,
+        default_locale: siteCore.default_locale,
+        supported_locales: sortLocales(siteCore.supported_locales),
+        site_name: siteLocale.site_name,
+        subtitle: siteLocale.subtitle,
+        short_description: siteLocale.short_description,
+        purpose: siteLocale.purpose,
+        free_use_notice: siteLocale.free_use_notice,
+        external_site_notice: siteLocale.external_site_notice,
+        disclaimer_summary: siteLocale.disclaimer_summary,
+        contact_url: siteLocale.contact_url ?? siteCore.contact_url
+      },
+      regions
+    },
+    results
+  };
+}
+
+export function buildPublicArtifacts(input, { artifactType, asOf }) {
+  const national = {};
+  const regions = Object.fromEntries(PUBLIC_LOCALES.map((locale) => [locale, {}]));
+  const results = [];
+  for (const locale of PUBLIC_LOCALES) {
+    const builtNational = buildNationalNavigation(input, { locale, artifactType, asOf });
+    results.push(...builtNational.results);
+    if (!builtNational.artifact) continue;
+    national[locale] = builtNational.artifact;
+    const indexes = createIndexes(input);
+    for (const region of publishedPrefectures(locale, indexes)) {
+      const builtRegion = buildRegionalNavigation(input, {
+        locale,
+        artifactType,
+        asOf,
+        regionId: region.id
+      });
+      results.push(...builtRegion.results);
+      if (builtRegion.artifact) regions[locale][region.region_slug] = builtRegion.artifact;
+    }
+  }
+  return { national, regions, results: sortResults(results) };
 }
 
 export function serializePublicArtifact(artifact) {
