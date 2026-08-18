@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:madoguchi-mimamori:contract:public:national-navigation:1.0.0",
+  "title": "全国トップ用公開地域インデックス",
+  "type": "object",
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "artifact_type": { "type": "string", "enum": ["fictional-preview", "production"] },
+    "artifact_scope": { "type": "string", "const": "national" },
+    "locale": { "type": "string", "enum": ["ja", "en"] },
+    "generated_for_date": { "type": "string", "format": "date" },
+    "site": { "$ref": "#/$defs/site" },
+    "regions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/region" }
+    }
+  },
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_scope",
+    "locale",
+    "generated_for_date",
+    "site",
+    "regions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "httpsUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "site": {
+      "type": "object",
+      "properties": {
+        "site_id": { "type": "string", "const": "madoguchi-mimamori" },
+        "default_locale": { "type": "string", "const": "ja" },
+        "supported_locales": {
+          "type": "array",
+          "prefixItems": [{ "const": "ja" }, { "const": "en" }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "site_name": { "$ref": "#/$defs/nonEmptyString" },
+        "subtitle": { "$ref": "#/$defs/nonEmptyString" },
+        "short_description": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "free_use_notice": { "$ref": "#/$defs/nonEmptyString" },
+        "external_site_notice": { "$ref": "#/$defs/nonEmptyString" },
+        "disclaimer_summary": { "$ref": "#/$defs/nonEmptyString" },
+        "contact_url": { "$ref": "#/$defs/httpsUrl" }
+      },
+      "required": [
+        "site_id",
+        "default_locale",
+        "supported_locales",
+        "site_name",
+        "subtitle",
+        "short_description",
+        "purpose",
+        "free_use_notice",
+        "external_site_notice",
+        "disclaimer_summary",
+        "contact_url"
+      ],
+      "additionalProperties": false
+    },
+    "region": {
+      "type": "object",
+      "properties": {
+        "region_id": { "type": "string", "pattern": "^region-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "region_slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "navigation_label": { "$ref": "#/$defs/nonEmptyString" },
+        "scope_note": { "$ref": "#/$defs/nonEmptyString" },
+        "path": { "type": "string", "pattern": "^/(ja|en)/regions/[a-z0-9]+(?:-[a-z0-9]+)*/$" }
+      },
+      "required": ["region_id", "region_slug", "navigation_label", "path"],
+      "additionalProperties": false
+    }
+  }
+}

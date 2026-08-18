@@ -1,5 +1,26 @@
 # サイト構成
 
+## BL-009工程Aの全国版URL基盤
+
+`/`は共通の言語選択入口、`/ja/`と`/en/`は地域選択を行う全国トップです。全国トップに地域固有カードを直接並べず、公開地域一覧から地域ページへ進みます。
+
+| 責務               | URL                                                     |
+| ------------------ | ------------------------------------------------------- |
+| 言語選択           | `/`                                                     |
+| 日本語全国トップ   | `/ja/`                                                  |
+| 英語全国トップ     | `/en/`                                                  |
+| 地域トップ         | `/{locale}/regions/{region_slug}/`                      |
+| 地域別分野         | `/{locale}/regions/{region_slug}/sections/{anchor_id}/` |
+| 地域別団体・案内先 | `/{locale}/regions/{region_slug}/organizations/`        |
+| 共通プライバシー   | `/{locale}/privacy/`                                    |
+| 共通404            | `/404.html`                                             |
+
+都道府県をルーティング単位とし、市町村は地域ページ内部のカードの対象ラベルで表します。市町村個別URL、カード個別URL、地域横断service-area URLは工程Aでは作りません。分野URLは既存`sections.anchor_id`を使用し、新しいsection slugは追加しません。
+
+旧地域なしURLである`/{locale}/sections/{anchor_id}/`と`/{locale}/organizations/`は、新しい基盤では生成・内部リンク・sitemap掲載・転送HTMLを行いません。工程Aのpreviewとfixtureでこの不在を検証し、既存productionの正式切替は工程Bへ残します。
+
+日英切替は同じregion、page type、`anchor_id`を維持し、hreflangは実在する同一論理ページだけを相互参照します。canonicalと`x-default`は追加しません。
+
 ## 文書の位置付け
 
 この文書は、現在実装済みのproduction画面構成と、第一版以降に検討する将来構想を区別して定めます。previewの契約は[Web画面preview MVP](WEB_UI_PREVIEW_MVP.md)、productionの生成・公開手順は[GitHub Pages手動デプロイ](GITHUB_PAGES_DEPLOYMENT.md)を参照してください。

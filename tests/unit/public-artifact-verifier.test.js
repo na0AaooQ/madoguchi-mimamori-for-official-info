@@ -43,6 +43,34 @@ test('detects missing preview languages and unexpected files with PUB-E008', asy
   assert.ok(results.filter(({ code }) => code === 'PUB-E008').length >= 2);
 });
 
+test('requires exactly the regional artifacts listed by each national artifact', async (t) => {
+  const missingRoot = await createPublicRepositoryCopy(t);
+  await rm(
+    path.join(missingRoot, 'dist/public-data/preview/ja/regions/second-example/navigation.json')
+  );
+  assert.ok(
+    (await validatePublicRepository(missingRoot)).results.some(
+      ({ code, message }) => code === 'PUB-E008' && message.includes('対応する地域成果物')
+    )
+  );
+
+  const extraRoot = await createPublicRepositoryCopy(t);
+  const regional = await readJson(
+    extraRoot,
+    'dist/public-data/preview/ja/regions/example/navigation.json'
+  );
+  await writeJson(
+    extraRoot,
+    'dist/public-data/preview/ja/regions/extra-example/navigation.json',
+    regional
+  );
+  assert.ok(
+    (await validatePublicRepository(extraRoot)).results.some(
+      ({ code, message }) => code === 'PUB-E008' && message.includes('掲載されていない地域成果物')
+    )
+  );
+});
+
 test('detects tracked preview edits and stale fixture generation with PUB-E006', async (t) => {
   const root = await createPublicRepositoryCopy(t);
   const japanese = await readJson(root, PUBLIC_ARTIFACT_PATHS.preview.ja);

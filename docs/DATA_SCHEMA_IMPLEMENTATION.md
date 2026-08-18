@@ -1,5 +1,13 @@
 # データSchema実装
 
+## BL-009工程AのSchema・公開契約
+
+core `regions`へprefecture専用の`region_slug`と`display_order`、locale `regions`へ`navigation_label`を追加しました。publishedカードの`region_ids`必須、slug形式・一意性、prefectureのlocale整合、地域階層はJSON Schemaと意味検証を分担します。管理Schemaは`additionalProperties: false`を維持し、`scope_description`は追加しません。
+
+公開成果物は、全国トップ用`contracts/public/national-navigation.schema.json`と地域用`contracts/public/regional-navigation.schema.json`へ分離します。全国成果物は公開地域の`region_id`・`region_slug`・`navigation_label`・任意の`scope_note`・生成`path`だけを持つ薄いインデックスで、カード、分野、団体、案内先、公開状態、根拠、内部情報を持ちません。地域成果物は`region_id`・`region_slug`・`region_name`・任意の`scope_note`・`path`と、既存契約を保った公開section/card/link/destinationを持ちます。
+
+Schema検証後に意味検証、publication builder、公開成果物検証、site builder、HTML・URL・内部リンク・sitemap・hreflang検証を行います。previewとproductionは同じモデル・抽出・契約を利用できる構造とし、工程Aではproductionの正式URL切替を実行しません。
+
 ## 目的
 
 本番用`data/`と`schemas/`の配置、正式なitem Schema、意味検証、公開成果物Schemaの責務分担を記録します。工程3-2Aと工程3-2Bで始めた管理データ縦切りを維持し、現在は第一版の実在管理データから日英`navigation.json`とproduction画面を検証・生成します。架空previewは本番用`data/`と分離します。

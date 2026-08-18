@@ -18,15 +18,22 @@ test('builds the complete deterministic Japanese and English preview site', () =
   cloned.assets['favicon.ico'] = Buffer.from(cloned.assets['favicon.ico']);
   cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
   const second = buildSiteArtifacts(cloned);
-  assert.equal(first.size, 21);
+  assert.equal(first.size, 19);
   assert.deepEqual([...first], [...second]);
-  assert.deepEqual([...first.keys()].sort(), expectedSiteArtifactPaths(inputs.navigations));
+  assert.deepEqual(
+    [...first.keys()].sort(),
+    expectedSiteArtifactPaths(inputs.navigations, 'preview', inputs.regionalNavigations)
+  );
   for (const locale of ['ja', 'en']) {
     assert.ok(first.has(`${locale}/index.html`));
-    assert.ok(first.has(`${locale}/organizations/index.html`));
     assert.ok(first.has(`${locale}/privacy/index.html`));
-    for (const section of inputs.navigations[locale].sections) {
-      assert.ok(first.has(`${locale}/sections/${section.anchor_id}/index.html`));
+    for (const navigation of Object.values(inputs.regionalNavigations[locale])) {
+      const slug = navigation.region.region_slug;
+      assert.ok(first.has(`${locale}/regions/${slug}/index.html`));
+      assert.ok(first.has(`${locale}/regions/${slug}/organizations/index.html`));
+      for (const section of navigation.sections) {
+        assert.ok(first.has(`${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`));
+      }
     }
   }
 });
@@ -128,9 +135,12 @@ test('renders the approved preview privacy wording and revision dates without le
 
 test('renders cards, empty sections, language warnings, and fictional URLs safely', () => {
   const artifacts = buildSiteArtifacts(inputs);
-  const japaneseCard = artifacts.get('ja/sections/public-institutions-disaster/index.html');
-  const englishCard = artifacts.get('en/sections/public-institutions-disaster/index.html');
-  const empty = artifacts.get('ja/sections/lifelines/index.html');
+  const japaneseCard = artifacts.get(
+    'ja/regions/example/sections/public-institutions-disaster/index.html'
+  );
+  const englishCard = artifacts.get(
+    'en/regions/example/sections/public-institutions-disaster/index.html'
+  );
   assert.match(japaneseCard, /<details class="card">/);
   assert.match(japaneseCard, /主な案内先/);
   assert.match(japaneseCard, /平常時・災害時/);
@@ -138,13 +148,13 @@ test('renders cards, empty sections, language warnings, and fictional URLs safel
   assert.doesNotMatch(japaneseCard, /href="https:\/\/example\.invalid/);
   assert.match(englishCard, /lang="ja">架空県防災情報窓口/);
   assert.match(englishCard, /The linked page is available in Japanese only\./);
-  assert.match(empty, /現在、この分野に表示できる案内はありません。/);
+  assert.equal(artifacts.has('ja/regions/example/sections/lifelines/index.html'), false);
 });
 
 test('deduplicates organizations, destinations, and regions in first-seen order', () => {
-  const navigation = structuredClone(inputs.navigations.ja);
+  const navigation = structuredClone(inputs.regionalNavigations.ja.example);
   const card = structuredClone(navigation.sections[0].cards[0]);
-  navigation.sections[1].cards.push(card);
+  navigation.sections[0].cards.push(card);
   const organizations = aggregateOrganizations(navigation);
   assert.equal(organizations.length, 1);
   assert.equal(organizations[0].destinations.length, 1);
@@ -161,17 +171,21 @@ test('aggregates visibility contexts according to the public display rules', () 
 test('derives changed section paths without fixing the section count in code', () => {
   const changed = structuredClone(inputs);
   for (const locale of ['ja', 'en']) {
-    changed.navigations[locale].sections.push({
+    changed.regionalNavigations[locale].example.sections.push({
       id: 'section-extra-fictional',
       anchor_id: 'extra-fictional',
       title: locale === 'ja' ? '追加の架空分野' : 'Additional Fictional Topic',
       cards: []
     });
   }
-  const paths = expectedSiteArtifactPaths(changed.navigations);
-  assert.ok(paths.includes('ja/sections/extra-fictional/index.html'));
-  assert.ok(paths.includes('en/sections/extra-fictional/index.html'));
-  assert.equal(paths.length, 23);
+  const paths = expectedSiteArtifactPaths(
+    changed.navigations,
+    'preview',
+    changed.regionalNavigations
+  );
+  assert.ok(paths.includes('ja/regions/example/sections/extra-fictional/index.html'));
+  assert.ok(paths.includes('en/regions/example/sections/extra-fictional/index.html'));
+  assert.equal(paths.length, 21);
 });
 
 test('keeps text and binary site icon artifacts in their native representations', () => {

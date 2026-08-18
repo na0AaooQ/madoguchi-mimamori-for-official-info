@@ -6,7 +6,11 @@ import { ARTIFACT_TYPES, PUBLIC_LOCALES, PublicRuntimeError } from './public-con
 import { validatePublicRepository, verifyPublicArtifacts } from './public-artifact-verifier.js';
 import { writePublicArtifacts } from './public-artifact-writer.js';
 import { loadPreviewInput, loadProductionInput } from './public-input-loader.js';
-import { buildPublicNavigation, isValidDateOnly } from './public-navigation-builder.js';
+import {
+  buildPublicArtifacts,
+  buildPublicNavigation,
+  isValidDateOnly
+} from './public-navigation-builder.js';
 
 function usageError(message) {
   throw new PublicRuntimeError('PUB-RUN-E001', 'scripts/publication/cli.js', message);
@@ -60,6 +64,15 @@ async function generate(repoRoot, options) {
   const inputErrors = loaded.results.filter(({ severity }) => severity === 'error');
   if (inputErrors.length > 0) return { results: inputErrors, exitCode: 1 };
   const asOf = options.mode === 'preview' ? loaded.manifest.as_of : options.asOf;
+  if (options.mode === 'preview') {
+    const built = buildPublicArtifacts(loaded.input, {
+      artifactType: ARTIFACT_TYPES.preview,
+      asOf
+    });
+    if (built.results.length > 0) return { results: built.results, exitCode: 1 };
+    const writeResults = await writePublicArtifacts(repoRoot, options.mode, built);
+    return { results: writeResults, exitCode: writeResults.length > 0 ? 1 : 0 };
+  }
   const artifacts = {};
   const results = [];
   for (const locale of PUBLIC_LOCALES) {

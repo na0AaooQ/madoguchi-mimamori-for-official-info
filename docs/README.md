@@ -13,6 +13,7 @@
 | [運用方針](OPERATIONS_POLICY.md)                               | 公開後の定期確認、状態管理、プライバシー、情報量                |
 | [公開後バックログ](POST_LAUNCH_BACKLOG.md)                     | 公開後の改善、継続運用、中長期構想と状態                        |
 | [データモデル](DATA_MODEL.md)                                  | JSON正本、core・locale、管理単位、参照関係、内部・公開履歴      |
+| [データリレーション](DATA_RELATIONSHIPS.md)                    | 管理正本のER図、参照関係、全国版の公開生成フロー                |
 | [データフィールド定義](DATA_FIELDS.md)                         | 各core・locale JSONの項目名、型、必須条件、許可値、整合性ルール |
 | [日英対応方針](LOCALIZATION_POLICY.md)                         | 第一版の日英対応、公式名称、リンク先言語、翻訳改訂              |
 | [データ検証・公開生成方針](DATA_VALIDATION_AND_PUBLICATION.md) | JSON Schema、意味検証、公開停止条件、内部項目除外               |
@@ -54,6 +55,7 @@
 | [0023](decisions/0023-generate-preview-site-as-static-html.md)                        | preview画面を静的HTMLとして生成する                          |
 | [0024](decisions/0024-expand-one-site-nationally-and-defer-regional-url-migration.md) | 同一サイトを全国版へ拡張し、地域別URL移行を2県目追加前に行う |
 | [0025](decisions/0025-adopt-minimal-ga4-analytics-for-production.md)                  | productionへ必要最小限のGoogle Analytics 4を導入する         |
+| [0026](decisions/0026-implement-national-regional-url-foundation.md)                  | 全国版・地域別URL共通基盤を工程Aとして実装する               |
 
 ## 文書の読み方
 

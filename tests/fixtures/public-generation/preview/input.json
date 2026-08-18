@@ -62,8 +62,19 @@
           "id": "region-example-prefecture",
           "region_type": "prefecture",
           "parent_region_id": "region-example-country",
+          "region_slug": "example",
+          "display_order": 1,
           "publication_status": "published",
           "internal_note": "公開生成MVPの架空fixtureです。"
+        },
+        {
+          "id": "region-example-second-prefecture",
+          "region_type": "prefecture",
+          "parent_region_id": "region-example-country",
+          "region_slug": "second-example",
+          "display_order": 2,
+          "publication_status": "published",
+          "internal_note": "全国版URL基盤を検証する架空fixtureです。"
         }
       ]
     },
@@ -236,7 +247,17 @@
           {
             "id": "region-example-prefecture",
             "name": "架空県",
+            "navigation_label": "架空県（例）",
             "scope_note": "公開生成MVP用の架空の都道府県です。",
+            "locale_status": "published",
+            "content_revision": 1,
+            "content_reviewed_on": "2026-08-02"
+          },
+          {
+            "id": "region-example-second-prefecture",
+            "name": "第二架空県",
+            "navigation_label": "第二架空県（例）",
+            "scope_note": "地域別URLテスト用の第二架空都道府県です。",
             "locale_status": "published",
             "content_revision": 1,
             "content_reviewed_on": "2026-08-02"
@@ -394,7 +415,18 @@
           {
             "id": "region-example-prefecture",
             "name": "Example Prefecture",
+            "navigation_label": "Example Prefecture",
             "scope_note": "A fictional prefecture for the public generation MVP.",
+            "locale_status": "published",
+            "content_revision": 1,
+            "based_on_ja_revision": 1,
+            "content_reviewed_on": "2026-08-02"
+          },
+          {
+            "id": "region-example-second-prefecture",
+            "name": "Second Example Prefecture",
+            "navigation_label": "Second Example Prefecture",
+            "scope_note": "A second fictional prefecture for regional URL tests.",
             "locale_status": "published",
             "content_revision": 1,
             "based_on_ja_revision": 1,

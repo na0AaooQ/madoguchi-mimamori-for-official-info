@@ -2,7 +2,7 @@
 
 ## 目的
 
-`navigation.json`は、管理用`data/`を画面へ直接渡さず、検証済みの公開可能情報だけを日英別に提供する公開成果物です。管理用の正規化データを公開カードからたどって非正規化し、画面が内部状態や確認根拠を読まなくても案内を構築できる形にします。
+`navigation.json`は、管理用`data/`を画面へ直接渡さず、検証済みの公開可能情報だけを日英別に提供する公開成果物です。BL-009工程Aでは、全国トップ用の薄い地域インデックスと、1 locale × 1 prefectureの自己完結型地域成果物へ分離します。
 
 previewとproductionの静的サイト生成では、各modeの日英`navigation.json`を公開案内情報の唯一の入力として、ビルド時に完成済み静的HTMLを生成します。ブラウザは主要表示のために本ファイルをfetchせず、画面生成処理も管理用`data/`を直接参照しません。
 
@@ -10,8 +10,18 @@ previewとproductionの静的サイト生成では、各modeの日英`navigation
 
 正式なパスは次のとおりです。
 
-- preview: `dist/public-data/preview/{ja,en}/navigation.json`
-- production: `dist/public-data/production/{ja,en}/navigation.json`
+- 全国トップ: `dist/public-data/{mode}/{ja,en}/navigation.json`
+- 地域: `dist/public-data/{mode}/{ja,en}/regions/{region_slug}/navigation.json`
+
+工程Aのpreviewは上記の全国版構造で生成します。既存productionの地域なし成果物は工程Bまで現行契約として維持し、正式移行時に同じ新契約へ切り替えます。
+
+## 全国トップ用成果物
+
+`artifact_scope: national`を持ち、公開中のprefecture一覧だけを示します。各region entryは`region_id`、`region_slug`、localeの`navigation_label`、存在する場合の`scope_note`、生成URLの`path`を持ちます。`display_order`、cards、sections、organizations、sources、section_ids、card_ids、evidence、publication_status、locale_status、internal_note等は含めません。
+
+## 地域用成果物
+
+`artifact_scope: region`を持ち、`region_id`、`region_slug`、localeの`region_name`、既存`scope_note`、生成`path`をルートに持ちます。カード、link、destination、organizationは収録カードから到達できる公開可能データだけを含め、対象prefectureのsubtreeと交差しないカードや到達不能sourceを含めません。`navigation_label`は全国トップ専用です。地域成果物単独で地域HTMLを生成でき、他regionや全国トップのカードを補完参照しません。
 
 トップレベルは次の6項目だけを持ちます。
 

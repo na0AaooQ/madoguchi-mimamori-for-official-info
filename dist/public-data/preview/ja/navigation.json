@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
   "artifact_type": "fictional-preview",
+  "artifact_scope": "national",
   "locale": "ja",
   "generated_for_date": "2026-08-02",
   "site": {
@@ -19,78 +20,20 @@
     "disclaimer_summary": "行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。",
     "contact_url": "https://example.invalid/contact/"
   },
-  "sections": [
+  "regions": [
     {
-      "id": "section-public-institutions-disaster",
-      "anchor_id": "public-institutions-disaster",
-      "title": "公的機関・防災全般",
-      "short_description": "国・自治体の防災情報、避難、河川、行政対応や支援の公式案内を探します。",
-      "cards": [
-        {
-          "id": "card-example-disaster-information",
-          "title": "防災情報を確認する（架空データ）",
-          "summary": "架空県の防災情報を確認する公式案内先へ進むための架空カードです。",
-          "region_label": "架空県",
-          "details_label": "案内先の詳細を見る",
-          "links": [
-            {
-              "id": "card-source-example-disaster-information-primary",
-              "role": "primary",
-              "visibility_context": "always",
-              "button_label": "架空県の防災情報案内を確認する（架空リンク）",
-              "public_note": "公開生成MVPで使用する架空の案内リンクです。",
-              "destination": {
-                "id": "src-example-prefecture-official-home",
-                "source_type": "official-homepage",
-                "content_format": "html",
-                "url": "https://example.invalid/example-prefecture/",
-                "destination_locales": [
-                  "ja"
-                ],
-                "display_title": "架空県 防災情報案内（架空データ）",
-                "purpose": "架空県の防災情報を確認するための架空案内先です。",
-                "public_note": "この案内先は公開生成MVPの架空データです。",
-                "destination_checked_on": "2026-08-02",
-                "official_information_checked_on": "2026-08-02",
-                "organization": {
-                  "id": "org-example-prefecture-disaster-office",
-                  "official_name": "架空県防災情報窓口",
-                  "name_kind": "official-ja",
-                  "summary": "架空県の防災情報を案内する架空団体です。"
-                }
-              }
-            }
-          ]
-        }
-      ]
+      "region_id": "region-example-prefecture",
+      "region_slug": "example",
+      "navigation_label": "架空県（例）",
+      "scope_note": "公開生成MVP用の架空の都道府県です。",
+      "path": "/ja/regions/example/"
     },
     {
-      "id": "section-life-safety-medical",
-      "anchor_id": "life-safety-medical",
-      "title": "命・安全・医療",
-      "short_description": "警察、消防・救急、医療機関や救急相談の公式案内を探します。",
-      "cards": []
-    },
-    {
-      "id": "section-lifelines",
-      "anchor_id": "lifelines",
-      "title": "ライフライン",
-      "short_description": "水道・下水道、電気、ガス、通信の公式案内を探します。",
-      "cards": []
-    },
-    {
-      "id": "section-roads-transportation",
-      "anchor_id": "roads-transportation",
-      "title": "道路・交通",
-      "short_description": "道路、高速道路、鉄道、市電、バス、空港・航空便の公式案内を探します。",
-      "cards": []
-    },
-    {
-      "id": "section-support-recovery",
-      "anchor_id": "support-recovery",
-      "title": "支援・復旧",
-      "short_description": "り災証明、住まい、福祉、事業者支援、義援金などの公式案内を探します。",
-      "cards": []
+      "region_id": "region-example-second-prefecture",
+      "region_slug": "second-example",
+      "navigation_label": "第二架空県（例）",
+      "scope_note": "地域別URLテスト用の第二架空都道府県です。",
+      "path": "/ja/regions/second-example/"
     }
   ]
 }

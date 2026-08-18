@@ -3,19 +3,25 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { createResult, sortResults } from '../validation/result.js';
+import { regionPath } from '../shared/public-url.js';
 import {
   ARTIFACT_TYPES,
   PUBLIC_ARTIFACT_PATHS,
   PUBLIC_LOCALES,
+  PUBLIC_REGIONAL_ARTIFACT_ROOTS,
   PublicRuntimeError
 } from './public-constants.js';
-import { loadPublicSchema, validatePublicArtifact } from './public-artifact-validator.js';
+import { loadPublicSchemas, validatePublicArtifact } from './public-artifact-validator.js';
 import {
   loadPreviewInput,
   loadProductionInput,
   readProductionSiteState
 } from './public-input-loader.js';
-import { buildPublicNavigation, serializePublicArtifact } from './public-navigation-builder.js';
+import {
+  buildPublicArtifacts,
+  buildPublicNavigation,
+  serializePublicArtifact
+} from './public-navigation-builder.js';
 
 function publicError(code, file, message) {
   return createResult({
@@ -75,13 +81,65 @@ function expectedFiles() {
   );
 }
 
+function isRegionalPreviewFile(file) {
+  return /^preview\/(ja|en)\/regions\/[a-z0-9]+(?:-[a-z0-9]+)*\/navigation\.json$/.test(file);
+}
+
+function regionalPreviewFile(locale, slug) {
+  return `${PUBLIC_REGIONAL_ARTIFACT_ROOTS.preview}/${locale}/regions/${slug}/navigation.json`;
+}
+
+function validatePreviewRegionalTopology(actual, loaded, results) {
+  for (const locale of PUBLIC_LOCALES) {
+    const nationalFile = PUBLIC_ARTIFACT_PATHS.preview[locale];
+    const national = loaded.get(nationalFile)?.value;
+    if (!national || !Array.isArray(national.regions)) continue;
+    const listed = new Map(national.regions.map((region) => [region.region_slug, region]));
+    for (const [slug, entry] of listed) {
+      const file = regionalPreviewFile(locale, slug);
+      if (!actual.has(file.replace(/^dist\/public-data\//, ''))) {
+        results.push(publicError('PUB-E008', file, '全国トップに対応する地域成果物がありません。'));
+        continue;
+      }
+      const regional = loaded.get(file)?.value;
+      if (!regional) continue;
+      if (
+        regional.region?.region_id !== entry.region_id ||
+        regional.region?.region_slug !== slug ||
+        regional.region?.path !== regionPath(locale, slug)
+      ) {
+        results.push(
+          publicError(
+            'PUB-E008',
+            file,
+            '全国トップと地域成果物の地域識別子またはpathが一致しません。'
+          )
+        );
+      }
+    }
+    for (const file of actual) {
+      const match = file.match(new RegExp(`^preview/${locale}/regions/([^/]+)/navigation\\.json$`));
+      if (!match) continue;
+      if (!listed.has(match[1])) {
+        results.push(
+          publicError(
+            'PUB-E008',
+            `dist/public-data/${file}`,
+            '全国トップに掲載されていない地域成果物があります。'
+          )
+        );
+      }
+    }
+  }
+}
+
 export async function validatePublicRepository(repoRoot) {
   const results = [];
-  const { validate } = await loadPublicSchema(repoRoot);
+  const schemas = await loadPublicSchemas(repoRoot);
   const actual = new Set(await collectFiles(path.join(repoRoot, 'dist', 'public-data')));
   const expected = expectedFiles();
   for (const file of actual) {
-    if (!expected.has(file)) {
+    if (!expected.has(file) && !isRegionalPreviewFile(file)) {
       results.push(
         publicError('PUB-E008', `dist/public-data/${file}`, '想定外の公開成果物ファイルです。')
       );
@@ -154,7 +212,9 @@ export async function validatePublicRepository(repoRoot) {
       loaded.set(file, read);
       results.push(
         ...validatePublicArtifact(read.value, {
-          validateSchema: validate,
+          validateSchema: schemas.legacy.validate,
+          validateNationalSchema: schemas.national.validate,
+          validateRegionalSchema: schemas.regional.validate,
           file,
           expectedMode: mode,
           expectedLocale: locale
@@ -162,6 +222,25 @@ export async function validatePublicRepository(repoRoot) {
       );
     }
   }
+  for (const file of actual) {
+    if (!isRegionalPreviewFile(file)) continue;
+    const read = await readArtifact(repoRoot, `dist/public-data/${file}`);
+    results.push(...read.results);
+    if (read.value) {
+      loaded.set(`dist/public-data/${file}`, read);
+      results.push(
+        ...validatePublicArtifact(read.value, {
+          validateSchema: schemas.legacy.validate,
+          validateNationalSchema: schemas.national.validate,
+          validateRegionalSchema: schemas.regional.validate,
+          file: `dist/public-data/${file}`,
+          expectedMode: 'preview',
+          expectedLocale: file.slice('preview/'.length, 'preview/'.length + 2)
+        })
+      );
+    }
+  }
+  validatePreviewRegionalTopology(actual, loaded, results);
   for (const mode of ['preview', 'production']) {
     const japanese = loaded.get(PUBLIC_ARTIFACT_PATHS[mode].ja)?.value;
     const english = loaded.get(PUBLIC_ARTIFACT_PATHS[mode].en)?.value;
@@ -178,7 +257,14 @@ export async function validatePublicRepository(repoRoot) {
   return { results: sortResults(results), loaded, siteState };
 }
 
-function buildPair(input, artifactType, asOf) {
+function buildPair(input, artifactType, asOf, mode = 'legacy') {
+  if (mode === 'preview') {
+    const built = buildPublicArtifacts(input, { artifactType, asOf });
+    return {
+      artifacts: { national: built.national, regions: built.regions },
+      results: built.results
+    };
+  }
   const artifacts = {};
   const results = [];
   for (const locale of PUBLIC_LOCALES) {
@@ -191,6 +277,26 @@ function buildPair(input, artifactType, asOf) {
 
 async function comparePair(repoRoot, mode, artifacts, temporaryRoot) {
   const results = [];
+  if (mode === 'preview' && artifacts.national) {
+    for (const locale of PUBLIC_LOCALES) {
+      const files = [
+        [PUBLIC_ARTIFACT_PATHS.preview[locale], artifacts.national[locale]],
+        ...Object.entries(artifacts.regions[locale] ?? {}).map(([slug, artifact]) => [
+          `${PUBLIC_REGIONAL_ARTIFACT_ROOTS.preview}/${locale}/regions/${slug}/navigation.json`,
+          artifact
+        ])
+      ];
+      for (const [file, artifact] of files) {
+        const regenerated = serializePublicArtifact(artifact);
+        const tracked = await readFile(path.join(repoRoot, file), 'utf8');
+        if (regenerated !== tracked)
+          results.push(
+            publicError('PUB-E006', file, '再生成結果がGit管理中の成果物とバイト一致しません。')
+          );
+      }
+    }
+    return results;
+  }
   for (const locale of PUBLIC_LOCALES) {
     const regenerated = serializePublicArtifact(artifacts[locale]);
     const temporaryFile = path.join(temporaryRoot, `${mode}-${locale}-navigation.json`);
@@ -221,7 +327,12 @@ export async function verifyPublicArtifacts(repoRoot) {
     await mkdir(temporaryRoot, { recursive: true });
     const preview = await loadPreviewInput(repoRoot);
     if (preview.results.some(({ severity }) => severity === 'error')) return preview.results;
-    const previewPair = buildPair(preview.input, ARTIFACT_TYPES.preview, preview.manifest.as_of);
+    const previewPair = buildPair(
+      preview.input,
+      ARTIFACT_TYPES.preview,
+      preview.manifest.as_of,
+      'preview'
+    );
     if (previewPair.results.length > 0) return previewPair.results;
     const results = await comparePair(repoRoot, 'preview', previewPair.artifacts, temporaryRoot);
 

@@ -39,7 +39,11 @@
     "section_back": "トップページへ戻る",
     "empty_section": "現在、この分野に表示できる案内はありません。トップページへ戻り、別の分野を確認してください。",
     "organizations_link": "全団体・案内先一覧から探す",
-    "situation_notice": "このサイトは現在の災害発生状況や情報の真偽を判定しません。"
+    "situation_notice": "このサイトは現在の災害発生状況や情報の真偽を判定しません。",
+    "regions_heading": "公開地域から探す",
+    "regions_intro": "現在公開している地域を選んでください。全国を網羅しているものではありません。",
+    "region_back": "地域トップへ戻る",
+    "national_home_link": "全国トップへ戻る"
   },
   "roles": {
     "primary": "主な案内先",

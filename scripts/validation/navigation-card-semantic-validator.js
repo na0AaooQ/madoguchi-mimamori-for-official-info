@@ -1,5 +1,6 @@
 import { isStructurallyPublishableOfficialSource } from './official-source-semantic-validator.js';
 import { createResult, sortResults } from './result.js';
+import { isSafeRegionSlug } from '../shared/public-url.js';
 
 const NAVIGATION_UNITS = Object.freeze(['sections', 'cards', 'cardSourceLinks']);
 const OFFICIAL_UNITS = Object.freeze(['regions', 'organizations', 'sources', 'evidence']);
@@ -8,17 +9,20 @@ const PUBLICATION_STATUSES = new Set(['draft', 'under-review', 'published', 'hid
 const VISIBILITY_CONTEXTS = new Set(['always', 'normal', 'disaster']);
 const DEFAULT_FILES = Object.freeze({
   core: Object.freeze({
+    regions: 'data/core/regions.json',
     sections: 'data/core/sections.json',
     cards: 'data/core/cards.json',
     cardSourceLinks: 'data/core/card-source-links.json'
   }),
   locales: Object.freeze({
     ja: Object.freeze({
+      regions: 'data/locales/ja/regions.json',
       sections: 'data/locales/ja/sections.json',
       cards: 'data/locales/ja/cards.json',
       cardSourceLinks: 'data/locales/ja/card-source-links.json'
     }),
     en: Object.freeze({
+      regions: 'data/locales/en/regions.json',
       sections: 'data/locales/en/sections.json',
       cards: 'data/locales/en/cards.json',
       cardSourceLinks: 'data/locales/en/card-source-links.json'
@@ -146,6 +150,103 @@ function validateReferences(context, results) {
         itemId: id,
         field: 'source_id',
         referencedId: link.source_id
+      });
+    }
+  }
+}
+
+function validateRegionalRouting(context, results) {
+  const { core, indexes, files } = context;
+  const slugOwners = new Map();
+  for (const region of core.regions) {
+    const id = recordId(region);
+    if (region.region_type === 'prefecture') {
+      if (!isSafeRegionSlug(region.region_slug)) {
+        addError(results, {
+          code: 'E020',
+          file: files.core.regions,
+          itemId: id,
+          field: 'region_slug',
+          message: '地域ページを持つprefectureには安全なregion_slugが必要です。',
+          suggestedAction: '小文字英数字とハイフンだけのregion_slugを設定してください。'
+        });
+      } else if (slugOwners.has(region.region_slug)) {
+        addError(results, {
+          code: 'E020',
+          file: files.core.regions,
+          itemId: id,
+          field: 'region_slug',
+          message: `prefecture間でregion_slug '${region.region_slug}' が重複しています。`,
+          suggestedAction: '公開URL識別子をprefecture間で一意にしてください。'
+        });
+      } else slugOwners.set(region.region_slug, id);
+      if (!Number.isInteger(region.display_order) || region.display_order < 1) {
+        addError(results, {
+          code: 'E020',
+          file: files.core.regions,
+          itemId: id,
+          field: 'display_order',
+          message: '地域ページを持つprefectureには1以上のdisplay_orderが必要です。',
+          suggestedAction: '全国トップでの表示順を正の整数で設定してください。'
+        });
+      }
+    } else if (Object.hasOwn(region, 'region_slug') || Object.hasOwn(region, 'display_order')) {
+      addError(results, {
+        code: 'E020',
+        file: files.core.regions,
+        itemId: id,
+        field: 'region_slug',
+        message: 'region_slugとdisplay_orderはprefectureだけに設定できます。',
+        suggestedAction: 'prefecture以外から全国版URL項目を削除してください。'
+      });
+    }
+  }
+  for (const region of core.regions.filter(({ region_type: type }) => type === 'municipality')) {
+    const parent = indexes.core.regions.get(region.parent_region_id);
+    if (parent && parent.region_type !== 'prefecture') {
+      addError(results, {
+        code: 'E020',
+        file: files.core.regions,
+        itemId: recordId(region),
+        field: 'parent_region_id',
+        message: 'municipalityの親地域はprefectureである必要があります。',
+        suggestedAction: '都道府県の親地域を指定してください。'
+      });
+    }
+  }
+  for (const region of core.regions.filter(({ region_type: type }) => type === 'prefecture')) {
+    for (const locale of SUPPORTED_LOCALES) {
+      const localized = indexes.locales[locale].regions.get(region.id);
+      if (
+        region.publication_status === 'published' &&
+        localized?.locale_status === 'published' &&
+        (typeof localized.navigation_label !== 'string' || localized.navigation_label === '')
+      ) {
+        addError(results, {
+          code: 'E020',
+          file: files.locales[locale].regions,
+          itemId: region.id,
+          field: 'navigation_label',
+          message: '公開prefectureの公開localeにはnavigation_labelが必要です。',
+          suggestedAction: '全国トップで表示する地域選択肢の名称を追加してください。'
+        });
+      }
+    }
+  }
+}
+
+function validatePublishedCardRegionScope(context, results) {
+  const { core, files } = context;
+  for (const card of core.cards) {
+    if (card.publication_status !== 'published') continue;
+    if (!Array.isArray(card.region_ids) || card.region_ids.length === 0) {
+      addError(results, {
+        code: 'E020',
+        file: files.core.cards,
+        itemId: recordId(card),
+        field: 'region_ids',
+        message: '公開カードには明示的なregion_idsが1件以上必要です。',
+        suggestedAction: '全地域への暗黙適用を使わず、掲載対象地域を明示してください。'
       });
     }
   }
@@ -722,11 +823,13 @@ export function validateNavigationCardData(input, { files: fileOverrides } = {})
     }
   }
   validateReferences(context, results);
+  validateRegionalRouting(context, results);
   validateDisplayUniqueness(context, results);
   validateLinkPairsAndPeriods(context, results);
   validateCoreLocaleCorrespondence(context, results);
   validateLocaleRules(context, results);
   validatePublishedReferences(context, results);
   validatePublishedCardPrimaryLinks(context, input, results);
+  validatePublishedCardRegionScope(context, results);
   return sortResults(results);
 }

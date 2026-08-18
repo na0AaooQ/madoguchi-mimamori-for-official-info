@@ -224,7 +224,11 @@ function previewHtmlContract(source, file, inputs) {
         siteError('SITE-E005', target, `preview外部リンクに安全なrelがありません: ${href}`)
       );
   }
-  for (const navigation of Object.values(inputs.navigations)) {
+  const contentNavigations =
+    inputs.mode === 'preview'
+      ? Object.values(inputs.regionalNavigations ?? {}).flatMap((bySlug) => Object.values(bySlug))
+      : Object.values(inputs.navigations);
+  for (const navigation of contentNavigations) {
     for (const section of navigation.sections) {
       for (const card of section.cards) {
         for (const link of card.links) {
@@ -236,6 +240,71 @@ function previewHtmlContract(source, file, inputs) {
     if (source.includes(`href="${escapeHtml(navigation.site.contact_url)}"`))
       results.push(siteError('SITE-E005', target, '架空の問い合わせURLがリンク化されています。'));
   }
+  if (/\/(?:ja|en)\/sections\//.test(source) || /\/(?:ja|en)\/organizations\//.test(source))
+    results.push(siteError('SITE-E005', target, 'previewへ地域なし旧URLを内部リンクできません。'));
+  if (/hreflang="x-default"|rel="canonical"/.test(source))
+    results.push(siteError('SITE-E005', target, 'x-defaultとcanonicalは工程Aの対象外です。'));
+  return results;
+}
+
+function expectedPreviewLogicalLinks(file, inputs) {
+  const match = /^(ja|en)\/(.*)index\.html$/.exec(file);
+  if (!match) return undefined;
+  const [, locale, rest] = match;
+  const relative = rest === '' ? `${locale}/` : `${locale}/${rest}`;
+  const alternateLocaleValue = locale === 'ja' ? 'en' : 'ja';
+  const alternate = `${alternateLocaleValue}/${relative.slice(locale.length + 1)}`;
+  return {
+    current: sitePathForValidation(inputs, relative),
+    alternate: sitePathForValidation(inputs, alternate)
+  };
+}
+
+function sitePathForValidation(inputs, relative) {
+  return joinSitePath(inputs.siteUrl.basePath, relative);
+}
+
+function validatePreviewHreflang(source, file, inputs, expectedPaths) {
+  if (inputs.mode !== 'preview') return [];
+  const expected = expectedPreviewLogicalLinks(file, inputs);
+  if (!expected) return [];
+  const alternateLinks = linkElements(source).filter(({ rel = '' }) =>
+    rel.split(/\s+/).includes('alternate')
+  );
+  const results = [];
+  const locale = file.split('/')[0];
+  const expectedByLocale =
+    locale === 'ja'
+      ? [
+          ['ja', expected.current],
+          ['en', expected.alternate]
+        ]
+      : [
+          ['ja', expected.alternate],
+          ['en', expected.current]
+        ];
+  for (const [hreflang, href] of expectedByLocale) {
+    const matches = alternateLinks.filter(
+      (link) => link.hreflang === hreflang && link.href === href
+    );
+    if (matches.length !== 1)
+      results.push(
+        siteError(
+          'SITE-E005',
+          outputFile(inputs, file),
+          `hreflang=${hreflang}の論理対応が不正です。`
+        )
+      );
+    const target = hrefToArtifact(href, inputs);
+    if (!target || !expectedPaths.has(target))
+      results.push(
+        siteError('SITE-E005', outputFile(inputs, file), `hreflang先が存在しません: ${href}`)
+      );
+  }
+  if (alternateLinks.some(({ hreflang }) => hreflang === 'x-default'))
+    results.push(
+      siteError('SITE-E005', outputFile(inputs, file), 'x-defaultは工程Aの対象外です。')
+    );
   return results;
 }
 
@@ -688,7 +757,11 @@ function validateProductionDestinationLinks(htmlByFile, inputs) {
 
 export async function validateArtifactsAt(root, inputs, { compareExpected = false } = {}) {
   const results = [];
-  const expectedPaths = expectedSiteArtifactPaths(inputs.navigations, inputs.mode);
+  const expectedPaths = expectedSiteArtifactPaths(
+    inputs.navigations,
+    inputs.mode,
+    inputs.regionalNavigations
+  );
   const expected = new Set(expectedPaths);
   const actualPaths = await collectFiles(root);
   const actual = new Set(actualPaths);
@@ -742,6 +815,7 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
           ? previewHtmlContract(source, file, inputs)
           : productionHtmlContract(source, file, inputs))
       );
+      results.push(...validatePreviewHreflang(source, file, inputs, expected));
       for (const href of internalReferences(source)) {
         if (href.includes('//'))
           results.push(

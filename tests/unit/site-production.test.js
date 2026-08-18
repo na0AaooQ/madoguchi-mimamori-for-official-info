@@ -7,6 +7,7 @@ import {
   buildSiteArtifacts,
   escapeHtml,
   expectedSiteArtifactPaths,
+  regionalSitemapUrls,
   productionSitemapUrls
 } from '../../scripts/site/site-builder.js';
 import { loadSiteInputs } from '../../scripts/site/site-input-loader.js';
@@ -885,7 +886,7 @@ test('keeps preview, localized production pages, 404, and sitemap scope unchange
   const previewInputs = await loadSiteInputs(repoRoot, 'preview');
   assert.deepEqual(previewInputs.results, []);
   const preview = buildSiteArtifacts(previewInputs);
-  assert.equal(preview.size, 21);
+  assert.equal(preview.size, 19);
   assert.equal(preview.has('index.html'), false);
 
   const production = buildSiteArtifacts(inputs);
@@ -914,4 +915,34 @@ test('generates the canonical sitemap in deterministic order', () => {
   assert.ok(sitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n'));
   assert.ok(sitemap.endsWith('\n'));
   assert.equal([...sitemap.matchAll(/<loc>/g)].length, expectedLength);
+});
+
+test('generates the nationwide sitemap URL set from regional artifacts', () => {
+  const regionalInputs = structuredClone(inputs);
+  regionalInputs.regionalNavigations = previewInputs.regionalNavigations;
+  const urls = regionalSitemapUrls(regionalInputs);
+  assert.equal(urls[0], 'https://madoguchi.kokoromimamori.na0aaooq.com/');
+  assert.ok(urls.includes('https://madoguchi.kokoromimamori.na0aaooq.com/ja/'));
+  assert.ok(urls.includes('https://madoguchi.kokoromimamori.na0aaooq.com/ja/regions/example/'));
+  assert.ok(
+    urls.includes(
+      'https://madoguchi.kokoromimamori.na0aaooq.com/ja/regions/example/sections/public-institutions-disaster/'
+    )
+  );
+  assert.ok(
+    urls.includes('https://madoguchi.kokoromimamori.na0aaooq.com/ja/regions/example/organizations/')
+  );
+  assert.ok(urls.includes('https://madoguchi.kokoromimamori.na0aaooq.com/en/privacy/'));
+  assert.equal(
+    urls.some((url) => /\/(?:ja|en)\/sections\//.test(url)),
+    false
+  );
+  assert.equal(
+    urls.some((url) => /\/(?:ja|en)\/organizations\/$/.test(url)),
+    false
+  );
+  assert.equal(
+    urls.some((url) => /404|navigation\.json|preview/.test(url)),
+    false
+  );
 });

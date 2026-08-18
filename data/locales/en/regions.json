@@ -14,6 +14,7 @@
     {
       "id": "region-kumamoto-prefecture",
       "name": "Kumamoto Prefecture",
+      "navigation_label": "Kumamoto Prefecture and Kumamoto City",
       "scope_note": "A region covering all of Kumamoto Prefecture, Japan.",
       "locale_status": "published",
       "content_revision": 1,

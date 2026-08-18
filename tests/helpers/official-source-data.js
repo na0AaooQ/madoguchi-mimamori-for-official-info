@@ -22,6 +22,8 @@ export function createDraftOfficialSourceData() {
           id: 'region-example-prefecture',
           region_type: 'prefecture',
           parent_region_id: 'region-example-country',
+          region_slug: 'example',
+          display_order: 1,
           publication_status: 'draft'
         }
       ],
@@ -91,7 +93,10 @@ export function createDraftOfficialSourceData() {
       ja: {
         regions: [
           localeRecord('region-example-country', { name: '架空国' }),
-          localeRecord('region-example-prefecture', { name: '架空県' })
+          localeRecord('region-example-prefecture', {
+            name: '架空県',
+            navigation_label: '架空県（例）'
+          })
         ],
         organizations: [
           localeRecord('org-example-prefecture-disaster-office', {
@@ -124,7 +129,10 @@ export function createDraftOfficialSourceData() {
             based_on_ja_revision: 1
           },
           {
-            ...localeRecord('region-example-prefecture', { name: 'Example Prefecture' }),
+            ...localeRecord('region-example-prefecture', {
+              name: 'Example Prefecture',
+              navigation_label: 'Example Prefecture'
+            }),
             based_on_ja_revision: 1
           }
         ],

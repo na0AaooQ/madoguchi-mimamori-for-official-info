@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0.0",
   "artifact_type": "fictional-preview",
+  "artifact_scope": "national",
   "locale": "en",
   "generated_for_date": "2026-08-02",
   "site": {
@@ -19,79 +20,20 @@
     "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service.",
     "contact_url": "https://example.invalid/contact/"
   },
-  "sections": [
+  "regions": [
     {
-      "id": "section-public-institutions-disaster",
-      "anchor_id": "public-institutions-disaster",
-      "title": "Public Institutions and General Disaster Information",
-      "short_description": "Find fictional official guidance from governments and public bodies.",
-      "cards": [
-        {
-          "id": "card-example-disaster-information",
-          "title": "Check disaster information (fictional data)",
-          "summary": "A fictional card leading to a fictional official disaster information destination.",
-          "region_label": "Example Prefecture",
-          "details_label": "View destination details",
-          "links": [
-            {
-              "id": "card-source-example-disaster-information-primary",
-              "role": "primary",
-              "visibility_context": "always",
-              "button_label": "View the Example Prefecture disaster information guide (fictional link)",
-              "public_note": "A fictional navigation link for the public generation MVP.",
-              "destination": {
-                "id": "src-example-prefecture-official-home",
-                "source_type": "official-homepage",
-                "content_format": "html",
-                "url": "https://example.invalid/example-prefecture/",
-                "destination_locales": [
-                  "ja"
-                ],
-                "display_title": "Example Prefecture Disaster Information Guide (fictional data)",
-                "purpose": "A fictional destination for checking disaster information in Example Prefecture.",
-                "public_note": "This destination is fictional data for the public generation MVP.",
-                "destination_language_note": "The linked page is available in Japanese only.",
-                "destination_checked_on": "2026-08-02",
-                "official_information_checked_on": "2026-08-02",
-                "organization": {
-                  "id": "org-example-prefecture-disaster-office",
-                  "official_name": "架空県防災情報窓口",
-                  "name_kind": "official-ja-fallback",
-                  "summary": "A fictional organization providing disaster information guidance for Example Prefecture."
-                }
-              }
-            }
-          ]
-        }
-      ]
+      "region_id": "region-example-prefecture",
+      "region_slug": "example",
+      "navigation_label": "Example Prefecture",
+      "scope_note": "A fictional prefecture for the public generation MVP.",
+      "path": "/en/regions/example/"
     },
     {
-      "id": "section-life-safety-medical",
-      "anchor_id": "life-safety-medical",
-      "title": "Life, Safety, and Medical Care",
-      "short_description": "Find fictional official guidance on safety and medical care.",
-      "cards": []
-    },
-    {
-      "id": "section-lifelines",
-      "anchor_id": "lifelines",
-      "title": "Lifelines",
-      "short_description": "Find fictional official guidance on lifelines.",
-      "cards": []
-    },
-    {
-      "id": "section-roads-transportation",
-      "anchor_id": "roads-transportation",
-      "title": "Roads and Transportation",
-      "short_description": "Find fictional official guidance on roads and transportation.",
-      "cards": []
-    },
-    {
-      "id": "section-support-recovery",
-      "anchor_id": "support-recovery",
-      "title": "Support and Recovery",
-      "short_description": "Find fictional official guidance on support and recovery.",
-      "cards": []
+      "region_id": "region-example-second-prefecture",
+      "region_slug": "second-example",
+      "navigation_label": "Second Example Prefecture",
+      "scope_note": "A second fictional prefecture for regional URL tests.",
+      "path": "/en/regions/second-example/"
     }
   ]
 }

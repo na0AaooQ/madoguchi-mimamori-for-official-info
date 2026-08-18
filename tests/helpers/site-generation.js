@@ -15,12 +15,7 @@ export async function loadInputs() {
 export async function createSiteRepositoryCopy(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'madoguchi-site-test-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  for (const relative of [
-    'contracts/public/navigation.schema.json',
-    'dist/public-data',
-    'dist/site',
-    'site'
-  ]) {
+  for (const relative of ['contracts/public', 'dist/public-data', 'dist/site', 'site']) {
     await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
     await cp(path.join(repoRoot, relative), path.join(root, relative), { recursive: true });
   }

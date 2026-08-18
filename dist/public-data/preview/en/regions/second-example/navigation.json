@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "fictional-preview",
+  "artifact_scope": "region",
+  "locale": "en",
+  "generated_for_date": "2026-08-02",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "Madoguchi Mimamori (Fictional Preview)",
+    "subtitle": "Official Information Guide for Example Prefecture (Fictional Data)",
+    "short_description": "A fictional preview with no real-world information, used to verify the public navigation structure.",
+    "purpose": "Verifies navigation to fictional official information from public institutions and related organizations.",
+    "free_use_notice": "Free to use. There are no ads or affiliate links, and no sign-in is required.",
+    "external_site_notice": "Destinations are fictional external URLs and are not real official information.",
+    "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service.",
+    "contact_url": "https://example.invalid/contact/"
+  },
+  "sections": [],
+  "region": {
+    "region_id": "region-example-second-prefecture",
+    "region_slug": "second-example",
+    "region_name": "Second Example Prefecture",
+    "scope_note": "A second fictional prefecture for regional URL tests.",
+    "path": "/en/regions/second-example/"
+  }
+}
