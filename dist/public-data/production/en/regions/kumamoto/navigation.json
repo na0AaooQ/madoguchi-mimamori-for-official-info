@@ -1,0 +1,551 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "production",
+  "artifact_scope": "region",
+  "locale": "en",
+  "generated_for_date": "2026-08-09",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "Madoguchi Mimamori",
+    "subtitle": "Guide to Official Information from Public Institutions and Related Organizations",
+    "short_description": "A guide that helps users find the responsible public institution or related organization and proceed to that organization's own official information during disasters and other situations.",
+    "purpose": "Helps users reach official information from public institutions and related organizations quickly.",
+    "free_use_notice": "Free to use. There are no ads or affiliate links, and no sign-in is required.",
+    "external_site_notice": "Destinations are external official websites. Check the linked site for the latest information.",
+    "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service. Listing does not guarantee the overall reliability of an organization or the accuracy of information at a destination.",
+    "contact_url": "https://portfolio.na0aaooq.com/en/contact.html"
+  },
+  "sections": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "title": "Public Institutions and General Disaster Information",
+      "short_description": "Find official guidance from governments and public bodies on disaster information, evacuation, rivers, government response, and support.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-disaster-information",
+          "title": "Check disaster information for Kumamoto Prefecture",
+          "summary": "Check disaster prevention information, emergency guidance, official websites, and social media provided by Kumamoto Prefecture.",
+          "region_label": "Kumamoto Prefecture",
+          "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Kumamoto Prefecture disaster information portal",
+              "destination": {
+                "id": "src-kumamoto-prefecture-disaster-portal",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://portal.bousai.pref.kumamoto.jp/",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Disaster Prevention Information Portal",
+                "purpose": "Provides consolidated disaster prevention information for Kumamoto Prefecture.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-home-en",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View the Kumamoto Prefecture official website",
+              "destination": {
+                "id": "src-kumamoto-prefecture-home-en",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp.e.qp.hp.transer.com/index2.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Official Website",
+                "purpose": "Provides general official information from Kumamoto Prefecture in English.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-disaster-guide-en",
+              "role": "secondary",
+              "visibility_context": "disaster",
+              "button_label": "View emergency information from Kumamoto Prefecture",
+              "public_note": "This destination is intended primarily for use during disasters.",
+              "destination": {
+                "id": "src-kumamoto-prefecture-disaster-guide-en",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp.e.qp.hp.transer.com/soshiki/1/274517.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Emergency Information",
+                "purpose": "Provides official emergency guidance from Kumamoto Prefecture in English during a disaster.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-disaster-information-x",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View official updates from Kumamoto Prefecture on X",
+              "destination": {
+                "id": "src-kumamoto-prefecture-x",
+                "source_type": "social-account",
+                "content_format": "social-profile",
+                "url": "https://x.com/KumamotoPre_koh",
+                "destination_locales": [
+                  "ja"
+                ],
+                "platform": "x",
+                "account_id": "KumamotoPre_koh",
+                "display_title": "【熊本県公式】気になる！くまもと",
+                "purpose": "Provides official notices and regional information from Kumamoto Prefecture on X.",
+                "destination_language_note": "The destination is mainly available in Japanese.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-disaster-information",
+          "title": "Check disaster information for Kumamoto City",
+          "summary": "Check disaster prevention information, emergency guidance, official websites, and social media provided by Kumamoto City.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-info-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Kumamoto City disaster prevention website",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-disaster-info-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/bousai/default.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Disaster Prevention Website",
+                "purpose": "Provides consolidated disaster prevention information for Kumamoto City in English.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-home-en",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View the Kumamoto City official website",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-home-en",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/default.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Official Website",
+                "purpose": "Provides general official information from Kumamoto City in English.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-disaster-guide-en",
+              "role": "secondary",
+              "visibility_context": "disaster",
+              "button_label": "View emergency information from Kumamoto City",
+              "public_note": "This destination is intended primarily for use during disasters.",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-disaster-guide-en",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/list04828.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Emergency Information",
+                "purpose": "Provides official emergency guidance from Kumamoto City in English during a disaster.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-disaster-information-x",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View official updates from Kumamoto City on X",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-x",
+                "source_type": "social-account",
+                "content_format": "social-profile",
+                "url": "https://x.com/kumamotocity_",
+                "destination_locales": [
+                  "ja"
+                ],
+                "platform": "x",
+                "account_id": "kumamotocity_",
+                "display_title": "熊本市",
+                "purpose": "Provides official notices from Kumamoto City on X.",
+                "destination_language_note": "The destination is mainly available in Japanese.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "title": "Life, Safety, and Medical Care",
+      "short_description": "Find official guidance on police, fire and ambulance services, medical care, and emergency consultation.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-emergency-medical-care",
+          "title": "Check emergency medical care information for Kumamoto City",
+          "summary": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destination directly for the latest available medical facilities, consultation hours, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Kumamoto City emergency medical care information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-emergency-medical-care-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/list04206.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Emergency Medical Care Information",
+                "purpose": "Check Kumamoto City's information about emergency medical care, medical services available on holidays and at night, and medical consultation services.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-lifelines",
+      "anchor_id": "lifelines",
+      "title": "Lifelines",
+      "short_description": "Find official guidance on water and sewerage, electricity, gas, and communications.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-water-sewerage-information",
+          "title": "Check water and sewerage information for Kumamoto City",
+          "summary": "Check official water supply and sewerage information provided by the Kumamoto City Waterworks and Sewerage Bureau.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "Check the linked official destination directly for the latest information about water outages, emergency water supply, and sewerage services.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-water-sewerage-information-home",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Kumamoto City Waterworks and Sewerage Bureau official website",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-waterworks-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.kumamoto-waterworks.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Kumamoto City Waterworks and Sewerage Bureau Official Website",
+                "purpose": "Provides official information about water supply and sewerage services in Kumamoto City.",
+                "destination_language_note": "The destination is available in Japanese.",
+                "destination_checked_on": "2026-08-04",
+                "official_information_checked_on": "2026-08-04",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city-waterworks",
+                  "official_name": "Kumamoto City Waterworks and Sewerage Bureau",
+                  "name_kind": "official-en",
+                  "summary": "An organization responsible for water supply and sewerage services in Kumamoto City."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-roads-transportation",
+      "anchor_id": "roads-transportation",
+      "title": "Roads and Transportation",
+      "short_description": "Find official guidance on roads, expressways, railways, trams, buses, airports, and flights.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-road-information",
+          "title": "Check road information for Kumamoto Prefecture",
+          "summary": "Check road restriction information provided by Kumamoto Prefecture and road traffic information provided by the Japan Road Traffic Information Center (JARTIC).",
+          "region_label": "Kumamoto Prefecture",
+          "emergency_note": "Check the linked destinations directly for the latest road restrictions and traffic information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-prefecture-road-traffic-restrictions",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View road traffic restriction information from Kumamoto Prefecture",
+              "public_note": "This destination provides traffic restriction information for roads managed by Kumamoto Prefecture.",
+              "destination": {
+                "id": "src-kumamoto-prefecture-road-traffic-restrictions",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://portal.bousai.pref.kumamoto.jp/?p=traffic&l=99-0&ll=32.63820000000001%2C130.77610000000007&z=9",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Road Traffic Restriction Information",
+                "purpose": "Check current and upcoming traffic restrictions on roads managed by Kumamoto Prefecture.",
+                "destination_language_note": "Some information at the destination may be available only in Japanese.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-kumamoto-prefecture-road-information-jartic",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Japan Road Traffic Information Center (JARTIC) in Japanese",
+              "public_note": "This destination provides road traffic information including roads managed by the national government, NEXCO, and Kumamoto City.",
+              "destination": {
+                "id": "src-japan-road-traffic-information-center-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.jartic.or.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Japan Road Traffic Information Center (JARTIC) (Japanese)",
+                "purpose": "Check road traffic information for expressways, urban expressways, and general roads.",
+                "destination_language_note": "The destination is available in Japanese only.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-japan-road-traffic-information-center",
+                  "official_name": "Japan Road Traffic Information Center",
+                  "name_kind": "official-en",
+                  "summary": "An organization that collects and provides road and road traffic information."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-support-recovery",
+      "anchor_id": "support-recovery",
+      "title": "Support and Recovery",
+      "short_description": "Find official guidance on disaster damage certificates, housing, welfare, business support, relief donations, and recovery.",
+      "cards": [
+        {
+          "id": "card-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate",
+          "title": "Check information about residential disaster damage certificates in Kumamoto City",
+          "summary": "Check Kumamoto City's information about applying for and the issuance of a disaster damage certificate when a residence is damaged by a disaster.",
+          "region_label": "Kumamoto City",
+          "emergency_note": "Check the linked destination directly for the latest application methods, reception hours, required documents, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Kumamoto City residential disaster damage certificate information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-kumamoto-city-residential-disaster-certificate-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.kumamoto.jp.e.fm.hp.transer.com/kiji0032451/index.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto City Residential Disaster Damage Certificate Information",
+                "purpose": "Check Kumamoto City's information about applying for and the issuance of residential disaster damage certificates.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-07",
+                "official_information_checked_on": "2026-08-07",
+                "organization": {
+                  "id": "org-kumamoto-prefecture-kumamoto-city",
+                  "official_name": "Kumamoto City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto City in Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-kumamoto-prefecture-relief-donation",
+          "title": "Check Kumamoto Prefecture relief donation information",
+          "summary": "Check Kumamoto Prefecture's information about relief donations to support people affected by the earthquake in Kumamoto in 2026.",
+          "region_label": "Kumamoto Prefecture",
+          "emergency_note": "Check the linked destination directly for the latest acceptance status, donation methods, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-kumamoto-prefecture-relief-donation-en",
+              "role": "primary",
+              "visibility_context": "disaster",
+              "button_label": "View Kumamoto Prefecture relief donation information",
+              "destination": {
+                "id": "src-kumamoto-prefecture-relief-donation-en",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.pref.kumamoto.jp.e.qp.hp.transer.com/soshiki/27/274572.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Kumamoto Prefecture Relief Donation Information",
+                "purpose": "Check Kumamoto Prefecture's relief donation information, including the latest acceptance status and donation methods.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-kumamoto-prefecture",
+                  "official_name": "Kumamoto Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Kumamoto Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+          "title": "Check MOD/SDF disaster relief dispatch information",
+          "summary": "Check information about disaster relief dispatches by Japan's Ministry of Defense and Self-Defense Forces, including links to the latest official updates during disasters.",
+          "region_label": "Japan",
+          "emergency_note": "For the latest support activities, locations, hours, and other details, check the official information linked from the destination.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+              "role": "primary",
+              "visibility_context": "disaster",
+              "button_label": "View MOD/SDF disaster relief dispatch information in Japanese",
+              "destination": {
+                "id": "src-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.mod.go.jp/j/approach/defense/saigai/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Ministry of Defense / Self-Defense Forces Disaster Relief Dispatch Information (Japanese)",
+                "purpose": "Check information about MOD/SDF disaster relief dispatches and links to the latest official updates.",
+                "destination_language_note": "The destination is available in Japanese.",
+                "destination_checked_on": "2026-08-09",
+                "official_information_checked_on": "2026-08-09",
+                "organization": {
+                  "id": "org-japan-ministry-of-defense-self-defense-forces",
+                  "official_name": "Ministry of Defense (MOD)/Self-Defense Forces (SDF)",
+                  "name_kind": "official-en",
+                  "summary": "A national government organization responsible for Japan's defense and disaster relief activities in cooperation with local governments during disasters."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "region": {
+    "region_id": "region-kumamoto-prefecture",
+    "region_slug": "kumamoto",
+    "region_name": "Kumamoto Prefecture",
+    "scope_note": "Includes information for Kumamoto Prefecture as a whole and information for Kumamoto City.",
+    "path": "/en/regions/kumamoto/"
+  }
+}

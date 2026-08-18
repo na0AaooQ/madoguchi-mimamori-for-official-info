@@ -90,7 +90,7 @@ npm run serve:site:production
 - 404: <http://127.0.0.1:4173/404.html>
 - sitemap: <http://127.0.0.1:4173/sitemap.xml>
 
-リポジトリ内で生成した5分野、8カード、全団体・24案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。production成果物は25ファイル、HTMLは通常17ページと404の計18件、sitemapは17 URLです。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。GitHub Pagesへの反映は、対象更新日に対応する基準日を明示した生成物を手動workflowでデプロイしてからです。
+リポジトリ内で生成した5分野、8カード、全団体・24案内先、日英のプライバシーポリシー、言語別問い合わせリンク、内部リンク、外部リンク属性、CSS、文字サイズを確認します。production成果物は27ファイル、HTMLは通常19ページと404の計20件、sitemapは19 URLです。390px、768px、デスクトップ幅、キーボードフォーカス、JavaScript無効時の主要情報、ブラウザコンソールも確認します。外部の案内先へ自動アクセスする必要はありません。GitHub Pagesへの反映は、対象更新日に対応する基準日を明示した生成物を手動workflowでデプロイしてからです。
 
 ## 手動workflowの実行
 
@@ -124,14 +124,14 @@ PRをマージした後、利用者が次を実行します。
 
 1. ルートの言語選択ページ
 2. 日本語・英語トップ
-3. 日英それぞれの公開中5分野
+3. 日英それぞれの全国トップ、熊本県地域トップ、公開中5分野
 4. 8カードと24案内先
 5. 全団体・案内先一覧
 6. 日英プライバシーポリシー
 7. 日本語問い合わせURLと英語問い合わせURLの分離
 8. 外部リンクの新しいタブと安全な`rel`
 9. 存在しないパスで日本語・英語併記の404が表示されること
-10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に17 URLがあること
+10. `https://madoguchi.kokoromimamori.na0aaooq.com/sitemap.xml`に19 URLがあること
 11. CSS、文字サイズ、内部リンク、モバイル表示、キーボード操作
 
 公開後確認済みの代表URLは次のとおりです。
@@ -139,10 +139,12 @@ PRをマージした後、利用者が次を実行します。
 - `/`
 - `/ja/`
 - `/en/`
-- `/ja/sections/life-safety-medical/`
-- `/en/sections/life-safety-medical/`
-- `/ja/organizations/`
-- `/en/organizations/`
+- `/ja/regions/kumamoto/`
+- `/en/regions/kumamoto/`
+- `/ja/regions/kumamoto/sections/life-safety-medical/`
+- `/en/regions/kumamoto/sections/life-safety-medical/`
+- `/ja/regions/kumamoto/organizations/`
+- `/en/regions/kumamoto/organizations/`
 - `/sitemap.xml`
 
 Google Analytics 4を含む変更を公開した場合は、運営者だけがGA4管理画面で次も確認します。ローカル生成・自動テストではGoogle AnalyticsやGoogle公式URLへ接続しません。

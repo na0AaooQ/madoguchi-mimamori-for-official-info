@@ -53,7 +53,7 @@
     {
       "id": "card-japan-ministry-of-defense-self-defense-forces-disaster-relief-dispatch",
       "section_id": "section-support-recovery",
-      "region_ids": ["region-japan"],
+      "region_ids": ["region-japan", "region-kumamoto-prefecture"],
       "display_order": 3,
       "publication_status": "published",
       "internal_note": "BL-006-C第三公開単位。防衛省・自衛隊の災害派遣情報への入口に限定し、実施中の入浴・給水・休憩場所・利用日時等の変動情報は転載しない。"

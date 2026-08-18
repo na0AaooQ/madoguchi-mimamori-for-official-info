@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -17,11 +17,7 @@ import {
   loadProductionInput,
   readProductionSiteState
 } from './public-input-loader.js';
-import {
-  buildPublicArtifacts,
-  buildPublicNavigation,
-  serializePublicArtifact
-} from './public-navigation-builder.js';
+import { buildPublicArtifacts, serializePublicArtifact } from './public-navigation-builder.js';
 
 function publicError(code, file, message) {
   return createResult({
@@ -73,7 +69,7 @@ async function readArtifact(repoRoot, file) {
   }
 }
 
-function expectedFiles() {
+function expectedNationalFiles() {
   return new Set(
     Object.values(PUBLIC_ARTIFACT_PATHS)
       .flatMap((paths) => Object.values(paths))
@@ -81,53 +77,89 @@ function expectedFiles() {
   );
 }
 
-function isRegionalPreviewFile(file) {
-  return /^preview\/(ja|en)\/regions\/[a-z0-9]+(?:-[a-z0-9]+)*\/navigation\.json$/.test(file);
+function regionalFile(mode, locale, slug) {
+  return `${PUBLIC_REGIONAL_ARTIFACT_ROOTS[mode]}/${locale}/regions/${slug}/navigation.json`;
 }
 
-function regionalPreviewFile(locale, slug) {
-  return `${PUBLIC_REGIONAL_ARTIFACT_ROOTS.preview}/${locale}/regions/${slug}/navigation.json`;
+function regionalFileInfo(file) {
+  const match =
+    /^(preview|production)\/(ja|en)\/regions\/([a-z0-9]+(?:-[a-z0-9]+)*)\/navigation\.json$/.exec(
+      file
+    );
+  return match ? { mode: match[1], locale: match[2], slug: match[3] } : undefined;
 }
 
-function validatePreviewRegionalTopology(actual, loaded, results) {
-  for (const locale of PUBLIC_LOCALES) {
-    const nationalFile = PUBLIC_ARTIFACT_PATHS.preview[locale];
-    const national = loaded.get(nationalFile)?.value;
-    if (!national || !Array.isArray(national.regions)) continue;
-    const listed = new Map(national.regions.map((region) => [region.region_slug, region]));
-    for (const [slug, entry] of listed) {
-      const file = regionalPreviewFile(locale, slug);
-      if (!actual.has(file.replace(/^dist\/public-data\//, ''))) {
-        results.push(publicError('PUB-E008', file, '全国トップに対応する地域成果物がありません。'));
-        continue;
-      }
-      const regional = loaded.get(file)?.value;
-      if (!regional) continue;
-      if (
-        regional.region?.region_id !== entry.region_id ||
-        regional.region?.region_slug !== slug ||
-        regional.region?.path !== regionPath(locale, slug)
-      ) {
+function validateRegionalTopology(actual, loaded, results) {
+  for (const mode of ['preview', 'production']) {
+    const regionsByLocale = {};
+    for (const locale of PUBLIC_LOCALES) {
+      const nationalFile = PUBLIC_ARTIFACT_PATHS[mode][locale];
+      const national = loaded.get(nationalFile)?.value;
+      if (!national || !Array.isArray(national.regions)) continue;
+      const listed = new Map(national.regions.map((region) => [region.region_slug, region]));
+      regionsByLocale[locale] = listed;
+      const regionalFiles = [...actual]
+        .map((file) => ({ file, info: regionalFileInfo(file) }))
+        .filter(({ info }) => info?.mode === mode && info.locale === locale);
+      const actualSlugs = regionalFiles.map(({ info }) => info.slug).sort();
+      const listedSlugs = [...listed.keys()].sort();
+      if (JSON.stringify(actualSlugs) !== JSON.stringify(listedSlugs))
         results.push(
           publicError(
             'PUB-E008',
-            file,
-            '全国トップと地域成果物の地域識別子またはpathが一致しません。'
+            `dist/public-data/${mode}/${locale}`,
+            '全国トップに掲載する地域集合と地域成果物集合が一致しません。'
           )
         );
+      for (const [slug, entry] of listed) {
+        const file = regionalFile(mode, locale, slug);
+        const relative = file.replace(/^dist\/public-data\//, '');
+        if (!actual.has(relative)) {
+          results.push(
+            publicError('PUB-E008', file, '全国トップに対応する地域成果物がありません。')
+          );
+          continue;
+        }
+        const regional = loaded.get(file)?.value;
+        if (
+          !regional ||
+          regional.region?.region_id !== entry.region_id ||
+          regional.region?.region_slug !== slug ||
+          regional.region?.path !== regionPath(locale, slug) ||
+          regional.generated_for_date !== national.generated_for_date
+        ) {
+          results.push(
+            publicError(
+              'PUB-E008',
+              file,
+              '全国トップと地域成果物の地域識別子、path、または基準日が一致しません。'
+            )
+          );
+        }
       }
     }
-    for (const file of actual) {
-      const match = file.match(new RegExp(`^preview/${locale}/regions/([^/]+)/navigation\\.json$`));
-      if (!match) continue;
-      if (!listed.has(match[1])) {
+    const ja = regionsByLocale.ja;
+    const en = regionsByLocale.en;
+    if (ja && en) {
+      const jaSlugs = [...ja.keys()].sort();
+      const enSlugs = [...en.keys()].sort();
+      if (JSON.stringify(jaSlugs) !== JSON.stringify(enSlugs))
         results.push(
           publicError(
             'PUB-E008',
-            `dist/public-data/${file}`,
-            '全国トップに掲載されていない地域成果物があります。'
+            `dist/public-data/${mode}`,
+            '日英の公開region集合が一致しません。'
           )
         );
+      for (const slug of jaSlugs) {
+        if (ja.get(slug)?.region_id !== en.get(slug)?.region_id)
+          results.push(
+            publicError(
+              'PUB-E008',
+              `dist/public-data/${mode}`,
+              `日英のregion_idが一致しません: ${slug}`
+            )
+          );
       }
     }
   }
@@ -137,23 +169,27 @@ export async function validatePublicRepository(repoRoot) {
   const results = [];
   const schemas = await loadPublicSchemas(repoRoot);
   const actual = new Set(await collectFiles(path.join(repoRoot, 'dist', 'public-data')));
-  const expected = expectedFiles();
+  const expectedNational = expectedNationalFiles();
   for (const file of actual) {
-    if (!expected.has(file) && !isRegionalPreviewFile(file)) {
+    if (!expectedNational.has(file) && !regionalFileInfo(file))
       results.push(
         publicError('PUB-E008', `dist/public-data/${file}`, '想定外の公開成果物ファイルです。')
       );
-    }
   }
 
-  const previewPresence = Object.fromEntries(
-    PUBLIC_LOCALES.map((locale) => [
-      locale,
-      actual.has(PUBLIC_ARTIFACT_PATHS.preview[locale].replace(/^dist\/public-data\//, ''))
+  const presence = Object.fromEntries(
+    ['preview', 'production'].map((mode) => [
+      mode,
+      Object.fromEntries(
+        PUBLIC_LOCALES.map((locale) => [
+          locale,
+          actual.has(PUBLIC_ARTIFACT_PATHS[mode][locale].replace(/^dist\/public-data\//, ''))
+        ])
+      )
     ])
   );
   for (const locale of PUBLIC_LOCALES) {
-    if (!previewPresence[locale]) {
+    if (!presence.preview[locale])
       results.push(
         publicError(
           'PUB-E008',
@@ -161,17 +197,9 @@ export async function validatePublicRepository(repoRoot) {
           '必須preview成果物がありません。'
         )
       );
-    }
   }
-
-  const productionPresence = Object.fromEntries(
-    PUBLIC_LOCALES.map((locale) => [
-      locale,
-      actual.has(PUBLIC_ARTIFACT_PATHS.production[locale].replace(/^dist\/public-data\//, ''))
-    ])
-  );
-  const productionCount = PUBLIC_LOCALES.filter((locale) => productionPresence[locale]).length;
-  if (productionCount === 1) {
+  const productionCount = PUBLIC_LOCALES.filter((locale) => presence.production[locale]).length;
+  if (productionCount === 1)
     results.push(
       publicError(
         'PUB-E008',
@@ -179,9 +207,8 @@ export async function validatePublicRepository(repoRoot) {
         'production成果物が片言語だけ存在します。'
       )
     );
-  }
   const siteState = await readProductionSiteState(repoRoot);
-  if (siteState === 'published' && productionCount === 0) {
+  if (siteState === 'published' && productionCount === 0)
     results.push(
       publicError(
         'PUB-E007',
@@ -189,8 +216,7 @@ export async function validatePublicRepository(repoRoot) {
         '公開中の正本にproduction成果物がありません。'
       )
     );
-  }
-  if (siteState !== 'published' && productionCount > 0) {
+  if (siteState !== 'published' && productionCount > 0)
     results.push(
       publicError(
         'PUB-E007',
@@ -198,13 +224,11 @@ export async function validatePublicRepository(repoRoot) {
         '非公開の正本にproduction成果物が残っています。'
       )
     );
-  }
 
   const loaded = new Map();
   for (const mode of ['preview', 'production']) {
     for (const locale of PUBLIC_LOCALES) {
-      if (mode === 'production' && !productionPresence[locale]) continue;
-      if (mode === 'preview' && !previewPresence[locale]) continue;
+      if (!presence[mode][locale]) continue;
       const file = PUBLIC_ARTIFACT_PATHS[mode][locale];
       const read = await readArtifact(repoRoot, file);
       results.push(...read.results);
@@ -222,29 +246,30 @@ export async function validatePublicRepository(repoRoot) {
       );
     }
   }
-  for (const file of actual) {
-    if (!isRegionalPreviewFile(file)) continue;
-    const read = await readArtifact(repoRoot, `dist/public-data/${file}`);
+  for (const relative of actual) {
+    const info = regionalFileInfo(relative);
+    if (!info) continue;
+    const file = `dist/public-data/${relative}`;
+    const read = await readArtifact(repoRoot, file);
     results.push(...read.results);
-    if (read.value) {
-      loaded.set(`dist/public-data/${file}`, read);
-      results.push(
-        ...validatePublicArtifact(read.value, {
-          validateSchema: schemas.legacy.validate,
-          validateNationalSchema: schemas.national.validate,
-          validateRegionalSchema: schemas.regional.validate,
-          file: `dist/public-data/${file}`,
-          expectedMode: 'preview',
-          expectedLocale: file.slice('preview/'.length, 'preview/'.length + 2)
-        })
-      );
-    }
+    if (!read.value) continue;
+    loaded.set(file, read);
+    results.push(
+      ...validatePublicArtifact(read.value, {
+        validateSchema: schemas.legacy.validate,
+        validateNationalSchema: schemas.national.validate,
+        validateRegionalSchema: schemas.regional.validate,
+        file,
+        expectedMode: info.mode,
+        expectedLocale: info.locale
+      })
+    );
   }
-  validatePreviewRegionalTopology(actual, loaded, results);
+  validateRegionalTopology(actual, loaded, results);
   for (const mode of ['preview', 'production']) {
     const japanese = loaded.get(PUBLIC_ARTIFACT_PATHS[mode].ja)?.value;
     const english = loaded.get(PUBLIC_ARTIFACT_PATHS[mode].en)?.value;
-    if (japanese && english && japanese.generated_for_date !== english.generated_for_date) {
+    if (japanese && english && japanese.generated_for_date !== english.generated_for_date)
       results.push(
         publicError(
           'PUB-E008',
@@ -252,67 +277,26 @@ export async function validatePublicRepository(repoRoot) {
           '日英成果物のgenerated_for_dateが一致しません。'
         )
       );
-    }
   }
   return { results: sortResults(results), loaded, siteState };
 }
 
-function buildPair(input, artifactType, asOf, mode = 'legacy') {
-  if (mode === 'preview') {
-    const built = buildPublicArtifacts(input, { artifactType, asOf });
-    return {
-      artifacts: { national: built.national, regions: built.regions },
-      results: built.results
-    };
-  }
-  const artifacts = {};
+async function compareArtifacts(repoRoot, mode, artifacts) {
   const results = [];
   for (const locale of PUBLIC_LOCALES) {
-    const built = buildPublicNavigation(input, { locale, artifactType, asOf });
-    results.push(...built.results);
-    if (built.artifact) artifacts[locale] = built.artifact;
-  }
-  return { artifacts, results: sortResults(results) };
-}
-
-async function comparePair(repoRoot, mode, artifacts, temporaryRoot) {
-  const results = [];
-  if (mode === 'preview' && artifacts.national) {
-    for (const locale of PUBLIC_LOCALES) {
-      const files = [
-        [PUBLIC_ARTIFACT_PATHS.preview[locale], artifacts.national[locale]],
-        ...Object.entries(artifacts.regions[locale] ?? {}).map(([slug, artifact]) => [
-          `${PUBLIC_REGIONAL_ARTIFACT_ROOTS.preview}/${locale}/regions/${slug}/navigation.json`,
-          artifact
-        ])
-      ];
-      for (const [file, artifact] of files) {
-        const regenerated = serializePublicArtifact(artifact);
-        const tracked = await readFile(path.join(repoRoot, file), 'utf8');
-        if (regenerated !== tracked)
-          results.push(
-            publicError('PUB-E006', file, '再生成結果がGit管理中の成果物とバイト一致しません。')
-          );
-      }
-    }
-    return results;
-  }
-  for (const locale of PUBLIC_LOCALES) {
-    const regenerated = serializePublicArtifact(artifacts[locale]);
-    const temporaryFile = path.join(temporaryRoot, `${mode}-${locale}-navigation.json`);
-    await writeFile(temporaryFile, regenerated, 'utf8');
-    const tracked = await readFile(
-      path.join(repoRoot, PUBLIC_ARTIFACT_PATHS[mode][locale]),
-      'utf8'
-    );
-    if (regenerated !== tracked) {
-      results.push(
-        publicError(
-          'PUB-E006',
-          PUBLIC_ARTIFACT_PATHS[mode][locale],
-          '再生成結果がGit管理中の成果物とバイト一致しません。'
-        )
-      );
+    const files = [
+      [PUBLIC_ARTIFACT_PATHS[mode][locale], artifacts.national[locale]],
+      ...Object.entries(artifacts.regions[locale]).map(([slug, artifact]) => [
+        regionalFile(mode, locale, slug),
+        artifact
+      ])
+    ];
+    for (const [file, artifact] of files) {
+      const tracked = await readFile(path.join(repoRoot, file), 'utf8');
+      if (serializePublicArtifact(artifact) !== tracked)
+        results.push(
+          publicError('PUB-E006', file, '再生成結果がGit管理中の成果物とバイト一致しません。')
+        );
     }
   }
   return results;
@@ -327,14 +311,12 @@ export async function verifyPublicArtifacts(repoRoot) {
     await mkdir(temporaryRoot, { recursive: true });
     const preview = await loadPreviewInput(repoRoot);
     if (preview.results.some(({ severity }) => severity === 'error')) return preview.results;
-    const previewPair = buildPair(
-      preview.input,
-      ARTIFACT_TYPES.preview,
-      preview.manifest.as_of,
-      'preview'
-    );
-    if (previewPair.results.length > 0) return previewPair.results;
-    const results = await comparePair(repoRoot, 'preview', previewPair.artifacts, temporaryRoot);
+    const previewArtifacts = buildPublicArtifacts(preview.input, {
+      artifactType: ARTIFACT_TYPES.preview,
+      asOf: preview.manifest.as_of
+    });
+    if (previewArtifacts.results.length > 0) return previewArtifacts.results;
+    const results = await compareArtifacts(repoRoot, 'preview', previewArtifacts);
 
     const productionJapanese = repositoryValidation.loaded.get(
       PUBLIC_ARTIFACT_PATHS.production.ja
@@ -343,15 +325,12 @@ export async function verifyPublicArtifacts(repoRoot) {
       const production = await loadProductionInput(repoRoot);
       const inputErrors = production.results.filter(({ severity }) => severity === 'error');
       if (inputErrors.length > 0) return sortResults(inputErrors);
-      const productionPair = buildPair(
-        production.input,
-        ARTIFACT_TYPES.production,
-        productionJapanese.generated_for_date
-      );
-      if (productionPair.results.length > 0) return productionPair.results;
-      results.push(
-        ...(await comparePair(repoRoot, 'production', productionPair.artifacts, temporaryRoot))
-      );
+      const productionArtifacts = buildPublicArtifacts(production.input, {
+        artifactType: ARTIFACT_TYPES.production,
+        asOf: productionJapanese.generated_for_date
+      });
+      if (productionArtifacts.results.length > 0) return productionArtifacts.results;
+      results.push(...(await compareArtifacts(repoRoot, 'production', productionArtifacts)));
     }
     return sortResults(results);
   } catch (error) {

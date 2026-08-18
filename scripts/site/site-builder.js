@@ -637,7 +637,7 @@ function productionHeader(inputs, navigation, ui, alternatePath) {
   return `
   <header class="site-header">
     <div class="header-inner">
-      <a class="site-name" href="${escapeHtml(productionPath(inputs, `${locale}/`))}">${escapeHtml(navigation.site.site_name)}</a>
+      <a class="site-name" href="${escapeHtml(productionPath(inputs, nationalPath(locale)))}">${escapeHtml(navigation.site.site_name)}</a>
       <div class="header-actions">
         <nav aria-label="${escapeHtml(ui.navigation_label)}">
           <a class="language-link" href="${escapeHtml(alternatePath)}" hreflang="${otherLocale}" lang="${otherLocale}" aria-label="${escapeHtml(ui.language_switch_label)}">${escapeHtml(ui.alternate_language_name)}</a>
@@ -652,19 +652,28 @@ function productionHeader(inputs, navigation, ui, alternatePath) {
   </header>`;
 }
 
-function productionFooter(inputs, navigation, ui) {
+function productionFooter(inputs, navigation, ui, regionSlug) {
   const locale = navigation.locale;
   const operatorLang = locale === 'en' ? ' lang="ja"' : '';
   const contact = footerContactAnchor(ui);
+  const home = regionSlug ? regionPath(locale, regionSlug) : nationalPath(locale);
+  const links = [
+    `<li><a href="${escapeHtml(productionPath(inputs, home))}">${escapeHtml(ui.footer.home)}</a></li>`,
+    ...(regionSlug
+      ? [
+          `<li><a href="${escapeHtml(productionPath(inputs, nationalPath(locale)))}">${escapeHtml(ui.pages.national_home_link)}</a></li>`,
+          `<li><a href="${escapeHtml(productionPath(inputs, regionOrganizationsPath(locale, regionSlug)))}">${escapeHtml(ui.footer.organizations)}</a></li>`
+        ]
+      : []),
+    `<li><a href="${escapeHtml(productionPath(inputs, privacyPath(locale)))}">${escapeHtml(ui.footer.privacy)}</a></li>`,
+    `<li>${contact}</li>`
+  ].join('\n          ');
   return `
   <footer class="site-footer">
     <div class="footer-inner">
       <nav aria-label="${escapeHtml(ui.navigation_label)}">
         <ul class="footer-links">
-          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/`))}">${escapeHtml(ui.footer.home)}</a></li>
-          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/organizations/`))}">${escapeHtml(ui.footer.organizations)}</a></li>
-          <li><a href="${escapeHtml(productionPath(inputs, `${locale}/privacy/`))}">${escapeHtml(ui.footer.privacy)}</a></li>
-          <li>${contact}</li>
+          ${links}
         </ul>
       </nav>
       <p>${escapeHtml(ui.footer.free_notice)}</p>
@@ -677,6 +686,7 @@ function productionHead({
   inputs,
   title,
   socialMetadata = '',
+  alternateLinks = '',
   robots = '',
   includeFontSizeScript = true
 }) {
@@ -690,9 +700,20 @@ ${googleAnalyticsTag(inputs.siteUrl.analytics.measurement_id)}
   <meta name="viewport" content="width=device-width, initial-scale=1">
 ${robotsMeta}  <meta name="generator" content="${SITE_GENERATOR_NAME}">
   <title>${escapeHtml(title)}</title>
-${socialMetadata ? `${socialMetadata}\n` : ''}${siteIconLinks(inputs)}
+${socialMetadata ? `${socialMetadata}\n` : ''}${alternateLinks ? `${alternateLinks}\n` : ''}${siteIconLinks(inputs)}
   <link rel="stylesheet" href="${escapeHtml(productionPath(inputs, 'assets/styles.css'))}">${fontSizeScript}
 </head>`;
+}
+
+function productionHreflangLinks(inputs, currentPath, alternatePath) {
+  const locale = currentPath.startsWith('/en/') ? 'en' : 'ja';
+  const otherLocale = alternateLocale(locale);
+  return `  <link rel="alternate" hreflang="${locale}" href="${escapeHtml(absoluteSiteUrl(inputs.siteUrl, currentPath))}">
+  <link rel="alternate" hreflang="${otherLocale}" href="${escapeHtml(absoluteSiteUrl(inputs.siteUrl, alternatePath))}">`;
+}
+
+function localizedPageTitle(locale, parts) {
+  return parts.join(locale === 'ja' ? '｜' : ' | ');
 }
 
 function productionPageShell({
@@ -700,15 +721,14 @@ function productionPageShell({
   navigation,
   ui,
   title,
-  documentTitle,
   description,
   pagePath,
   alternatePath,
-  mainContent
+  mainContent,
+  regionSlug
 }) {
-  const pageTitle = `${title}｜${navigation.site.site_name}`;
   const socialMetadata = productionSocialMetaTags(inputs, {
-    title: pageTitle,
+    title,
     description,
     pageUrl: absoluteSiteUrl(inputs.siteUrl, pagePath),
     siteName: navigation.site.site_name,
@@ -716,31 +736,36 @@ function productionPageShell({
   });
   return `<!doctype html>
 <html lang="${navigation.locale}" data-text-size="standard">
-${productionHead({ inputs, title: documentTitle ?? pageTitle, socialMetadata })}
+${productionHead({
+  inputs,
+  title,
+  socialMetadata,
+  alternateLinks: productionHreflangLinks(inputs, pagePath, alternatePath)
+})}
 <body>
   <a class="skip-link" href="#main-content">${escapeHtml(ui.skip_link)}</a>${productionHeader(inputs, navigation, ui, alternatePath)}
   <div class="page">
     <main id="main-content">
 ${mainContent}${commonDetails(navigation.site, ui)}
     </main>
-  </div>${productionFooter(inputs, navigation, ui)}
+  </div>${productionFooter(inputs, navigation, ui, regionSlug)}
 </body>
 </html>
 `;
 }
 
-function productionHomePage(inputs, navigation, ui) {
+function productionNationalPage(inputs, navigation, ui) {
   const locale = navigation.locale;
   const siteIdentity =
     locale === 'ja'
       ? `      <p><strong>${escapeHtml(navigation.site.site_name)}</strong>｜${escapeHtml(navigation.site.subtitle)}</p>
 `
       : '';
-  const sectionItems = navigation.sections
+  const regionItems = navigation.regions
     .map(
-      (section) => `        <li>
-          <a class="section-link" href="${escapeHtml(productionPath(inputs, `${locale}/sections/${section.anchor_id}/`))}">
-            <strong>${escapeHtml(section.title)}</strong>${section.short_description ? `\n            <span>${escapeHtml(section.short_description)}</span>` : ''}
+      (region) => `        <li>
+          <a class="section-link" href="${escapeHtml(productionPath(inputs, region.path))}">
+            <strong>${escapeHtml(region.navigation_label)}</strong>${region.scope_note ? `\n            <span>${escapeHtml(region.scope_note)}</span>` : ''}
           </a>
         </li>`
     )
@@ -748,26 +773,21 @@ function productionHomePage(inputs, navigation, ui) {
   const content = `${siteIdentity}      <h1>${escapeHtml(ui.pages.home_heading)}</h1>
       <p>${escapeHtml(navigation.site.short_description)}</p>
       <p>${escapeHtml(navigation.site.purpose)}</p>
-      <section aria-labelledby="sections-heading">
-        <h2 id="sections-heading">${escapeHtml(ui.pages.sections_heading)}</h2>
-        <p>${escapeHtml(ui.pages.sections_intro)}</p>
+      <section aria-labelledby="regions-heading">
+        <h2 id="regions-heading">${escapeHtml(ui.pages.regions_heading)}</h2>
+        <p>${escapeHtml(ui.pages.regions_intro)}</p>
         <ul class="section-list">
-${sectionItems}
+${regionItems}
         </ul>
-      </section>
-      <a class="primary-link" href="${escapeHtml(productionPath(inputs, `${locale}/organizations/`))}">${escapeHtml(ui.pages.organizations_link)}</a>`;
+      </section>`;
   return productionPageShell({
     inputs,
     navigation,
     ui,
-    title: ui.pages.home_title,
-    documentTitle:
-      navigation.locale === 'ja'
-        ? `${navigation.site.site_name}｜${navigation.site.subtitle}`
-        : undefined,
+    title: localizedPageTitle(locale, [navigation.site.site_name, navigation.site.subtitle]),
     description: navigation.site.short_description,
-    pagePath: `${locale}/`,
-    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/`),
+    pagePath: nationalPath(locale),
+    alternatePath: nationalPath(alternateLocale(locale)),
     mainContent: content
   });
 }
@@ -869,35 +889,75 @@ ${links
       </details>`;
 }
 
-function productionSectionPage(inputs, navigation, ui, section) {
+function productionRegionPage(inputs, navigation, ui) {
   const locale = navigation.locale;
-  const homePath = productionPath(inputs, `${locale}/`);
-  const cards =
-    section.cards.length > 0
-      ? section.cards.map((card) => renderProductionCard(card, locale, ui)).join('\n')
-      : `      <p class="note">${escapeHtml(ui.pages.empty_section)}</p>`;
-  const content = `      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.section_back)}</a>
-      <h1>${escapeHtml(section.title)}</h1>${section.short_description ? `\n      <p>${escapeHtml(section.short_description)}</p>` : ''}
-      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
-${cards}
-      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.section_back)}</a>`;
+  const region = navigation.region;
+  const sectionItems = navigation.sections
+    .map(
+      (section) => `        <li>
+          <a class="section-link" href="${escapeHtml(productionPath(inputs, regionSectionPath(locale, region.region_slug, section.anchor_id)))}">
+            <strong>${escapeHtml(section.title)}</strong>${section.short_description ? `\n            <span>${escapeHtml(section.short_description)}</span>` : ''}
+          </a>
+        </li>`
+    )
+    .join('\n');
+  const content = `      <a class="back-link" href="${escapeHtml(productionPath(inputs, nationalPath(locale)))}">${escapeHtml(ui.pages.national_home_link)}</a>
+      <h1>${escapeHtml(region.region_name)}</h1>${region.scope_note ? `\n      <p>${escapeHtml(region.scope_note)}</p>` : ''}
+      <p>${escapeHtml(navigation.site.purpose)}</p>
+      <section aria-labelledby="sections-heading">
+        <h2 id="sections-heading">${escapeHtml(ui.pages.sections_heading)}</h2>
+        <p>${escapeHtml(ui.pages.sections_intro)}</p>
+        <ul class="section-list">
+${sectionItems}
+        </ul>
+      </section>
+      <a class="primary-link" href="${escapeHtml(productionPath(inputs, regionOrganizationsPath(locale, region.region_slug)))}">${escapeHtml(ui.pages.organizations_link)}</a>`;
   return productionPageShell({
     inputs,
     navigation,
     ui,
-    title: section.title,
-    description: section.short_description,
-    pagePath: `${locale}/sections/${section.anchor_id}/`,
-    alternatePath: productionPath(
-      inputs,
-      `${alternateLocale(locale)}/sections/${section.anchor_id}/`
-    ),
-    mainContent: content
+    title: localizedPageTitle(locale, [region.region_name, navigation.site.site_name]),
+    description: region.scope_note,
+    pagePath: regionPath(locale, region.region_slug),
+    alternatePath: regionPath(alternateLocale(locale), region.region_slug),
+    mainContent: content,
+    regionSlug: region.region_slug
   });
 }
 
-function productionOrganizationsPage(inputs, navigation, ui) {
+function productionRegionSectionPage(inputs, navigation, ui, section) {
   const locale = navigation.locale;
+  const slug = navigation.region.region_slug;
+  const homePath = productionPath(inputs, regionPath(locale, slug));
+  const cards =
+    section.cards.length > 0
+      ? section.cards.map((card) => renderProductionCard(card, locale, ui)).join('\n')
+      : `      <p class="note">${escapeHtml(ui.pages.empty_section)}</p>`;
+  const content = `      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.region_back)}</a>
+      <h1>${escapeHtml(section.title)}</h1>${section.short_description ? `\n      <p>${escapeHtml(section.short_description)}</p>` : ''}
+      <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
+${cards}
+      <a class="back-link" href="${escapeHtml(homePath)}">${escapeHtml(ui.pages.region_back)}</a>`;
+  return productionPageShell({
+    inputs,
+    navigation,
+    ui,
+    title: localizedPageTitle(locale, [
+      section.title,
+      navigation.region.region_name,
+      navigation.site.site_name
+    ]),
+    description: section.short_description,
+    pagePath: regionSectionPath(locale, slug, section.anchor_id),
+    alternatePath: regionSectionPath(alternateLocale(locale), slug, section.anchor_id),
+    mainContent: content,
+    regionSlug: slug
+  });
+}
+
+function productionRegionOrganizationsPage(inputs, navigation, ui) {
+  const locale = navigation.locale;
+  const slug = navigation.region.region_slug;
   const organizations = aggregateOrganizations(navigation)
     .map(({ organization, regions, destinations }) => {
       const fallback =
@@ -941,7 +1001,8 @@ ${entries
       </article>`;
     })
     .join('\n');
-  const content = `      <h1>${escapeHtml(ui.pages.organizations_title)}</h1>
+  const content = `      <a class="back-link" href="${escapeHtml(productionPath(inputs, regionPath(locale, slug)))}">${escapeHtml(ui.pages.region_back)}</a>
+      <h1>${escapeHtml(ui.pages.organizations_title)}</h1>
       <p>${escapeHtml(ui.pages.organizations_intro)}</p>
       <p class="note">${escapeHtml(ui.pages.situation_notice)}</p>
 ${organizations}`;
@@ -949,11 +1010,16 @@ ${organizations}`;
     inputs,
     navigation,
     ui,
-    title: ui.pages.organizations_title,
+    title: localizedPageTitle(locale, [
+      ui.pages.organizations_title,
+      navigation.region.region_name,
+      navigation.site.site_name
+    ]),
     description: ui.pages.organizations_intro,
-    pagePath: `${locale}/organizations/`,
-    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/organizations/`),
-    mainContent: content
+    pagePath: regionOrganizationsPath(locale, slug),
+    alternatePath: regionOrganizationsPath(alternateLocale(locale), slug),
+    mainContent: content,
+    regionSlug: slug
   });
 }
 
@@ -990,10 +1056,10 @@ ${privacySection(privacy.revision_heading, privacy.revision_items)}`;
     inputs,
     navigation,
     ui,
-    title: ui.pages.privacy_title,
+    title: localizedPageTitle(locale, [ui.pages.privacy_title, navigation.site.site_name]),
     description: ui.social.privacy_description,
-    pagePath: `${locale}/privacy/`,
-    alternatePath: productionPath(inputs, `${alternateLocale(locale)}/privacy/`),
+    pagePath: privacyPath(locale),
+    alternatePath: privacyPath(alternateLocale(locale)),
     mainContent: content
   });
 }
@@ -1041,8 +1107,8 @@ ${productionHead({ inputs, title: documentTitle, socialMetadata })}
       <p class="note">${escapeHtml(japaneseRoot.unofficial)}</p>
       <p class="note" lang="en">${escapeHtml(englishRoot.unofficial)}</p>
       <ul class="section-list">
-        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja"><strong>${escapeHtml(japaneseRoot.language_link)}</strong></a></li>
-        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en"><strong>${escapeHtml(englishRoot.language_link)}</strong></a></li>
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, nationalPath('ja')))}" hreflang="ja" lang="ja"><strong>${escapeHtml(japaneseRoot.language_link)}</strong></a></li>
+        <li><a class="section-link" href="${escapeHtml(productionPath(inputs, nationalPath('en')))}" hreflang="en" lang="en"><strong>${escapeHtml(englishRoot.language_link)}</strong></a></li>
       </ul>
     </main>
   </div>
@@ -1050,13 +1116,13 @@ ${productionHead({ inputs, title: documentTitle, socialMetadata })}
     <div class="footer-inner">
       <nav aria-label="${escapeHtml(japaneseRoot.footer_navigation_label)}">
         <ul class="footer-links">
-          <li><a href="${escapeHtml(productionPath(inputs, 'ja/privacy/'))}">${escapeHtml(japaneseUi.footer.privacy)}</a></li>
+          <li><a href="${escapeHtml(productionPath(inputs, privacyPath('ja')))}">${escapeHtml(japaneseUi.footer.privacy)}</a></li>
           <li>${footerContactAnchor(japaneseUi)}</li>
         </ul>
       </nav>
       <nav lang="en" aria-label="${escapeHtml(englishRoot.footer_navigation_label)}">
         <ul class="footer-links">
-          <li><a href="${escapeHtml(productionPath(inputs, 'en/privacy/'))}">${escapeHtml(englishUi.footer.privacy)}</a></li>
+          <li><a href="${escapeHtml(productionPath(inputs, privacyPath('en')))}">${escapeHtml(englishUi.footer.privacy)}</a></li>
           <li>${footerContactAnchor(englishUi)}</li>
         </ul>
       </nav>
@@ -1091,9 +1157,9 @@ ${productionHead({
       <p>${escapeHtml(notFound.body_ja)}</p>
       <p lang="en">${escapeHtml(notFound.body_en)}</p>
       <ul>
-        <li><a href="${escapeHtml(productionPath(inputs))}">${escapeHtml(notFound.root_link)}</a></li>
-        <li><a href="${escapeHtml(productionPath(inputs, 'ja/'))}" hreflang="ja" lang="ja">${escapeHtml(notFound.japanese_link)}</a></li>
-        <li><a href="${escapeHtml(productionPath(inputs, 'en/'))}" hreflang="en" lang="en">${escapeHtml(notFound.english_link)}</a></li>
+        <li><a href="${escapeHtml(productionPath(inputs, publicRootPath()))}">${escapeHtml(notFound.root_link)}</a></li>
+        <li><a href="${escapeHtml(productionPath(inputs, nationalPath('ja')))}" hreflang="ja" lang="ja">${escapeHtml(notFound.japanese_link)}</a></li>
+        <li><a href="${escapeHtml(productionPath(inputs, nationalPath('en')))}" hreflang="en" lang="en">${escapeHtml(notFound.english_link)}</a></li>
       </ul>
     </main>
   </div>
@@ -1103,18 +1169,7 @@ ${productionHead({
 }
 
 export function productionSitemapUrls(inputs) {
-  const urls = [absoluteSiteUrl(inputs.siteUrl)];
-  for (const locale of SITE_LOCALES) urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/`));
-  for (const locale of SITE_LOCALES) {
-    for (const section of inputs.navigations[locale].sections) {
-      urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/sections/${section.anchor_id}/`));
-    }
-  }
-  for (const locale of SITE_LOCALES)
-    urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/organizations/`));
-  for (const locale of SITE_LOCALES)
-    urls.push(absoluteSiteUrl(inputs.siteUrl, `${locale}/privacy/`));
-  return urls;
+  return regionalSitemapUrls(inputs);
 }
 
 export function regionalSitemapUrls(inputs) {
@@ -1145,7 +1200,7 @@ ${entries}
 `;
 }
 
-function expectedProductionSiteArtifactPaths(navigations) {
+function expectedProductionSiteArtifactPaths(navigations, regionalNavigations = {}) {
   const paths = new Set([
     'index.html',
     '404.html',
@@ -1159,10 +1214,14 @@ function expectedProductionSiteArtifactPaths(navigations) {
   ]);
   for (const locale of SITE_LOCALES) {
     paths.add(`${locale}/index.html`);
-    paths.add(`${locale}/organizations/index.html`);
     paths.add(`${locale}/privacy/index.html`);
-    for (const section of navigations[locale].sections)
-      paths.add(`${locale}/sections/${section.anchor_id}/index.html`);
+    for (const navigation of Object.values(regionalNavigations[locale] ?? {})) {
+      const slug = navigation.region.region_slug;
+      paths.add(`${locale}/regions/${slug}/index.html`);
+      paths.add(`${locale}/regions/${slug}/organizations/index.html`);
+      for (const section of navigation.sections)
+        paths.add(`${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`);
+    }
   }
   return [...paths].sort();
 }
@@ -1173,19 +1232,26 @@ function buildProductionSiteArtifacts(inputs) {
   artifacts.set('404.html', productionNotFoundPage(inputs));
   artifacts.set('sitemap.xml', productionSitemap(inputs));
   for (const locale of SITE_LOCALES) {
-    const navigation = inputs.navigations[locale];
+    const national = inputs.navigations[locale];
     const ui = inputs.uiLocales[locale];
-    artifacts.set(`${locale}/index.html`, productionHomePage(inputs, navigation, ui));
-    artifacts.set(
-      `${locale}/organizations/index.html`,
-      productionOrganizationsPage(inputs, navigation, ui)
-    );
-    artifacts.set(`${locale}/privacy/index.html`, productionPrivacyPage(inputs, navigation, ui));
-    for (const section of navigation.sections) {
+    artifacts.set(`${locale}/index.html`, productionNationalPage(inputs, national, ui));
+    artifacts.set(`${locale}/privacy/index.html`, productionPrivacyPage(inputs, national, ui));
+    for (const navigation of Object.values(inputs.regionalNavigations[locale] ?? {})) {
+      const slug = navigation.region.region_slug;
       artifacts.set(
-        `${locale}/sections/${section.anchor_id}/index.html`,
-        productionSectionPage(inputs, navigation, ui, section)
+        `${locale}/regions/${slug}/index.html`,
+        productionRegionPage(inputs, navigation, ui)
       );
+      artifacts.set(
+        `${locale}/regions/${slug}/organizations/index.html`,
+        productionRegionOrganizationsPage(inputs, navigation, ui)
+      );
+      for (const section of navigation.sections) {
+        artifacts.set(
+          `${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`,
+          productionRegionSectionPage(inputs, navigation, ui, section)
+        );
+      }
     }
   }
   return artifacts;
@@ -1193,7 +1259,7 @@ function buildProductionSiteArtifacts(inputs) {
 
 export function expectedSiteArtifactPaths(navigations, mode = 'preview', regionalNavigations = {}) {
   return mode === 'production'
-    ? expectedProductionSiteArtifactPaths(navigations)
+    ? expectedProductionSiteArtifactPaths(navigations, regionalNavigations)
     : expectedPreviewSiteArtifactPaths(navigations, regionalNavigations);
 }
 

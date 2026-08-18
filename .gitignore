@@ -110,6 +110,14 @@ dist/public-data/preview/en/regions/*/*
 !dist/public-data/preview/en/regions/*/navigation.json
 !dist/public-data/production/ja/navigation.json
 !dist/public-data/production/en/navigation.json
+!dist/public-data/production/ja/regions/
+dist/public-data/production/ja/regions/*/*
+!dist/public-data/production/ja/regions/*/
+!dist/public-data/production/ja/regions/*/navigation.json
+!dist/public-data/production/en/regions/
+dist/public-data/production/en/regions/*/*
+!dist/public-data/production/en/regions/*/
+!dist/public-data/production/en/regions/*/navigation.json
 !dist/site/
 dist/site/*
 !dist/site/preview/

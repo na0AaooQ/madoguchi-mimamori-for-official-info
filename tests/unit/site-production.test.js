@@ -23,6 +23,10 @@ function countLiteral(source, value) {
   return source.split(value).length - 1;
 }
 
+function regionalNavigation(locale) {
+  return inputs.regionalNavigations[locale].kumamoto;
+}
+
 function anchorTag(source, href) {
   const escaped = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return source.match(new RegExp(`<a\\b[^>]*href="${escaped}"[^>]*>`))?.[0];
@@ -35,11 +39,14 @@ test('builds the deterministic production site from production navigation only',
   cloned.assets['apple-touch-icon.png'] = Buffer.from(cloned.assets['apple-touch-icon.png']);
   cloned.assets['ogp-image.png'] = Buffer.from(cloned.assets['ogp-image.png']);
   const second = buildSiteArtifacts(cloned);
-  assert.equal(first.size, expectedSiteArtifactPaths(inputs.navigations, 'production').length);
+  assert.equal(
+    first.size,
+    expectedSiteArtifactPaths(inputs.navigations, 'production', inputs.regionalNavigations).length
+  );
   assert.deepEqual([...first], [...second]);
   assert.deepEqual(
     [...first.keys()].sort(),
-    expectedSiteArtifactPaths(inputs.navigations, 'production')
+    expectedSiteArtifactPaths(inputs.navigations, 'production', inputs.regionalNavigations)
   );
   for (const file of ['index.html', '404.html', 'sitemap.xml']) assert.ok(first.has(file));
   assert.equal(Buffer.isBuffer(first.get('ogp-image.png')), true);
@@ -49,10 +56,10 @@ test('builds the deterministic production site from production navigation only',
     /\.production-root \.root-language-heading/
   );
   for (const locale of ['ja', 'en']) {
-    assert.equal(inputs.navigations[locale].sections.length, 5);
-    assert.ok(first.has(`${locale}/sections/life-safety-medical/index.html`));
-    assert.ok(first.has(`${locale}/sections/roads-transportation/index.html`));
-    assert.ok(first.has(`${locale}/sections/support-recovery/index.html`));
+    assert.equal(regionalNavigation(locale).sections.length, 5);
+    assert.ok(first.has(`${locale}/regions/kumamoto/sections/life-safety-medical/index.html`));
+    assert.ok(first.has(`${locale}/regions/kumamoto/sections/roads-transportation/index.html`));
+    assert.ok(first.has(`${locale}/regions/kumamoto/sections/support-recovery/index.html`));
   }
 });
 
@@ -62,8 +69,8 @@ test('adds one standard GA4 Google tag to every production HTML and none to prev
   const productionHtml = [...buildSiteArtifacts(inputs)].filter(([file]) => file.endsWith('.html'));
   assert.equal(
     productionHtml.length,
-    expectedSiteArtifactPaths(inputs.navigations, 'production').filter((file) =>
-      file.endsWith('.html')
+    expectedSiteArtifactPaths(inputs.navigations, 'production', inputs.regionalNavigations).filter(
+      (file) => file.endsWith('.html')
     ).length
   );
   for (const [file, source] of productionHtml) {
@@ -137,7 +144,7 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
   ];
 
   for (const locale of ['ja', 'en']) {
-    const navigation = inputs.navigations[locale];
+    const navigation = regionalNavigation(locale);
     assert.equal(navigation.sections.length, 5);
     const section = navigation.sections.find(({ id }) => id === 'section-roads-transportation');
     assert.ok(section);
@@ -161,7 +168,7 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
     );
   }
 
-  const englishSection = inputs.navigations.en.sections.find(
+  const englishSection = regionalNavigation('en').sections.find(
     ({ id }) => id === 'section-roads-transportation'
   );
   const [prefecture, jartic] = englishSection.cards[0].links;
@@ -175,7 +182,7 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
     'Some information at the destination may be available only in Japanese.'
   );
   assert.match(
-    buildSiteArtifacts(inputs).get('en/sections/roads-transportation/index.html'),
+    buildSiteArtifacts(inputs).get('en/regions/kumamoto/sections/roads-transportation/index.html'),
     /href="https:\/\/portal\.bousai\.pref\.kumamoto\.jp\/\?p=traffic&amp;l=99-0&amp;ll=32\.63820000000001%2C130\.77610000000007&amp;z=9"/
   );
   assert.equal(jartic.destination.source_type, 'official-homepage');
@@ -202,7 +209,9 @@ test('publishes the BL-006-B road-information card with two ordered primary dest
     ['ja']
   );
 
-  const organizationsPage = buildSiteArtifacts(inputs).get('en/organizations/index.html');
+  const organizationsPage = buildSiteArtifacts(inputs).get(
+    'en/regions/kumamoto/organizations/index.html'
+  );
   assert.match(organizationsPage, /Japan Road Traffic Information Center \(JARTIC\)/);
   assert.match(organizationsPage, /Kumamoto Prefecture Road Traffic Restriction Information/);
   assert.match(organizationsPage, /Japan Road Traffic Information Center \(JARTIC\) \(Japanese\)/);
@@ -242,7 +251,7 @@ test('publishes the BL-006-C residential disaster damage certificate card with o
   };
 
   for (const locale of ['ja', 'en']) {
-    const section = inputs.navigations[locale].sections.find(
+    const section = regionalNavigation(locale).sections.find(
       ({ id }) => id === 'section-support-recovery'
     );
     assert.ok(section);
@@ -291,7 +300,7 @@ test('publishes the BL-006-C relief donation card with one locale-specific disas
   };
 
   for (const locale of ['ja', 'en']) {
-    const section = inputs.navigations[locale].sections.find(
+    const section = regionalNavigation(locale).sections.find(
       ({ id }) => id === 'section-support-recovery'
     );
     assert.ok(section);
@@ -337,19 +346,19 @@ test('publishes the BL-006-C relief donation card with one locale-specific disas
     return html.slice(start, end);
   };
   const japaneseReliefHtml = cardHtml(
-    artifacts.get('ja/sections/support-recovery/index.html'),
+    artifacts.get('ja/regions/kumamoto/sections/support-recovery/index.html'),
     '熊本県が案内する義援金を確認する'
   );
   assert.match(japaneseReliefHtml, /<dd>災害時<\/dd>/);
   assert.doesNotMatch(japaneseReliefHtml, /平常時/);
   const englishReliefHtml = cardHtml(
-    artifacts.get('en/sections/support-recovery/index.html'),
+    artifacts.get('en/regions/kumamoto/sections/support-recovery/index.html'),
     'Check Kumamoto Prefecture relief donation information'
   );
   assert.match(englishReliefHtml, /<dd>Disaster situations<\/dd>/);
   assert.doesNotMatch(englishReliefHtml, /Normal and disaster situations/);
 
-  const japaneseOrganizations = artifacts.get('ja/organizations/index.html');
+  const japaneseOrganizations = artifacts.get('ja/regions/kumamoto/organizations/index.html');
   assert.match(japaneseOrganizations, /<dt>対象地域<\/dt>\s*<dd>熊本県全域<\/dd>/);
   assert.doesNotMatch(japaneseOrganizations, /熊本県全域 \/ 熊本県/);
 });
@@ -404,7 +413,7 @@ test('publishes BL-006-C third and BL-006-A first release units with safe biling
   const artifacts = buildSiteArtifacts(inputs);
 
   for (const locale of ['ja', 'en']) {
-    const navigation = inputs.navigations[locale];
+    const navigation = regionalNavigation(locale);
     assert.equal(navigation.sections.length, 5);
 
     const lifeSafety = navigation.sections.find(({ id }) => id === 'section-life-safety-medical');
@@ -413,7 +422,7 @@ test('publishes BL-006-C third and BL-006-A first release units with safe biling
       lifeSafety.cards.map(({ id }) => id),
       [medicalCardId]
     );
-    assert.ok(artifacts.has(`${locale}/sections/life-safety-medical/index.html`));
+    assert.ok(artifacts.has(`${locale}/regions/kumamoto/sections/life-safety-medical/index.html`));
 
     const supportRecovery = navigation.sections.find(({ id }) => id === 'section-support-recovery');
     assert.ok(supportRecovery);
@@ -505,7 +514,7 @@ test('publishes BL-006-C third and BL-006-A first release units with safe biling
     }
   }
 
-  const modEnglishHtml = artifacts.get('en/sections/support-recovery/index.html');
+  const modEnglishHtml = artifacts.get('en/regions/kumamoto/sections/support-recovery/index.html');
   assert.ok(modEnglishHtml.includes('The destination is available in Japanese.'));
   assert.doesNotMatch(modEnglishHtml, /入浴支援|給水|休憩場所/);
   for (const [file, source] of artifacts) {
@@ -522,7 +531,10 @@ test('generates the agreed common UI and accessible bilingual production root', 
   assert.match(root, /<html lang="ja" data-text-size="standard">/);
   assert.match(root, /<body class="production-root">/);
   assert.equal([...root.matchAll(/<h1(?:\s|>)/g)].length, 1);
-  assert.match(root, /<title>まどぐちみまもり｜熊本県・熊本市の公式情報案内｜言語を選択<\/title>/);
+  assert.match(
+    root,
+    /<title>まどぐちみまもり｜公的機関・関係団体の公式情報案内｜言語を選択<\/title>/
+  );
   assert.match(
     root,
     /<a class="skip-link" href="#main-content">本文へ移動<span lang="en"> \/ Skip to main content<\/span><\/a>/
@@ -549,11 +561,11 @@ test('generates the agreed common UI and accessible bilingual production root', 
   );
   assert.match(
     root,
-    /<p class="root-description-ja">熊本県・熊本市に関係する公的機関・関係団体自身の公式情報へ進むための案内サイトです。<\/p>/
+    /<p class="root-description-ja">公開中の地域について、公的機関・関係団体自身の公式情報へ進むための案内サイトです。<\/p>/
   );
   assert.match(
     root,
-    /<p lang="en">A guide to official information published by public institutions and related organizations serving Kumamoto Prefecture and Kumamoto City\.<\/p>/
+    /<p lang="en">A guide to official information published by public institutions and related organizations for the regions currently covered by this site\.<\/p>/
   );
   assert.match(root, /<p class="note">行政機関が運営する公式サイトではありません。<\/p>/);
   assert.match(root, /<p class="note" lang="en">This is not an official government website\.<\/p>/);
@@ -664,7 +676,7 @@ test('keeps the approved production home titles, visible site identity, and h1 c
   const english = artifacts.get('en/index.html');
   const site = inputs.navigations.ja.site;
 
-  assert.match(japanese, /<title>まどぐちみまもり｜熊本県・熊本市の公式情報案内<\/title>/);
+  assert.match(japanese, /<title>まどぐちみまもり｜公的機関・関係団体の公式情報案内<\/title>/);
   assert.match(
     japanese,
     new RegExp(
@@ -674,7 +686,10 @@ test('keeps the approved production home titles, visible site identity, and h1 c
   assert.match(japanese, /<h1>確認したい公式情報を探す<\/h1>/);
   assert.equal([...japanese.matchAll(/<h1(?:\s|>)/g)].length, 1);
 
-  assert.match(english, /<title>Home｜Madoguchi Mimamori<\/title>/);
+  assert.match(
+    english,
+    /<title>Madoguchi Mimamori \| Guide to Official Information from Public Institutions and Related Organizations<\/title>/
+  );
   assert.match(english, /<h1>Find official information to check<\/h1>/);
   assert.equal([...english.matchAll(/<h1(?:\s|>)/g)].length, 1);
   assert.doesNotMatch(
@@ -803,7 +818,9 @@ test('uses language-specific contacts and safe clickable external links', () => 
   assert.doesNotMatch(japanese, /\/en\/contact\.html/);
   assert.match(english, /href="https:\/\/portfolio\.na0aaooq\.com\/en\/contact\.html"/);
   assert.doesNotMatch(english, /href="https:\/\/portfolio\.na0aaooq\.com\/contact\.html"/);
-  const section = artifacts.get('ja/sections/public-institutions-disaster/index.html');
+  const section = artifacts.get(
+    'ja/regions/kumamoto/sections/public-institutions-disaster/index.html'
+  );
   assert.match(section, /href="https:\/\/portal\.bousai\.pref\.kumamoto\.jp\/"/);
   for (const [file, source] of artifacts) {
     if (!file.endsWith('.html')) continue;
@@ -903,7 +920,7 @@ test('keeps preview, localized production pages, 404, and sitemap scope unchange
 
 test('generates the canonical sitemap in deterministic order', () => {
   const urls = productionSitemapUrls(inputs);
-  const expectedLength = 1 + ['ja', 'en'].length * (3 + inputs.navigations.ja.sections.length);
+  const expectedLength = 1 + ['ja', 'en'].length * (4 + regionalNavigation('ja').sections.length);
   assert.equal(urls.length, expectedLength);
   assert.equal(urls[0], 'https://madoguchi.kokoromimamori.na0aaooq.com/');
   assert.ok(urls.every((url) => url.startsWith('https://')));

@@ -1,6 +1,6 @@
 # サイト構成
 
-## BL-009工程Aの全国版URL基盤
+## BL-009工程A・Bの全国版URL基盤と熊本production移行
 
 `/`は共通の言語選択入口、`/ja/`と`/en/`は地域選択を行う全国トップです。全国トップに地域固有カードを直接並べず、公開地域一覧から地域ページへ進みます。
 
@@ -17,7 +17,7 @@
 
 都道府県をルーティング単位とし、市町村は地域ページ内部のカードの対象ラベルで表します。市町村個別URL、カード個別URL、地域横断service-area URLは工程Aでは作りません。分野URLは既存`sections.anchor_id`を使用し、新しいsection slugは追加しません。
 
-旧地域なしURLである`/{locale}/sections/{anchor_id}/`と`/{locale}/organizations/`は、新しい基盤では生成・内部リンク・sitemap掲載・転送HTMLを行いません。工程Aのpreviewとfixtureでこの不在を検証し、既存productionの正式切替は工程Bへ残します。
+旧地域なしURLである`/{locale}/sections/{anchor_id}/`と`/{locale}/organizations/`は、新しい基盤では生成・内部リンク・sitemap掲載・転送HTMLを行いません。previewとproductionの両方でこの不在を検証し、旧URLからの転送も行いません。
 
 日英切替は同じregion、page type、`anchor_id`を維持し、hreflangは実在する同一論理ページだけを相互参照します。canonicalと`x-default`は追加しません。
 
@@ -31,11 +31,11 @@
 
 現在のproductionは、カスタムドメイン直下に次を生成します。
 
-| 配置   | 現在実装済みの内容                                                                  |
-| ------ | ----------------------------------------------------------------------------------- |
-| ルート | 言語選択ページ、`404.html`、`sitemap.xml`                                           |
-| 日本語 | トップ、publishedセクションの分野別ページ、全団体・案内先一覧、プライバシーポリシー |
-| 英語   | トップ、publishedセクションの分野別ページ、全団体・案内先一覧、プライバシーポリシー |
+| 配置   | 現在実装済みの内容                                                                    |
+| ------ | ------------------------------------------------------------------------------------- |
+| ルート | 言語選択ページ、`404.html`、`sitemap.xml`                                             |
+| 日本語 | 全国トップ、熊本県地域トップ・published分野別ページ・全団体・案内先一覧、プライバシー |
+| 英語   | 全国トップ、熊本県地域トップ・published分野別ページ・全団体・案内先一覧、プライバシー |
 
 日本語は`/ja/`、英語は`/en/`へ対称に配置します。分野別ページはpublishedのセクションから動的に生成し、現在は5分野すべてが対象です。掲載方針、確認・更新履歴、サイト内問い合わせの独立HTMLページは未実装です。サイトの目的、利用上の注意、免責事項はトップページなどに組み込み、問い合わせは言語別の外部ページへ案内します。
 
@@ -45,9 +45,9 @@
 
 OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だけBufferとして読み込み、`dist/site/production/ogp-image.png`へバイト列を変更せず生成します。previewでは入力として読み込まず、成果物にも生成しません。正式画像のSHA-256は`7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84`です。
 
-共通画像1枚を、sitemapと同じproduction通常ページ全17ページで使用します。各ページにOpen Graph 10項目とX向け6項目を1件ずつ設定し、`title`、`description`、`og:url`はページごとの既存データと正式URL設定から生成します。ルートは日英共通値、日本語・英語ページは対応するLocaleと公開ナビゲーションを使用します。productionの`404.html`とpreview全HTMLは対象外です。
+共通画像1枚を、sitemapと同じproduction通常ページ全19ページで使用します。各ページにOpen Graph 10項目とX向け6項目を1件ずつ設定し、`title`、`description`、`og:url`はページごとの地域成果物と正式URL設定から生成します。ルートは日英共通値、日本語・英語ページは対応するLocaleと公開ナビゲーションを使用します。productionの`404.html`とpreview全HTMLは対象外です。
 
-リポジトリ内の成果物数はproduction 25件、preview 21件で、productionのHTMLは通常17ページと404の計18件です。sitemapは通常ページと一致する17 URLです。GitHub Pagesへの反映は手動デプロイ後です。OGP画像はHTMLではないためsitemapへ追加しません。
+リポジトリ内の成果物数はproduction 27件、preview 21件で、productionのHTMLは通常19ページと404の計20件です。sitemapは通常ページと一致する19 URLです。GitHub Pagesへの反映は手動デプロイ後です。OGP画像はHTMLではないためsitemapへ追加しません。
 
 ## productionルート
 
@@ -57,9 +57,9 @@ OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だ�
 
 本文上部には、日本語Localeの`site_name`と`subtitle`から生成した「まどぐちみまもり｜熊本県・熊本市の公式情報案内」を通常の本文として表示します。ルートは引き続き日本語・英語を選択する共通入口であり、言語選択の`h1`は変更しません。
 
-`/ja/`と`/en/`以下の現在のページ構造はBL-004で変更しません。previewにはルートを設けず、`/preview/ja/`と`/preview/en/`から始まる従来構造を維持します。
+productionの`/ja/`と`/en/`は全国トップとし、地域ページを`/{locale}/regions/{region_slug}/`以下へ配置します。previewにはルートを設けず、`/preview/ja/`と`/preview/en/`から始まる従来構造を維持します。
 
-将来は同一サイトを全国版へ拡張し、地域別URLへの移行を2県目追加前の別工程で設計します。現在仕様と将来構想の境界、正式ルートを共通入口として維持する決定は[ADR 0024](decisions/0024-expand-one-site-nationally-and-defer-regional-url-migration.md)を参照してください。
+同一サイトを全国版へ拡張する共通基盤と、既存熊本productionの地域別URL移行はBL-009工程A・Bで実装しました。現在仕様と将来構想の境界、正式ルートを共通入口として維持する決定は[ADR 0024](decisions/0024-expand-one-site-nationally-and-defer-regional-url-migration.md)を参照してください。
 
 ## トップページの導線
 
