@@ -78,31 +78,52 @@ function expectedPageMetadata(file) {
 
   const [, locale, rest] = /^(ja|en)\/(.*)index\.html$/.exec(file);
   const navigation = productionInputs.navigations[locale];
+  const regional = productionInputs.regionalNavigations[locale].kumamoto;
   const ui = productionInputs.uiLocales[locale];
   let title;
   let description;
   let relative;
+  let titleIncludesSite = true;
   if (rest === '') {
-    title = ui.pages.home_title;
+    title = [navigation.site.site_name, navigation.site.subtitle].join(
+      locale === 'ja' ? '｜' : ' | '
+    );
     description = navigation.site.short_description;
     relative = `${locale}/`;
-  } else if (rest === 'organizations/') {
+    titleIncludesSite = false;
+  } else if (rest === 'regions/kumamoto/') {
+    title = [regional.region.region_name, navigation.site.site_name].join(
+      locale === 'ja' ? '｜' : ' | '
+    );
+    description = regional.region.scope_note;
+    relative = `${locale}/regions/kumamoto/`;
+    titleIncludesSite = false;
+  } else if (rest === 'regions/kumamoto/organizations/') {
     title = ui.pages.organizations_title;
     description = ui.pages.organizations_intro;
-    relative = `${locale}/organizations/`;
+    title = [title, regional.region.region_name, navigation.site.site_name].join(
+      locale === 'ja' ? '｜' : ' | '
+    );
+    relative = `${locale}/regions/kumamoto/organizations/`;
+    titleIncludesSite = false;
   } else if (rest === 'privacy/') {
     title = ui.pages.privacy_title;
     description = ui.social.privacy_description;
     relative = `${locale}/privacy/`;
   } else {
-    const anchorId = /^sections\/([^/]+)\/$/.exec(rest)[1];
-    const section = navigation.sections.find(({ anchor_id: value }) => value === anchorId);
-    title = section.title;
+    const anchorId = /^regions\/kumamoto\/sections\/([^/]+)\/$/.exec(rest)[1];
+    const section = regional.sections.find(({ anchor_id: value }) => value === anchorId);
+    title = [section.title, regional.region.region_name, navigation.site.site_name].join(
+      locale === 'ja' ? '｜' : ' | '
+    );
     description = section.short_description;
-    relative = `${locale}/sections/${anchorId}/`;
+    relative = `${locale}/regions/kumamoto/sections/${anchorId}/`;
+    titleIncludesSite = false;
   }
   return {
-    title: `${title}｜${navigation.site.site_name}`,
+    title: titleIncludesSite
+      ? `${title}${locale === 'ja' ? '｜' : ' | '}${navigation.site.site_name}`
+      : title,
     description,
     url: `https://madoguchi.kokoromimamori.na0aaooq.com/${relative}`,
     siteName: navigation.site.site_name,
@@ -182,7 +203,11 @@ test('keeps preview and production 404 outside the social metadata scope', () =>
   const production = buildSiteArtifacts(productionInputs);
   assert.equal(
     production.size,
-    expectedSiteArtifactPaths(productionInputs.navigations, 'production').length
+    expectedSiteArtifactPaths(
+      productionInputs.navigations,
+      'production',
+      productionInputs.regionalNavigations
+    ).length
   );
   assert.deepEqual(socialMetadata(production.get('404.html')), []);
   assert.match(production.get('404.html'), /<meta name="robots" content="noindex">/);
@@ -278,7 +303,8 @@ test('site validation detects duplicate social metadata and a stale OGP artifact
   const root = await createSiteRepositoryCopy(t);
   const htmlPath = path.join(root, 'dist/site/production/ja/index.html');
   const html = await readFile(htmlPath, 'utf8');
-  const tag = '  <meta property="og:title" content="トップページ｜まどぐちみまもり">';
+  const tag =
+    '  <meta property="og:title" content="まどぐちみまもり｜公的機関・関係団体の公式情報案内">';
   await writeFile(htmlPath, html.replace(tag, `${tag}\n${tag}`));
   const imagePath = path.join(root, 'dist/site/production/ogp-image.png');
   const image = await readFile(imagePath);

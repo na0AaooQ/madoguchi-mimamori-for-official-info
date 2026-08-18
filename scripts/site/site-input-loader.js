@@ -4,7 +4,6 @@ import { TextDecoder } from 'node:util';
 
 import { createResult, sortResults } from '../validation/result.js';
 import {
-  loadPublicSchema,
   loadPublicSchemas,
   validatePublicArtifact
 } from '../publication/public-artifact-validator.js';
@@ -490,69 +489,93 @@ function validatePair(navigations, uiLocales, config, regionalNavigations = {}) 
       siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsite_idが一致しません。')
     );
   }
-  if (config.mode === 'preview') {
-    const jaRegions = Object.keys(regionalNavigations.ja ?? {}).sort();
-    const enRegions = Object.keys(regionalNavigations.en ?? {}).sort();
-    if (JSON.stringify(jaRegions) !== JSON.stringify(enRegions))
+  const nationalRegions = Object.fromEntries(
+    SITE_LOCALES.map((locale) => [
+      locale,
+      new Map((navigations[locale]?.regions ?? []).map((region) => [region.region_slug, region]))
+    ])
+  );
+  const jaNationalSlugs = [...nationalRegions.ja.keys()].sort();
+  const enNationalSlugs = [...nationalRegions.en.keys()].sort();
+  if (JSON.stringify(jaNationalSlugs) !== JSON.stringify(enNationalSlugs))
+    results.push(
+      siteError(
+        'SITE-E001',
+        `dist/public-data/${config.mode}`,
+        '日英の公開region一覧が一致しません。'
+      )
+    );
+  for (const slug of jaNationalSlugs) {
+    if (nationalRegions.ja.get(slug)?.region_id !== nationalRegions.en.get(slug)?.region_id)
       results.push(
         siteError(
           'SITE-E001',
           `dist/public-data/${config.mode}`,
-          '日英の公開region一覧が一致しません。'
+          `日英の全国region対応が一致しません: ${slug}`
         )
       );
-    for (const slug of jaRegions) {
-      const ja = regionalNavigations.ja[slug];
-      const en = regionalNavigations.en[slug];
+  }
+  for (const locale of SITE_LOCALES) {
+    for (const [slug, entry] of nationalRegions[locale]) {
+      const regional = regionalNavigations[locale]?.[slug];
       if (
-        ja?.region?.region_id !== en?.region?.region_id ||
-        ja?.region?.region_slug !== en?.region?.region_slug
+        !regional ||
+        regional.region?.region_id !== entry.region_id ||
+        regional.region?.region_slug !== slug ||
+        regional.region?.path !== entry.path ||
+        regional.generated_for_date !== navigations[locale]?.generated_for_date
       )
         results.push(
           siteError(
             'SITE-E001',
-            `dist/public-data/${config.mode}`,
-            `日英のregion対応が一致しません: ${slug}`
+            `dist/public-data/${config.mode}/${locale}/regions/${slug}/navigation.json`,
+            '全国トップと地域成果物のregion_id、region_slug、path、または基準日が一致しません。'
           )
         );
-      if ((ja?.sections?.length ?? -1) !== (en?.sections?.length ?? -2))
-        results.push(
-          siteError(
-            'SITE-E001',
-            `dist/public-data/${config.mode}`,
-            `日英の地域section件数が一致しません: ${slug}`
-          )
-        );
-      for (const [index, section] of (ja?.sections ?? []).entries()) {
-        const counterpart = en.sections[index];
-        if (section.id !== counterpart?.id || section.anchor_id !== counterpart?.anchor_id)
-          results.push(
-            siteError(
-              'SITE-E001',
-              `dist/public-data/${config.mode}`,
-              `日英の地域section対応が一致しません: ${slug}`
-            )
-          );
-      }
     }
-  } else if ((japanese.sections?.length ?? -1) !== (english.sections?.length ?? -2)) {
-    results.push(
-      siteError('SITE-E001', `dist/public-data/${config.mode}`, '日英のsection件数が一致しません。')
-    );
-    return results;
   }
-  if (config.mode !== 'preview') {
-    for (const [index, section] of japanese.sections.entries()) {
-      const counterpart = english.sections[index];
-      if (section.id !== counterpart.id || section.anchor_id !== counterpart.anchor_id) {
+  const jaRegions = Object.keys(regionalNavigations.ja ?? {}).sort();
+  const enRegions = Object.keys(regionalNavigations.en ?? {}).sort();
+  if (JSON.stringify(jaRegions) !== JSON.stringify(enRegions))
+    results.push(
+      siteError(
+        'SITE-E001',
+        `dist/public-data/${config.mode}`,
+        '日英の地域成果物一覧が一致しません。'
+      )
+    );
+  for (const slug of jaRegions) {
+    const ja = regionalNavigations.ja[slug];
+    const en = regionalNavigations.en[slug];
+    if (
+      ja?.region?.region_id !== en?.region?.region_id ||
+      ja?.region?.region_slug !== en?.region?.region_slug
+    )
+      results.push(
+        siteError(
+          'SITE-E001',
+          `dist/public-data/${config.mode}`,
+          `日英のregion対応が一致しません: ${slug}`
+        )
+      );
+    if ((ja?.sections?.length ?? -1) !== (en?.sections?.length ?? -2))
+      results.push(
+        siteError(
+          'SITE-E001',
+          `dist/public-data/${config.mode}`,
+          `日英の地域section件数が一致しません: ${slug}`
+        )
+      );
+    for (const [index, section] of (ja?.sections ?? []).entries()) {
+      const counterpart = en?.sections[index];
+      if (section.id !== counterpart?.id || section.anchor_id !== counterpart?.anchor_id)
         results.push(
           siteError(
             'SITE-E001',
             `dist/public-data/${config.mode}`,
-            `日英のsection対応が一致しません（位置${index + 1}）。`
+            `日英の地域section対応が一致しません: ${slug}`
           )
         );
-      }
     }
   }
   const revisedDates = {};
@@ -613,10 +636,7 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
   const results = [];
   const navigations = {};
   const uiLocales = {};
-  const schemas =
-    mode === 'preview'
-      ? await loadPublicSchemas(repoRoot)
-      : { legacy: await loadPublicSchema(repoRoot) };
+  const schemas = await loadPublicSchemas(repoRoot);
   const regionalNavigations = Object.fromEntries(SITE_LOCALES.map((locale) => [locale, {}]));
 
   for (const locale of SITE_LOCALES) {
@@ -635,30 +655,24 @@ export async function loadSiteInputs(repoRoot, mode = 'preview') {
           expectedLocale: locale
         })
       );
-      results.push(
-        ...(mode === 'preview'
-          ? validateNationalNavigation(navigation, locale, navigationPath, config)
-          : validateNavigation(navigation, locale, navigationPath, config))
-      );
-      if (mode === 'preview') {
-        for (const entry of navigation.regions ?? []) {
-          const regionalPath = `${config.regionalNavigationRoots[locale]}/${entry.region_slug}/navigation.json`;
-          const regional = await readJson(repoRoot, regionalPath);
-          if (regional.parseError) results.push(regional.parseError);
-          else {
-            regionalNavigations[locale][entry.region_slug] = regional;
-            results.push(
-              ...validatePublicArtifact(regional, {
-                validateSchema: schemas.legacy.validate,
-                validateNationalSchema: schemas.national.validate,
-                validateRegionalSchema: schemas.regional.validate,
-                file: regionalPath,
-                expectedMode: mode,
-                expectedLocale: locale
-              }),
-              ...validateRegionalNavigation(regional, locale, regionalPath, config)
-            );
-          }
+      results.push(...validateNationalNavigation(navigation, locale, navigationPath, config));
+      for (const entry of navigation.regions ?? []) {
+        const regionalPath = `${config.regionalNavigationRoots[locale]}/${entry.region_slug}/navigation.json`;
+        const regional = await readJson(repoRoot, regionalPath);
+        if (regional.parseError) results.push(regional.parseError);
+        else {
+          regionalNavigations[locale][entry.region_slug] = regional;
+          results.push(
+            ...validatePublicArtifact(regional, {
+              validateSchema: schemas.legacy.validate,
+              validateNationalSchema: schemas.national.validate,
+              validateRegionalSchema: schemas.regional.validate,
+              file: regionalPath,
+              expectedMode: mode,
+              expectedLocale: locale
+            }),
+            ...validateRegionalNavigation(regional, locale, regionalPath, config)
+          );
         }
       }
     }

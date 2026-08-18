@@ -247,16 +247,20 @@ function previewHtmlContract(source, file, inputs) {
   return results;
 }
 
-function expectedPreviewLogicalLinks(file, inputs) {
+function expectedLocalizedLogicalLinks(file, inputs) {
   const match = /^(ja|en)\/(.*)index\.html$/.exec(file);
   if (!match) return undefined;
   const [, locale, rest] = match;
   const relative = rest === '' ? `${locale}/` : `${locale}/${rest}`;
   const alternateLocaleValue = locale === 'ja' ? 'en' : 'ja';
   const alternate = `${alternateLocaleValue}/${relative.slice(locale.length + 1)}`;
+  const toHref =
+    inputs.mode === 'production'
+      ? (value) => absoluteSiteUrl(inputs.siteUrl, value)
+      : (value) => sitePathForValidation(inputs, value);
   return {
-    current: sitePathForValidation(inputs, relative),
-    alternate: sitePathForValidation(inputs, alternate)
+    current: toHref(relative),
+    alternate: toHref(alternate)
   };
 }
 
@@ -264,9 +268,9 @@ function sitePathForValidation(inputs, relative) {
   return joinSitePath(inputs.siteUrl.basePath, relative);
 }
 
-function validatePreviewHreflang(source, file, inputs, expectedPaths) {
-  if (inputs.mode !== 'preview') return [];
-  const expected = expectedPreviewLogicalLinks(file, inputs);
+function validateLocalizedHreflang(source, file, inputs, expectedPaths) {
+  if (file === 'index.html' || file === '404.html') return [];
+  const expected = expectedLocalizedLogicalLinks(file, inputs);
   if (!expected) return [];
   const alternateLinks = linkElements(source).filter(({ rel = '' }) =>
     rel.split(/\s+/).includes('alternate')
@@ -301,10 +305,16 @@ function validatePreviewHreflang(source, file, inputs, expectedPaths) {
         siteError('SITE-E005', outputFile(inputs, file), `hreflang先が存在しません: ${href}`)
       );
   }
-  if (alternateLinks.some(({ hreflang }) => hreflang === 'x-default'))
+  if (alternateLinks.length !== 2)
     results.push(
-      siteError('SITE-E005', outputFile(inputs, file), 'x-defaultは工程Aの対象外です。')
+      siteError(
+        'SITE-E005',
+        outputFile(inputs, file),
+        'hreflangはselfとalternateの2件だけ必要です。'
+      )
     );
+  if (alternateLinks.some(({ hreflang }) => hreflang === 'x-default'))
+    results.push(siteError('SITE-E005', outputFile(inputs, file), 'x-defaultは設定できません。'));
   return results;
 }
 
@@ -355,38 +365,53 @@ function expectedProductionSocialMetadata(file, inputs) {
   const match = /^(ja|en)\/(.*)index\.html$/.exec(file);
   if (!match) return undefined;
   const [, locale, rest] = match;
-  const navigation = inputs.navigations[locale];
+  const national = inputs.navigations[locale];
   const ui = inputs.uiLocales[locale];
   let title;
   let description;
-  let pagePath;
+  let pagePath = `/${locale}/${rest}`;
   if (rest === '') {
-    title = ui.pages.home_title;
-    description = navigation.site.short_description;
-    pagePath = `${locale}/`;
-  } else if (rest === 'organizations/') {
-    title = ui.pages.organizations_title;
-    description = ui.pages.organizations_intro;
-    pagePath = `${locale}/organizations/`;
+    title = [national.site.site_name, national.site.subtitle].join(locale === 'ja' ? '｜' : ' | ');
+    description = national.site.short_description;
+    pagePath = `/${locale}/`;
   } else if (rest === 'privacy/') {
-    title = ui.pages.privacy_title;
+    title = [ui.pages.privacy_title, national.site.site_name].join(locale === 'ja' ? '｜' : ' | ');
     description = ui.social.privacy_description;
-    pagePath = `${locale}/privacy/`;
   } else {
-    const sectionMatch = /^sections\/([^/]+)\/$/.exec(rest);
-    const section = sectionMatch
-      ? navigation.sections.find(({ anchor_id: anchorId }) => anchorId === sectionMatch[1])
-      : undefined;
-    if (!section) return undefined;
-    title = section.title;
-    description = section.short_description;
-    pagePath = `${locale}/sections/${section.anchor_id}/`;
+    const regionMatch = /^regions\/([^/]+)\/(.*)$/.exec(rest);
+    if (!regionMatch) return undefined;
+    const [, slug, regionalRest] = regionMatch;
+    const navigation = inputs.regionalNavigations[locale]?.[slug];
+    if (!navigation) return undefined;
+    if (regionalRest === '') {
+      title = [navigation.region.region_name, navigation.site.site_name].join(
+        locale === 'ja' ? '｜' : ' | '
+      );
+      description = navigation.region.scope_note;
+    } else if (regionalRest === 'organizations/') {
+      title = [
+        ui.pages.organizations_title,
+        navigation.region.region_name,
+        navigation.site.site_name
+      ].join(locale === 'ja' ? '｜' : ' | ');
+      description = ui.pages.organizations_intro;
+    } else {
+      const sectionMatch = /^sections\/([^/]+)\/$/.exec(regionalRest);
+      const section = sectionMatch
+        ? navigation.sections.find(({ anchor_id: anchorId }) => anchorId === sectionMatch[1])
+        : undefined;
+      if (!section) return undefined;
+      title = [section.title, navigation.region.region_name, navigation.site.site_name].join(
+        locale === 'ja' ? '｜' : ' | '
+      );
+      description = section.short_description;
+    }
   }
   return {
-    title: `${title}｜${navigation.site.site_name}`,
+    title,
     description,
     pageUrl: absoluteSiteUrl(inputs.siteUrl, pagePath),
-    siteName: navigation.site.site_name,
+    siteName: national.site.site_name,
     imageUrl,
     imageAlt: ui.social.image_alt
   };
@@ -668,6 +693,8 @@ function productionHtmlContract(source, file, inputs) {
     if (source.includes(marker))
       results.push(siteError('SITE-E005', target, `production禁止文言があります: ${marker}`));
   }
+  if (/\/(?:ja|en)\/(?:sections\/|organizations\/)/.test(source))
+    results.push(siteError('SITE-E005', target, '地域なしの旧URLが生成物へ残っています。'));
 
   const anchors = anchorElements(source);
   for (const { href, attributes } of anchors.filter(({ href }) => /^https:\/\//.test(href))) {
@@ -702,7 +729,16 @@ function internalReferences(source) {
 }
 
 function hrefToArtifact(href, inputs) {
-  const pathname = href.split(/[?#]/, 1)[0];
+  let pathname = href.split(/[?#]/, 1)[0];
+  if (/^https:\/\//.test(href)) {
+    try {
+      const url = new URL(href);
+      if (url.origin !== inputs.siteUrl.origin) return undefined;
+      pathname = url.pathname;
+    } catch {
+      return undefined;
+    }
+  }
   const basePath = inputs.siteUrl.basePath || '';
   if (basePath && pathname !== basePath && !pathname.startsWith(`${basePath}/`)) return undefined;
   const relative = pathname.slice(basePath.length).replace(/^\//, '');
@@ -738,9 +774,10 @@ function validateProductionDestinationLinks(htmlByFile, inputs) {
       .map(([, source]) => source)
       .join('\n');
     const urls = new Set();
-    for (const section of inputs.navigations[locale].sections)
-      for (const card of section.cards)
-        for (const link of card.links) urls.add(link.destination.url);
+    for (const navigation of Object.values(inputs.regionalNavigations[locale] ?? {}))
+      for (const section of navigation.sections)
+        for (const card of section.cards)
+          for (const link of card.links) urls.add(link.destination.url);
     for (const url of urls) {
       if (!localizedHtml.includes(`href="${escapeHtml(url)}"`))
         results.push(
@@ -815,7 +852,7 @@ export async function validateArtifactsAt(root, inputs, { compareExpected = fals
           ? previewHtmlContract(source, file, inputs)
           : productionHtmlContract(source, file, inputs))
       );
-      results.push(...validatePreviewHreflang(source, file, inputs, expected));
+      results.push(...validateLocalizedHreflang(source, file, inputs, expected));
       for (const href of internalReferences(source)) {
         if (href.includes('//'))
           results.push(

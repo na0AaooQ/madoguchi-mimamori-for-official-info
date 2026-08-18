@@ -171,9 +171,9 @@
 - **工程A（全国版・地域別URL基盤）:** 全国トップ用と地域用の公開成果物、prefecture単位の抽出、`region_slug`・`display_order`・`navigation_label`、新URL、sitemap、内部リンク、hreflang、Schema・意味・HTML検証、preview fixture、ER図を整備します。工程Aでは千葉実データを追加せず、既存production熊本のURL切替もしません。
 - **工程B（熊本production地域ページ移行）:** 工程Aの共通基盤へ既存の熊本productionを正式接続し、productionのURL、公開成果物、内部リンク、sitemap、hreflang、公開後確認を切り替えます。工程Aの完了条件には含めません。
 - **工程C（千葉県・千葉市の第一公開）:** 工程B後に、公式性・案内目的・日英・定期確認体制を人が確認した千葉県・千葉市の第一公開単位を追加します。スプレッドシートNo.42〜No.70の掲載実装を工程Aへ前倒ししません。
-- **現在の状態:** 工程Aの共通基盤（preview fixtureを用いた全国トップ・地域成果物・地域URL・検証・ER図・関連文書）を実装しました。productionは工程Bまで現行の地域なしURLを維持します。千葉県・千葉市の実データは未追加です。
+- **現在の状態:** 工程Aの共通基盤と工程Bの熊本production地域別URL移行（全国・地域成果物、URL、内部リンク、sitemap、hreflang、検証）を実装しました。GitHub Pagesへの反映はPRマージ後の手動workflowで行います。千葉県・千葉市の実データは未追加です。
 - **依存する項目:** BL-007の継続可能性、対象地域ごとの公式性確認体制、工程Aの検証済み公開契約
-- **今回含めないこと:** 工程B・工程C、千葉実データ、productionデプロイ、GitHub Pages切替、市町村個別URL、カード個別URL、canonical、`x-default`、全国共通カードの自動全地域配信
+- **今回含めないこと:** 工程C、千葉実データ、productionデプロイ、GitHub Pages切替、市町村個別URL、カード個別URL、canonical、`x-default`、全国共通カードの自動全地域配信
 - **完了条件:** A・B・Cそれぞれの目的と境界を守り、工程Aはfixtureで複数prefectureの生成・検証が成功し、工程Bは既存熊本productionの正式移行と公開後確認が成功し、工程Cは承認済みの千葉第一公開単位が日英・検証・運用とともに公開されること
 
 ### BL-010 Googleスプレッドシート入力を補助するGAS等

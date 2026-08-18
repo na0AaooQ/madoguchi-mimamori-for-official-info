@@ -2,15 +2,11 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { createResult, formatResults, sortResults } from '../validation/result.js';
-import { ARTIFACT_TYPES, PUBLIC_LOCALES, PublicRuntimeError } from './public-constants.js';
+import { ARTIFACT_TYPES, PublicRuntimeError } from './public-constants.js';
 import { validatePublicRepository, verifyPublicArtifacts } from './public-artifact-verifier.js';
 import { writePublicArtifacts } from './public-artifact-writer.js';
 import { loadPreviewInput, loadProductionInput } from './public-input-loader.js';
-import {
-  buildPublicArtifacts,
-  buildPublicNavigation,
-  isValidDateOnly
-} from './public-navigation-builder.js';
+import { buildPublicArtifacts, isValidDateOnly } from './public-navigation-builder.js';
 
 function usageError(message) {
   throw new PublicRuntimeError('PUB-RUN-E001', 'scripts/publication/cli.js', message);
@@ -64,27 +60,11 @@ async function generate(repoRoot, options) {
   const inputErrors = loaded.results.filter(({ severity }) => severity === 'error');
   if (inputErrors.length > 0) return { results: inputErrors, exitCode: 1 };
   const asOf = options.mode === 'preview' ? loaded.manifest.as_of : options.asOf;
-  if (options.mode === 'preview') {
-    const built = buildPublicArtifacts(loaded.input, {
-      artifactType: ARTIFACT_TYPES.preview,
-      asOf
-    });
-    if (built.results.length > 0) return { results: built.results, exitCode: 1 };
-    const writeResults = await writePublicArtifacts(repoRoot, options.mode, built);
-    return { results: writeResults, exitCode: writeResults.length > 0 ? 1 : 0 };
-  }
-  const artifacts = {};
-  const results = [];
-  for (const locale of PUBLIC_LOCALES) {
-    const built = buildPublicNavigation(loaded.input, {
-      locale,
-      artifactType: ARTIFACT_TYPES[options.mode],
-      asOf
-    });
-    results.push(...built.results);
-    if (built.artifact) artifacts[locale] = built.artifact;
-  }
-  if (results.length > 0) return { results: sortResults(results), exitCode: 1 };
+  const artifacts = buildPublicArtifacts(loaded.input, {
+    artifactType: ARTIFACT_TYPES[options.mode],
+    asOf
+  });
+  if (artifacts.results.length > 0) return { results: sortResults(artifacts.results), exitCode: 1 };
   const writeResults = await writePublicArtifacts(repoRoot, options.mode, artifacts);
   return { results: writeResults, exitCode: writeResults.length > 0 ? 1 : 0 };
 }

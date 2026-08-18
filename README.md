@@ -1,4 +1,4 @@
-# まどぐちみまもり｜熊本県・熊本市の公式情報案内 (英語表記: Madoguchi Mimamori｜Official Information Guide for Kumamoto Prefecture and Kumamoto City)
+# まどぐちみまもり｜公的機関・関係団体の公式情報案内 (英語表記: Madoguchi Mimamori｜Guide to Official Information from Public Institutions and Related Organizations)
 
 「まどぐちみまもり」は、災害時などに確認したい内容から担当する公的機関・関係団体を見つけ、その団体自身の公式発表へ進むための案内サイトです。行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。
 
@@ -9,13 +9,13 @@
 | 開発段階           | 第一版を2026年8月4日に正式公開済み                                                                                                   |
 | 正式URL            | <https://madoguchi.kokoromimamori.na0aaooq.com/>                                                                                     |
 | 第一版公開時       | 日本語・英語、2分野、3カード、14案内先、production静的サイト18ファイル                                                               |
-| リポジトリ内成果物 | production静的サイト25ファイル（通常17ページ、404 1ページ、HTML18件、CSS・JavaScript 2件、正式アイコン3件、OGP画像1件、sitemap 1件） |
+| リポジトリ内成果物 | production静的サイト27ファイル（通常19ページ、404 1ページ、HTML20件、CSS・JavaScript 2件、正式アイコン3件、OGP画像1件、sitemap 1件） |
 | ホスティング構成   | GitHub Pages、カスタムドメイン、HTTPS有効                                                                                            |
 | デプロイ           | GitHub Pagesの手動workflowで公開。PR #31を2026年8月9日にマージし、本番デプロイ・公開後確認済み                                       |
 
 本リポジトリには、初期設計文書、ローカル品質管理基盤、架空preview Web画面MVP、TSV変換基盤、第一版の実在管理データを整備しています。管理JSONには、地域3件、団体5件、案内先24件、確認根拠40件、案内カード8件、カード案内先関連24件を登録しています。案内先と確認根拠は、人が確認した内容を管理JSONへ反映しています。
 
-リポジトリ内では5分野と対象データをすべてpublishedとし、実在管理データから日英のproduction公開データと25ファイルの静的サイトを生成します。現在のproductionは5分野、8カード、24案内先を公開し、案内リンクはJA 16件、EN 15件です。BL-006-B、BL-006-C第一・第二・第三公開単位、BL-006-A第一公開単位を2026年8月7日から8月9日にかけて完了し、2026年8月9日に5分野すべての公開後確認を終えました。既存の架空preview成果物は、画面と生成基盤の確認専用として分離しています。
+リポジトリ内では5分野と対象データをすべてpublishedとし、実在管理データから日英のproduction公開データと27ファイルの静的サイトを生成します。現在のproductionは5分野、8カード、24案内先を公開し、案内リンクはJA 16件、EN 15件です。BL-006-B、BL-006-C第一・第二・第三公開単位、BL-006-A第一公開単位を2026年8月7日から8月9日にかけて完了し、BL-009工程Bで熊本productionを全国トップ・地域別URLへ移行しました。GitHub Pagesへの反映はPRマージ後の手動workflowで行います。既存の架空preview成果物は、画面と生成基盤の確認専用として分離しています。
 
 第一版公開後の改善、継続運用、将来構想は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)で管理します。
 
@@ -87,13 +87,12 @@ BL-006-B「道路・交通」は2026年8月7日に公開済みです。BL-006-C�
 
 1. ルートの言語選択ページ
 2. 日本語・英語トップページ
-3. 日本語・英語の公開中分野ページ
-4. 日本語・英語の全団体・案内先一覧
-5. 日本語・英語のプライバシーポリシー
-6. 404ページ
-7. `sitemap.xml`
+3. 日本語・英語の地域トップ、地域別分野ページ、地域別の全団体・案内先一覧
+4. 日本語・英語のプライバシーポリシー
+5. 404ページ
+6. `sitemap.xml`
 
-分野ページはpublishedのセクションから動的に生成し、現在は5分野すべてを公開対象としています。
+全国トップは公開中の都道府県一覧を表示し、地域トップ以下の分野・団体一覧は対応する地域成果物から動的に生成します。現在は熊本県地域で5分野すべてを公開対象としています。
 
 今後production成果物の変更をGitHub Pagesへ反映する場合は、PRのマージ後に手動デプロイが必要です。
 サイトの目的、利用上の注意、免責事項はトップページなどの`details`内で案内します。問い合わせは独立したサイト内ページを設けず、言語別の外部ポートフォリオ問い合わせページへ案内します。掲載方針と確認・更新履歴の独立HTMLページは将来検討であり、現在のproductionには存在しません。
@@ -109,7 +108,7 @@ BL-006-B「道路・交通」は2026年8月7日に公開済みです。BL-006-C�
 ## 品質管理
 
 Node.js `24.18.0`とnpm `11.16.0`を対象環境として固定しています。依存関係を`npm ci`で準備した後、`npm run validate:data`で本番用データ基盤を検証できます。
-`npm run check`でLint、書式、613件のテスト、fixture、文書、管理データ、公開データ、preview・productionサイト、再現性をまとめて確認できます。
+`npm run check`でLint、書式、629件のテスト、fixture、文書、管理データ、公開データ、preview・productionサイト、再現性をまとめて確認できます。
 2026年8月4日の第一版公開時、2026年8月7日のBL-006-B公開後、2026年8月8日のBL-006-C第一公開単位公開後、および2026年8月9日のBL-006-C第二・第三公開単位とBL-006-A第一公開単位公開後の確認で`npm run check`は成功しています。
 詳しくは[品質管理基盤](docs/QUALITY_TOOLING.md)を参照してください。
 
@@ -227,7 +226,7 @@ Lint、書式、全テスト、fixture、文書、管理データの検証に加
 npm run generate:public -- --as-of 2026-08-09
 ```
 
-正本siteは`published`です。このコマンドは実在管理データから日英の`dist/public-data/production/{ja,en}/navigation.json`を一組として生成します。基準日は必須で、現在日時を自動採用しません。生成後は`npm run validate:public`と`npm run verify:public`を実行してください。
+正本siteは`published`です。このコマンドは実在管理データから全国トップと地域別の日英`dist/public-data/production/{ja,en}/navigation.json`、`regions/{region_slug}/navigation.json`を生成します。基準日は必須で、現在日時を自動採用しません。生成後は`npm run validate:public`と`npm run verify:public`を実行してください。
 
 ### 成果物を変更するときの基本手順
 
@@ -287,7 +286,7 @@ npm run verify:site
 npm run serve:site:production
 ```
 
-ローカルでは<http://127.0.0.1:4173/>を開きます。production成果物は`dist/site/production/`にあり、ルート言語選択、日英トップ、公開対象5分野、全団体・案内先一覧、プライバシーポリシー、`404.html`、`sitemap.xml`を含みます。GitHub Pagesへの反映は、対象更新日に対応する基準日を明示して生成・確認した後、手動workflowで行います。正式base URL、手動workflow、公開後確認、再デプロイは[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
+ローカルでは<http://127.0.0.1:4173/>を開きます。production成果物は`dist/site/production/`にあり、ルート言語選択、日英全国トップ、熊本県地域トップ・5分野・全団体・案内先一覧、プライバシーポリシー、`404.html`、`sitemap.xml`を含みます。GitHub Pagesへの反映は、対象更新日に対応する基準日を明示して生成・確認した後、手動workflowで行います。正式base URL、手動workflow、公開後確認、再デプロイは[GitHub Pages手動デプロイ](docs/GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ## 運用方針
 

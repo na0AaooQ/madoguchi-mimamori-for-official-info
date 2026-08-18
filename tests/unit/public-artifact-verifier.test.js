@@ -1,19 +1,22 @@
 import assert from 'node:assert/strict';
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { readdir, readFile, rename as fsRename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
 import { runPublicCli } from '../../scripts/publication/cli.js';
-import { PUBLIC_ARTIFACT_PATHS } from '../../scripts/publication/public-constants.js';
+import {
+  ARTIFACT_TYPES,
+  PUBLIC_ARTIFACT_PATHS
+} from '../../scripts/publication/public-constants.js';
+import { buildPublicArtifacts } from '../../scripts/publication/public-navigation-builder.js';
 import {
   validatePublicRepository,
   verifyPublicArtifacts
 } from '../../scripts/publication/public-artifact-verifier.js';
 import { writePublicArtifacts } from '../../scripts/publication/public-artifact-writer.js';
 import {
-  createPreviewArtifacts,
+  createPreviewInput,
   createPublicRepositoryCopy,
-  makeProductionArtifact,
   readJson,
   writeJson
 } from '../helpers/public-generation.js';
@@ -66,7 +69,7 @@ test('requires exactly the regional artifacts listed by each national artifact',
   );
   assert.ok(
     (await validatePublicRepository(extraRoot)).results.some(
-      ({ code, message }) => code === 'PUB-E008' && message.includes('掲載されていない地域成果物')
+      ({ code, message }) => code === 'PUB-E008' && message.includes('地域成果物集合')
     )
   );
 });
@@ -119,39 +122,142 @@ test('enforces production lifecycle and pair rules', async (t) => {
   });
 });
 
-test('writer validates both artifacts before changing tracked files', async (t) => {
+test('writer validates all national and regional artifacts before changing tracked files', async (t) => {
   const root = await createPublicRepositoryCopy(t);
-  const previews = await createPreviewArtifacts();
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
   const before = await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.ja), 'utf8');
-  previews.en.sections[0].cards[0].internal_note = 'must not leak';
+  previews.regions.en.example.sections[0].cards[0].internal_note = 'must not leak';
   const results = await writePublicArtifacts(root, 'preview', previews);
-  assert.ok(results.some(({ code }) => code === 'PUB-E005'));
+  assert.ok(results.some(({ code }) => code === 'PUB-E004'));
   assert.equal(await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.ja), 'utf8'), before);
 });
 
-test('failed production generation validation preserves an existing production pair', async (t) => {
+test('failed production generation validation preserves existing national and regional artifacts', async (t) => {
   const root = await createPublicRepositoryCopy(t);
-  const previews = await createPreviewArtifacts();
-  const productions = Object.fromEntries(
-    ['ja', 'en'].map((locale) => [locale, makeProductionArtifact(previews[locale])])
-  );
+  const productions = { national: {}, regions: { ja: {}, en: {} } };
   for (const locale of ['ja', 'en']) {
-    await writeJson(root, PUBLIC_ARTIFACT_PATHS.production[locale], productions[locale]);
+    productions.national[locale] = await readJson(root, PUBLIC_ARTIFACT_PATHS.production[locale]);
+    productions.regions[locale].kumamoto = await readJson(
+      root,
+      `dist/public-data/production/${locale}/regions/kumamoto/navigation.json`
+    );
   }
-  const before = await Promise.all(
-    ['ja', 'en'].map((locale) =>
-      readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.production[locale]), 'utf8')
-    )
-  );
-  productions.en.sections[0].cards[0].links[0].destination.url = 'http://unsafe.example/';
+  const files = [
+    ...Object.values(PUBLIC_ARTIFACT_PATHS.production),
+    'dist/public-data/production/ja/regions/kumamoto/navigation.json',
+    'dist/public-data/production/en/regions/kumamoto/navigation.json'
+  ];
+  const before = await Promise.all(files.map((file) => readFile(path.join(root, file), 'utf8')));
+  productions.regions.en.kumamoto.sections[0].cards[0].internal_note = 'must not leak';
   const results = await writePublicArtifacts(root, 'production', productions);
   assert.ok(results.some(({ code }) => code === 'PUB-E004'));
+  const after = await Promise.all(files.map((file) => readFile(path.join(root, file), 'utf8')));
+  assert.deepEqual(after, before);
+});
+
+test('writer atomically replaces preview artifacts and removes temporary roots after success', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+
+  assert.deepEqual(await writePublicArtifacts(root, 'preview', previews), []);
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.backup-public-preview-')),
+    false
+  );
+  assert.match(
+    await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.en), 'utf8'),
+    /"artifact_type": "fictional-preview"/
+  );
+});
+
+test('writer restores the existing preview artifacts when target switch fails and rollback succeeds', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+  const targetFiles = Object.values(PUBLIC_ARTIFACT_PATHS.preview);
+  const before = await Promise.all(
+    targetFiles.map((file) => readFile(path.join(root, file), 'utf8'))
+  );
+  let renameCalls = 0;
+  const rename = async (source, target) => {
+    renameCalls += 1;
+    if (renameCalls === 2) throw new Error('new target switch failed');
+    return fsRename(source, target);
+  };
+
+  await assert.rejects(
+    () => writePublicArtifacts(root, 'preview', previews, { filesystem: { rename } }),
+    /new target switch failed/
+  );
   const after = await Promise.all(
-    ['ja', 'en'].map((locale) =>
-      readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.production[locale]), 'utf8')
-    )
+    targetFiles.map((file) => readFile(path.join(root, file), 'utf8'))
   );
   assert.deepEqual(after, before);
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.backup-public-preview-')),
+    false
+  );
+});
+
+test('writer preserves the backup when target switch and rollback both fail', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+  const beforeJapanese = await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.ja), 'utf8');
+  let renameCalls = 0;
+  const rename = async (source, target) => {
+    renameCalls += 1;
+    if (renameCalls >= 2)
+      throw new Error(renameCalls === 2 ? 'new target switch failed' : 'rollback failed');
+    return fsRename(source, target);
+  };
+
+  await assert.rejects(
+    () => writePublicArtifacts(root, 'preview', previews, { filesystem: { rename } }),
+    /rollbackにも失敗.*backupを保持します/
+  );
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  const backups = entries.filter((entry) => entry.startsWith('.backup-public-preview-'));
+  assert.equal(backups.length, 1);
+  assert.equal(
+    await readFile(
+      path.join(root, 'dist', 'public-data', backups[0], 'ja', 'navigation.json'),
+      'utf8'
+    ),
+    beforeJapanese
+  );
 });
 
 test('CLI validates arguments and returns 0, 1, and 2 by error class', async (t) => {
@@ -208,5 +314,14 @@ test('CLI validates arguments and returns 0, 1, and 2 by error class', async (t)
     for (const file of Object.values(PUBLIC_ARTIFACT_PATHS.preview)) {
       assert.equal((await readFile(path.join(root, file), 'utf8')).endsWith('\n'), true);
     }
+    assert.equal(
+      (
+        await readFile(
+          path.join(root, 'dist/public-data/preview/ja/regions/example/navigation.json'),
+          'utf8'
+        )
+      ).endsWith('\n'),
+      true
+    );
   });
 });
