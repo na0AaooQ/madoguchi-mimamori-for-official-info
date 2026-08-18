@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "fictional-preview",
+  "artifact_scope": "region",
+  "locale": "en",
+  "generated_for_date": "2026-08-02",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "Madoguchi Mimamori (Fictional Preview)",
+    "subtitle": "Official Information Guide for Example Prefecture (Fictional Data)",
+    "short_description": "A fictional preview with no real-world information, used to verify the public navigation structure.",
+    "purpose": "Verifies navigation to fictional official information from public institutions and related organizations.",
+    "free_use_notice": "Free to use. There are no ads or affiliate links, and no sign-in is required.",
+    "external_site_notice": "Destinations are fictional external URLs and are not real official information.",
+    "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service.",
+    "contact_url": "https://example.invalid/contact/"
+  },
+  "sections": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "title": "Public Institutions and General Disaster Information",
+      "short_description": "Find fictional official guidance from governments and public bodies.",
+      "cards": [
+        {
+          "id": "card-example-disaster-information",
+          "title": "Check disaster information (fictional data)",
+          "summary": "A fictional card leading to a fictional official disaster information destination.",
+          "region_label": "Example Prefecture",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-example-disaster-information-primary",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Example Prefecture disaster information guide (fictional link)",
+              "public_note": "A fictional navigation link for the public generation MVP.",
+              "destination": {
+                "id": "src-example-prefecture-official-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://example.invalid/example-prefecture/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Example Prefecture Disaster Information Guide (fictional data)",
+                "purpose": "A fictional destination for checking disaster information in Example Prefecture.",
+                "public_note": "This destination is fictional data for the public generation MVP.",
+                "destination_language_note": "The linked page is available in Japanese only.",
+                "destination_checked_on": "2026-08-02",
+                "official_information_checked_on": "2026-08-02",
+                "organization": {
+                  "id": "org-example-prefecture-disaster-office",
+                  "official_name": "架空県防災情報窓口",
+                  "name_kind": "official-ja-fallback",
+                  "summary": "A fictional organization providing disaster information guidance for Example Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "region": {
+    "region_id": "region-example-prefecture",
+    "region_slug": "example",
+    "region_name": "Example Prefecture",
+    "scope_note": "A fictional prefecture for the public generation MVP.",
+    "path": "/en/regions/example/"
+  }
+}
