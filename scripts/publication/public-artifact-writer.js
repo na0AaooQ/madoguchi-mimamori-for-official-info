@@ -120,46 +120,66 @@ async function validateArtifacts(repoRoot, mode, artifacts) {
   return sortResults(results);
 }
 
-export async function writePublicArtifacts(repoRoot, mode, artifacts) {
+export async function writePublicArtifacts(repoRoot, mode, artifacts, { filesystem = {} } = {}) {
   const validationResults = await validateArtifacts(repoRoot, mode, artifacts);
   if (validationResults.length > 0) return validationResults;
+
+  const io = { mkdir, mkdtemp, rename, rm, writeFile, ...filesystem };
 
   const publicRoot = path.join(repoRoot, 'dist', 'public-data');
   const targetRoot = path.join(repoRoot, PUBLIC_REGIONAL_ARTIFACT_ROOTS[mode]);
   let temporaryRoot;
   let backupRoot;
+  let preserveBackup = false;
   try {
-    await mkdir(publicRoot, { recursive: true });
-    temporaryRoot = await mkdtemp(path.join(publicRoot, `.tmp-public-${mode}-`));
+    await io.mkdir(publicRoot, { recursive: true });
+    temporaryRoot = await io.mkdtemp(path.join(publicRoot, `.tmp-public-${mode}-`));
     for (const locale of PUBLIC_LOCALES) {
       const nationalTarget = path.join(temporaryRoot, locale, 'navigation.json');
-      await mkdir(path.dirname(nationalTarget), { recursive: true });
-      await writeFile(nationalTarget, serializePublicArtifact(artifacts.national[locale]), 'utf8');
+      await io.mkdir(path.dirname(nationalTarget), { recursive: true });
+      await io.writeFile(
+        nationalTarget,
+        serializePublicArtifact(artifacts.national[locale]),
+        'utf8'
+      );
       for (const [slug, regional] of Object.entries(artifacts.regions[locale])) {
         const regionalTarget = path.join(temporaryRoot, locale, 'regions', slug, 'navigation.json');
-        await mkdir(path.dirname(regionalTarget), { recursive: true });
-        await writeFile(regionalTarget, serializePublicArtifact(regional), 'utf8');
+        await io.mkdir(path.dirname(regionalTarget), { recursive: true });
+        await io.writeFile(regionalTarget, serializePublicArtifact(regional), 'utf8');
       }
     }
-    backupRoot = await mkdtemp(path.join(publicRoot, `.backup-public-${mode}-`));
-    await rm(backupRoot, { recursive: true, force: true });
+    backupRoot = await io.mkdtemp(path.join(publicRoot, `.backup-public-${mode}-`));
+    await io.rm(backupRoot, { recursive: true, force: true });
     try {
-      await rename(targetRoot, backupRoot);
+      await io.rename(targetRoot, backupRoot);
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
+      await io.rm(backupRoot, { recursive: true, force: true });
       backupRoot = undefined;
     }
     try {
-      await rename(temporaryRoot, targetRoot);
+      await io.rename(temporaryRoot, targetRoot);
       temporaryRoot = undefined;
-    } catch (error) {
-      if (backupRoot) await rename(backupRoot, targetRoot);
-      backupRoot = undefined;
-      throw error;
+    } catch (switchError) {
+      if (backupRoot) {
+        try {
+          await io.rename(backupRoot, targetRoot);
+          backupRoot = undefined;
+        } catch (rollbackError) {
+          preserveBackup = true;
+          throw new Error(
+            `公開成果物の切替に失敗し、rollbackにも失敗したためbackupを保持します: ${rollbackError.message}`,
+            { cause: rollbackError }
+          );
+        }
+      }
+      throw switchError;
     }
     if (backupRoot) {
-      await rm(backupRoot, { recursive: true, force: true });
+      preserveBackup = true;
+      await io.rm(backupRoot, { recursive: true, force: true });
       backupRoot = undefined;
+      preserveBackup = false;
     }
   } catch (error) {
     throw new PublicRuntimeError(
@@ -169,8 +189,8 @@ export async function writePublicArtifacts(repoRoot, mode, artifacts) {
       error
     );
   } finally {
-    if (temporaryRoot) await rm(temporaryRoot, { recursive: true, force: true });
-    if (backupRoot) await rm(backupRoot, { recursive: true, force: true });
+    if (temporaryRoot) await io.rm(temporaryRoot, { recursive: true, force: true });
+    if (backupRoot && !preserveBackup) await io.rm(backupRoot, { recursive: true, force: true });
   }
   return [];
 }

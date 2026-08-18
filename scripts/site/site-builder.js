@@ -756,11 +756,8 @@ ${mainContent}${commonDetails(navigation.site, ui)}
 
 function productionNationalPage(inputs, navigation, ui) {
   const locale = navigation.locale;
-  const siteIdentity =
-    locale === 'ja'
-      ? `      <p><strong>${escapeHtml(navigation.site.site_name)}</strong>｜${escapeHtml(navigation.site.subtitle)}</p>
-`
-      : '';
+  const siteIdentity = `      <p><strong>${escapeHtml(navigation.site.site_name)}</strong>${locale === 'ja' ? '｜' : ' | '}${escapeHtml(navigation.site.subtitle)}</p>
+`;
   const regionItems = navigation.regions
     .map(
       (region) => `        <li>

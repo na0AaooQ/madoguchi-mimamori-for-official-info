@@ -675,13 +675,15 @@ test('keeps the approved production home titles, visible site identity, and h1 c
   const japanese = artifacts.get('ja/index.html');
   const english = artifacts.get('en/index.html');
   const site = inputs.navigations.ja.site;
+  const englishSite = inputs.navigations.en.site;
 
   assert.match(japanese, /<title>まどぐちみまもり｜公的機関・関係団体の公式情報案内<\/title>/);
-  assert.match(
-    japanese,
-    new RegExp(
+  assert.equal(
+    countLiteral(
+      japanese,
       `<p><strong>${escapeHtml(site.site_name)}</strong>｜${escapeHtml(site.subtitle)}</p>`
-    )
+    ),
+    1
   );
   assert.match(japanese, /<h1>確認したい公式情報を探す<\/h1>/);
   assert.equal([...japanese.matchAll(/<h1(?:\s|>)/g)].length, 1);
@@ -690,14 +692,15 @@ test('keeps the approved production home titles, visible site identity, and h1 c
     english,
     /<title>Madoguchi Mimamori \| Guide to Official Information from Public Institutions and Related Organizations<\/title>/
   );
+  assert.equal(
+    countLiteral(
+      english,
+      `<p><strong>${escapeHtml(englishSite.site_name)}</strong> | ${escapeHtml(englishSite.subtitle)}</p>`
+    ),
+    1
+  );
   assert.match(english, /<h1>Find official information to check<\/h1>/);
   assert.equal([...english.matchAll(/<h1(?:\s|>)/g)].length, 1);
-  assert.doesNotMatch(
-    english,
-    new RegExp(
-      `<p><strong>${escapeHtml(site.site_name)}</strong>｜${escapeHtml(site.subtitle)}</p>`
-    )
-  );
 });
 
 test('does not add automatic language redirects or browser storage beyond the approved scripts', () => {

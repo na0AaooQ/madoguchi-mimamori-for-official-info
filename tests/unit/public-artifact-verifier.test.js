@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { readdir, readFile, rename as fsRename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
@@ -158,6 +158,106 @@ test('failed production generation validation preserves existing national and re
   assert.ok(results.some(({ code }) => code === 'PUB-E004'));
   const after = await Promise.all(files.map((file) => readFile(path.join(root, file), 'utf8')));
   assert.deepEqual(after, before);
+});
+
+test('writer atomically replaces preview artifacts and removes temporary roots after success', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+
+  assert.deepEqual(await writePublicArtifacts(root, 'preview', previews), []);
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.backup-public-preview-')),
+    false
+  );
+  assert.match(
+    await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.en), 'utf8'),
+    /"artifact_type": "fictional-preview"/
+  );
+});
+
+test('writer restores the existing preview artifacts when target switch fails and rollback succeeds', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+  const targetFiles = Object.values(PUBLIC_ARTIFACT_PATHS.preview);
+  const before = await Promise.all(
+    targetFiles.map((file) => readFile(path.join(root, file), 'utf8'))
+  );
+  let renameCalls = 0;
+  const rename = async (source, target) => {
+    renameCalls += 1;
+    if (renameCalls === 2) throw new Error('new target switch failed');
+    return fsRename(source, target);
+  };
+
+  await assert.rejects(
+    () => writePublicArtifacts(root, 'preview', previews, { filesystem: { rename } }),
+    /new target switch failed/
+  );
+  const after = await Promise.all(
+    targetFiles.map((file) => readFile(path.join(root, file), 'utf8'))
+  );
+  assert.deepEqual(after, before);
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.backup-public-preview-')),
+    false
+  );
+});
+
+test('writer preserves the backup when target switch and rollback both fail', async (t) => {
+  const root = await createPublicRepositoryCopy(t);
+  const input = await createPreviewInput();
+  const previews = buildPublicArtifacts(input, {
+    artifactType: ARTIFACT_TYPES.preview,
+    asOf: '2026-08-02'
+  });
+  assert.deepEqual(previews.results, []);
+  const beforeJapanese = await readFile(path.join(root, PUBLIC_ARTIFACT_PATHS.preview.ja), 'utf8');
+  let renameCalls = 0;
+  const rename = async (source, target) => {
+    renameCalls += 1;
+    if (renameCalls >= 2)
+      throw new Error(renameCalls === 2 ? 'new target switch failed' : 'rollback failed');
+    return fsRename(source, target);
+  };
+
+  await assert.rejects(
+    () => writePublicArtifacts(root, 'preview', previews, { filesystem: { rename } }),
+    /rollbackにも失敗.*backupを保持します/
+  );
+  const entries = await readdir(path.join(root, 'dist', 'public-data'));
+  assert.equal(
+    entries.some((entry) => entry.startsWith('.tmp-public-preview-')),
+    false
+  );
+  const backups = entries.filter((entry) => entry.startsWith('.backup-public-preview-'));
+  assert.equal(backups.length, 1);
+  assert.equal(
+    await readFile(
+      path.join(root, 'dist', 'public-data', backups[0], 'ja', 'navigation.json'),
+      'utf8'
+    ),
+    beforeJapanese
+  );
 });
 
 test('CLI validates arguments and returns 0, 1, and 2 by error class', async (t) => {
