@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "region-japan",
@@ -25,6 +25,16 @@
       "official_code": "43100",
       "publication_status": "published",
       "internal_note": "実在情報の試験登録用。official_codeには統計に用いる標準地域コード「43100」を設定する。"
+    },
+    {
+      "id": "region-chiba-prefecture",
+      "region_type": "prefecture",
+      "parent_region_id": "region-japan",
+      "region_slug": "chiba",
+      "display_order": 2,
+      "official_code": "12000",
+      "publication_status": "published",
+      "internal_note": "実在情報の試験登録対象。official_codeには標準地域コード「12000」を設定する。"
     }
   ]
 }

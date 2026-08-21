@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -175,6 +175,118 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-ja",
+      "button_label": "千葉県公式ホームページを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-en",
+      "button_label": "千葉県公式ホームページ（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-ja",
+      "button_label": "千葉市公式ホームページを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-en",
+      "button_label": "千葉市公式ホームページ（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-disaster-portal",
+      "button_label": "千葉県防災ポータルサイトを見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-ja",
+      "button_label": "千葉市防災・安全安心を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-en",
+      "button_label": "千葉市防災・安全安心（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-prefecture-disaster-safety-ja",
+      "button_label": "千葉県 防災・安全・安心を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-home",
+      "button_label": "千葉市営水道の公式情報を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-water-supply-emergency",
+      "button_label": "千葉市営水道の災害・緊急時情報を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-prefecture-disaster-certificate-ja",
+      "button_label": "千葉県の罹災証明書について見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-ja",
+      "button_label": "千葉市の罹災証明書・被災証明書を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-en",
+      "button_label": "千葉市の罹災証明書・被災証明書（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-ja",
+      "button_label": "千葉市の救急・救命情報を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-en",
+      "button_label": "千葉市の救急・救命情報（英語）を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-119-ja",
+      "button_label": "千葉市の119番のかけ方を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

@@ -684,14 +684,21 @@ function isEvaluablePrimaryLink(context, link) {
   return true;
 }
 
-function isStructurallyPublishablePrimary(context, input, card, link) {
+function isStructurallyPublishablePrimary(
+  context,
+  input,
+  card,
+  link,
+  targetLocales = link.display_locales
+) {
   const cardId = recordId(card);
-  const displayLocales = link.display_locales;
+  const displayLocales = targetLocales;
   if (
     link.publication_status !== 'published' ||
     link.role !== 'primary' ||
     link.card_id !== cardId ||
-    hasContradictoryPeriod(link)
+    hasContradictoryPeriod(link) ||
+    !displayLocales.every((locale) => link.display_locales.includes(locale))
   ) {
     return false;
   }
@@ -727,21 +734,29 @@ function isStructurallyPublishablePrimary(context, input, card, link) {
   });
 }
 
+function publishedCardLocales(context, cardId) {
+  return SUPPORTED_LOCALES.filter(
+    (locale) => context.indexes.locales[locale].cards.get(cardId)?.locale_status === 'published'
+  );
+}
+
+function isCompletePublishedCard(context, card) {
+  return (
+    typeof card.section_id === 'string' &&
+    context.indexes.core.sections.has(card.section_id) &&
+    (card.region_ids === undefined ||
+      (Array.isArray(card.region_ids) &&
+        card.region_ids.every(
+          (regionId) => typeof regionId === 'string' && context.indexes.core.regions.has(regionId)
+        )))
+  );
+}
+
 function validatePublishedCardPrimaryLinks(context, input, results) {
   for (const card of context.core.cards) {
     const id = recordId(card);
     if (card.publication_status !== 'published' || !id) continue;
-    if (
-      typeof card.section_id !== 'string' ||
-      !context.indexes.core.sections.has(card.section_id) ||
-      (card.region_ids !== undefined &&
-        (!Array.isArray(card.region_ids) ||
-          !card.region_ids.every(
-            (regionId) => typeof regionId === 'string' && context.indexes.core.regions.has(regionId)
-          )))
-    ) {
-      continue;
-    }
+    if (!isCompletePublishedCard(context, card)) continue;
     const primaryLinks = context.core.cardSourceLinks.filter(
       (link) => link.card_id === id && link.role === 'primary'
     );
@@ -763,6 +778,47 @@ function validatePublishedCardPrimaryLinks(context, input, results) {
       message: '公開カードに構造上公開可能な主案内先がありません。',
       suggestedAction: '公開条件を満たすrole: primaryの関連を最低1件用意してください。'
     });
+  }
+}
+
+function validatePublishedCardPrimaryLinksPerLocale(context, input, results) {
+  for (const card of context.core.cards) {
+    const id = recordId(card);
+    if (card.publication_status !== 'published' || !id || !isCompletePublishedCard(context, card)) {
+      continue;
+    }
+    const evaluablePrimaryLinks = context.core.cardSourceLinks.filter(
+      (link) =>
+        link.card_id === id && link.role === 'primary' && isEvaluablePrimaryLink(context, link)
+    );
+    if (
+      !evaluablePrimaryLinks.some((link) =>
+        isStructurallyPublishablePrimary(context, input, card, link)
+      )
+    ) {
+      continue;
+    }
+    for (const locale of publishedCardLocales(context, id)) {
+      if (
+        evaluablePrimaryLinks.some((link) =>
+          isStructurallyPublishablePrimary(context, input, card, link, [locale])
+        )
+      ) {
+        continue;
+      }
+      const representative =
+        evaluablePrimaryLinks.find((link) => !link.display_locales.includes(locale)) ??
+        evaluablePrimaryLinks[0];
+      addError(results, {
+        code: 'E021',
+        file: context.files.core.cardSourceLinks,
+        itemId: recordId(representative),
+        field: 'display_locales',
+        message: `公開カードの${locale}表示に構造上公開可能な主案内先がありません。`,
+        suggestedAction:
+          '各公開言語で表示できる、公開条件を満たすrole: primaryの関連を設定してください。'
+      });
+    }
   }
 }
 
@@ -830,6 +886,7 @@ export function validateNavigationCardData(input, { files: fileOverrides } = {})
   validateLocaleRules(context, results);
   validatePublishedReferences(context, results);
   validatePublishedCardPrimaryLinks(context, input, results);
+  validatePublishedCardPrimaryLinksPerLocale(context, input, results);
   validatePublishedCardRegionScope(context, results);
   return sortResults(results);
 }

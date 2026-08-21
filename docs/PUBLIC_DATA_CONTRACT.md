@@ -13,7 +13,7 @@ previewとproductionの静的サイト生成では、各modeの日英`navigation
 - 全国トップ: `dist/public-data/{mode}/{ja,en}/navigation.json`
 - 地域: `dist/public-data/{mode}/{ja,en}/regions/{region_slug}/navigation.json`
 
-previewとproductionの両方を上記の全国版構造で生成します。productionはBL-009工程Bで熊本県地域へ正式接続済みで、地域なしの旧成果物は生成しません。
+previewとproductionの両方を上記の全国版構造で生成します。productionはBL-009工程Bで熊本県地域へ正式接続し、千葉第一公開単位を同じ地域成果物として追加します。地域なしの旧成果物は生成しません。
 
 ## 全国トップ用成果物
 

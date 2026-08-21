@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -199,6 +199,134 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-ja",
+      "button_label": "View the Chiba Prefecture official website in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-en",
+      "button_label": "View the Chiba Prefecture official website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-ja",
+      "button_label": "View the Chiba City official website in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-en",
+      "button_label": "View the Chiba City official website",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-disaster-portal",
+      "button_label": "View the Chiba Prefecture Disaster Prevention Portal",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-ja",
+      "button_label": "View Chiba City disaster prevention and safety information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-en",
+      "button_label": "View Chiba City disaster prevention and safety information",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-prefecture-disaster-safety-ja",
+      "button_label": "View Chiba Prefecture disaster prevention and safety information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-home",
+      "button_label": "View official information from Chiba City Water Supply in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-water-supply-emergency",
+      "button_label": "View Chiba City Water Supply emergency information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-prefecture-disaster-certificate-ja",
+      "button_label": "View Chiba Prefecture information about disaster damage certificates in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-ja",
+      "button_label": "View Chiba City residential disaster damage certificate information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-en",
+      "button_label": "View Chiba City residential disaster damage certificate information",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-ja",
+      "button_label": "View Chiba City emergency and life-saving information in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-en",
+      "button_label": "View Chiba City emergency and life-saving information",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-119-ja",
+      "button_label": "View Chiba City guidance on how to call 119 in Japanese",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

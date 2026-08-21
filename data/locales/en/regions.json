@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "region-japan",
@@ -29,6 +29,16 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-04"
+    },
+    {
+      "id": "region-chiba-prefecture",
+      "name": "Chiba Prefecture",
+      "scope_note": "Includes information for Chiba Prefecture as a whole and information for Chiba City.",
+      "navigation_label": "Chiba Prefecture and Chiba City",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

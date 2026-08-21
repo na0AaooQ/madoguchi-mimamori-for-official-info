@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "org-kumamoto-prefecture",
@@ -56,6 +56,50 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "org-chiba-prefecture",
+      "official_name": "Chiba Prefecture",
+      "display_name": "Chiba Prefecture",
+      "name_kind": "official-en",
+      "summary": "A local government responsible for the administration of Chiba Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "org-chiba-prefecture-chiba-city",
+      "official_name": "Chiba City",
+      "display_name": "Chiba City",
+      "name_kind": "official-en",
+      "summary": "A local government responsible for the administration of Chiba City in Chiba Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "org-chiba-city-water-supply",
+      "official_name": "千葉市営水道",
+      "display_name": "千葉市営水道",
+      "name_kind": "official-ja-fallback",
+      "summary": "An organization providing water supply services and related information in Chiba City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "org-chiba-city-fire-department",
+      "official_name": "千葉市消防局",
+      "display_name": "千葉市消防局",
+      "name_kind": "official-ja-fallback",
+      "summary": "The organization responsible for fire and emergency services in Chiba City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

@@ -27,6 +27,10 @@ function regionalNavigation(locale) {
   return inputs.regionalNavigations[locale].kumamoto;
 }
 
+function regionalNavigations(locale) {
+  return Object.values(inputs.regionalNavigations[locale]);
+}
+
 function anchorTag(source, href) {
   const escaped = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return source.match(new RegExp(`<a\\b[^>]*href="${escaped}"[^>]*>`))?.[0];
@@ -56,6 +60,18 @@ test('builds the deterministic production site from production navigation only',
     /\.production-root \.root-language-heading/
   );
   for (const locale of ['ja', 'en']) {
+    const regional = regionalNavigations(locale);
+    assert.deepEqual(
+      regional.map(({ region }) => region.region_slug).sort(),
+      inputs.navigations[locale].regions.map(({ region_slug: slug }) => slug).sort()
+    );
+    for (const navigation of regional) {
+      const slug = navigation.region.region_slug;
+      assert.ok(first.has(`${locale}/regions/${slug}/index.html`));
+      assert.ok(first.has(`${locale}/regions/${slug}/organizations/index.html`));
+      for (const section of navigation.sections)
+        assert.ok(first.has(`${locale}/regions/${slug}/sections/${section.anchor_id}/index.html`));
+    }
     assert.equal(regionalNavigation(locale).sections.length, 5);
     assert.ok(first.has(`${locale}/regions/kumamoto/sections/life-safety-medical/index.html`));
     assert.ok(first.has(`${locale}/regions/kumamoto/sections/roads-transportation/index.html`));
@@ -923,7 +939,18 @@ test('keeps preview, localized production pages, 404, and sitemap scope unchange
 
 test('generates the canonical sitemap in deterministic order', () => {
   const urls = productionSitemapUrls(inputs);
-  const expectedLength = 1 + ['ja', 'en'].length * (4 + regionalNavigation('ja').sections.length);
+  const expectedLength =
+    1 +
+    ['ja', 'en'].reduce(
+      (count, locale) =>
+        count +
+        2 +
+        regionalNavigations(locale).reduce(
+          (regionalCount, navigation) => regionalCount + 2 + navigation.sections.length,
+          0
+        ),
+      0
+    );
   assert.equal(urls.length, expectedLength);
   assert.equal(urls[0], 'https://madoguchi.kokoromimamori.na0aaooq.com/');
   assert.ok(urls.every((url) => url.startsWith('https://')));

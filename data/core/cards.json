@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -65,6 +65,46 @@
       "display_order": 1,
       "publication_status": "published",
       "internal_note": "BL-006-A第一公開単位。熊本市の救急医療体制への入口として案内する。特定医療機関の推奨、当番医・診療時間等の変動情報の転載、症状・緊急度の判定は行わない。119の案内は熊本市公式の救急安心センター事業ページを根拠とする。"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-official-information",
+      "section_id": "section-public-institutions-disaster",
+      "region_ids": ["region-chiba-prefecture"],
+      "display_order": 3,
+      "publication_status": "published",
+      "internal_note": "千葉第一公開単位。千葉県・千葉市の公式情報への入口として案内する。最新情報はリンク先で直接確認する。"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "section_id": "section-public-institutions-disaster",
+      "region_ids": ["region-chiba-prefecture"],
+      "display_order": 4,
+      "publication_status": "published",
+      "internal_note": "千葉第一公開単位。防災ポータル、千葉市防災・安全安心、千葉県防災・安全・安心への入口を案内する。変動情報は転載しない。"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-water-supply-information",
+      "section_id": "section-lifelines",
+      "region_ids": ["region-chiba-prefecture"],
+      "display_order": 2,
+      "publication_status": "published",
+      "internal_note": "千葉第一公開単位。千葉市営水道の通常時・災害時の公式案内への入口。断水等の変動情報は転載しない。"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "section_id": "section-support-recovery",
+      "region_ids": ["region-chiba-prefecture"],
+      "display_order": 4,
+      "publication_status": "published",
+      "internal_note": "千葉第一公開単位。罹災証明書等の制度・手続きへの入口に限定し、受付日時・必要書類等の変動情報は転載しない。"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "section_id": "section-life-safety-medical",
+      "region_ids": ["region-chiba-prefecture"],
+      "display_order": 2,
+      "publication_status": "published",
+      "internal_note": "千葉第一公開単位。千葉市の救急・救命と119番通報の公式案内への入口。特定医療機関の推奨、当番医・診療時間等の変動情報の転載、症状・緊急度の判定は行わない。"
     }
   ]
 }

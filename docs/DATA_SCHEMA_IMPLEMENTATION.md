@@ -56,7 +56,7 @@ Schema検証後に意味検証、publication builder、公開成果物検証、s
 
 ## 本番用管理データと架空preview
 
-core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルには、実在管理データを登録しています。現在は地域3件、団体5件、案内先24件、確認根拠40件、5分野、案内カード8件、カード案内先関連24件です。5分野とその対象データをすべてpublishedとしています。
+core・日本語・英語の`regions`、`organizations`、`sources`、`evidence`、`sections`、`cards`、`card-source-links`の21ファイルには、実在管理データを登録しています。現在は地域4件、団体9件、案内先40件、確認根拠67件、5分野、案内カード13件、カード案内先関連40件です。5分野とその対象データをpublishedとしています。
 
 架空previewは`tests/fixtures/`配下へ分離し、予約ドメイン`example.invalid`と明確な架空名称だけを使用します。テストと検証は`example.invalid`や実在する公式サイトへ接続しません。
 
@@ -91,7 +91,7 @@ JSON Schema Draft 2020-12とAjv strictモードを使い、各Schemaは一意の
 - coreと日英localeの対応、日英改訂番号、公開状態
 - アンカー、分野内・カード内の表示順の重複
 - カードと案内先の関連組み合わせ、表示開始日と終了日の矛盾
-- 公開カードに必要な、工程3-2Aの公開条件まで満たす`role: primary`の関連
+- 公開カードの各公開言語に必要な、工程3-2Aの公開条件まで満たす`role: primary`の関連
 
 意味検証は一部データがSchema違反していても例外終了せず、可能な問題を収集し、決定論的に並べます。Schemaや配置対応表の異常は`RUN-E`系としてデータErrorから分離します。
 

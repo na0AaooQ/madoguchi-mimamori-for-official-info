@@ -1,0 +1,326 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "production",
+  "artifact_scope": "region",
+  "locale": "en",
+  "generated_for_date": "2026-08-21",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "Madoguchi Mimamori",
+    "subtitle": "Guide to Official Information from Public Institutions and Related Organizations",
+    "short_description": "A guide that helps users find the responsible public institution or related organization and proceed to that organization's own official information during disasters and other situations.",
+    "purpose": "Helps users reach official information from public institutions and related organizations quickly.",
+    "free_use_notice": "Free to use. There are no ads or affiliate links, and no sign-in is required.",
+    "external_site_notice": "Destinations are external official websites. Check the linked site for the latest information.",
+    "disclaimer_summary": "This is not an official government website, breaking-news service, or fact-checking service. Listing does not guarantee the overall reliability of an organization or the accuracy of information at a destination.",
+    "contact_url": "https://portfolio.na0aaooq.com/en/contact.html"
+  },
+  "sections": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "title": "Public Institutions and General Disaster Information",
+      "short_description": "Find official guidance from governments and public bodies on disaster information, evacuation, rivers, government response, and support.",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-official-information",
+          "title": "Chiba Prefecture and Chiba City Official Information",
+          "summary": "You can access official information provided by Chiba Prefecture and Chiba City.",
+          "region_label": "Chiba Prefecture and Chiba City",
+          "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Chiba Prefecture official website",
+              "destination": {
+                "id": "src-chiba-prefecture-home-en",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.pref.chiba.lg.jp/english/index.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Chiba Prefecture Official Website (English)",
+                "purpose": "You can check official information provided by Chiba Prefecture in English.",
+                "public_note": "This is an official English page provided by Chiba Prefecture.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "Chiba Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-en",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View the Chiba City official website",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-home-en",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/shimin/shimin/kokusai/portal-en.html",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Chiba City English Homepage",
+                "purpose": "You can check official information in English for residents and visitors in Chiba City.",
+                "public_note": "This is an official English information page provided by Chiba City.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "Chiba City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba City in Chiba Prefecture."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-chiba-prefecture-chiba-city-disaster-information",
+          "title": "Check Disaster Prevention Information",
+          "summary": "Check disaster prevention, emergency guidance, and safety information provided by Chiba Prefecture and Chiba City.",
+          "region_label": "Chiba Prefecture and Chiba City",
+          "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-information-disaster-portal",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View the Chiba Prefecture Disaster Prevention Portal",
+              "destination": {
+                "id": "src-chiba-prefecture-disaster-portal-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.bousai.pref.chiba.lg.jp/X_PUB_VF_Top",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "Chiba Prefecture Disaster Prevention Portal",
+                "purpose": "You can check disaster prevention information provided by Chiba Prefecture.",
+                "public_note": "During a disaster, check the latest information directly on the linked official page.",
+                "destination_language_note": "The portal provides a language selection feature; some information may be available only in Japanese.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "Chiba Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-en",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View Chiba City disaster prevention and safety information",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-disaster-info-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://chiba.j-server.com/LUCHIBASHI/ns/tl.cgi/https://www.city.chiba.jp/anzen/index.html?SLANG=ja&TLANG=en&XMODE=0&XCHARSET=utf-8&XJSID=0",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Chiba City Disaster Prevention and Safety Information",
+                "purpose": "You can check Chiba City's disaster prevention, safety, and security information through an English translation page.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "Chiba City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba City in Chiba Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "title": "Life, Safety, and Medical Care",
+      "short_description": "Find official guidance on police, fire and ambulance services, medical care, and emergency consultation.",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+          "title": "Emergency and Life-Saving Information",
+          "summary": "Check Chiba City's information about emergency medical care, life-saving services, and how to call 119.",
+          "region_label": "Chiba City",
+          "emergency_note": "If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destinations directly for the latest available information.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-en",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Chiba City emergency and life-saving information",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-emergency-medical-care-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://chiba.j-server.com/LUCHIBASHI/ns/tl.cgi/https://www.city.chiba.jp/anzen/kyukyu/index.html?SLANG=ja&TLANG=en&XMODE=0&XCHARSET=utf-8&XJSID=0",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Chiba City Emergency and Life-Saving Information",
+                "purpose": "You can check Chiba City's emergency medical and life-saving information through an English translation page.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "Chiba City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba City in Chiba Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-lifelines",
+      "anchor_id": "lifelines",
+      "title": "Lifelines",
+      "short_description": "Find official guidance on water and sewerage, electricity, gas, and communications.",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-water-supply-information",
+          "title": "Official Information from Chiba City Water Supply",
+          "summary": "Check official information and emergency updates provided by Chiba City Water Supply. Water service in Chiba City is provided by multiple water utilities, so confirm your area and the applicable service zone.",
+          "region_label": "Chiba City",
+          "emergency_note": "Check the linked official destination directly for the latest information about water outages, emergency water supply, and other emergencies.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-home",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View official information from Chiba City Water Supply in Japanese",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-water-supply-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/suido/somu/main.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Chiba City Water Supply Official Information",
+                "purpose": "You can check official information about water supply services provided by Chiba City Water Supply. Water service in Chiba City is provided by multiple water utilities, so confirm your area and the applicable service zone.",
+                "public_note": "Check the latest information directly on the official website.",
+                "destination_language_note": "The destination is available in Japanese only.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-city-water-supply",
+                  "official_name": "千葉市営水道",
+                  "name_kind": "official-ja-fallback",
+                  "summary": "An organization providing water supply services and related information in Chiba City."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-support-recovery",
+      "anchor_id": "support-recovery",
+      "title": "Support and Recovery",
+      "short_description": "Find official guidance on disaster damage certificates, housing, welfare, business support, relief donations, and recovery.",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+          "title": "Disaster Damage Certificates and Recovery Support Information",
+          "summary": "Check information from Chiba Prefecture and Chiba City about disaster damage certificates and post-disaster support procedures.",
+          "region_label": "Chiba Prefecture and Chiba City",
+          "emergency_note": "Check the linked destinations directly for the latest application methods, reception hours, required documents, and other details.",
+          "details_label": "View destination details",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-prefecture-disaster-certificate-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "View Chiba Prefecture information about disaster damage certificates in Japanese",
+              "destination": {
+                "id": "src-chiba-prefecture-disaster-certificate-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.pref.chiba.lg.jp/bousaik/jibun/koudou/risaisyomei.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "Chiba Prefecture Information about Disaster Damage Certificates",
+                "purpose": "You can check official information about disaster damage certificates provided by Chiba Prefecture.",
+                "public_note": "No official English page is currently registered; check the Japanese official page for the latest information.",
+                "destination_language_note": "The destination is available in Japanese only.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "Chiba Prefecture",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba Prefecture."
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-en",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "View Chiba City residential disaster damage certificate information",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-en",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://chiba.j-server.com/LUCHIBASHI/ns/tl.cgi/https://www.city.chiba.jp/sogoseisaku/kikikanri/kikikanri/sinnrisaishomei.html?SLANG=ja&TLANG=en&XMODE=0&XCHARSET=utf-8&XJSID=0",
+                "destination_locales": [
+                  "en"
+                ],
+                "display_title": "Chiba City Residential Disaster Damage Certificate Information",
+                "purpose": "You can check Chiba City's information about disaster damage certificates through an English translation page.",
+                "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "Chiba City",
+                  "name_kind": "official-en",
+                  "summary": "A local government responsible for the administration of Chiba City in Chiba Prefecture."
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "region": {
+    "region_id": "region-chiba-prefecture",
+    "region_slug": "chiba",
+    "region_name": "Chiba Prefecture",
+    "scope_note": "Includes information for Chiba Prefecture as a whole and information for Chiba City.",
+    "path": "/en/regions/chiba/"
+  }
+}

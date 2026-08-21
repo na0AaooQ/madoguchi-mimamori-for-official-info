@@ -142,6 +142,11 @@ test('surfaces existing Schema and semantic failures from candidate JSON', async
       'published card has no primary destination',
       (input) => (input.core.cardSourceLinks = []),
       'E019'
+    ],
+    [
+      'published card lacks an English primary destination',
+      (input) => (input.core.cardSourceLinks[0].display_locales = ['ja']),
+      'E021'
     ]
   ];
 

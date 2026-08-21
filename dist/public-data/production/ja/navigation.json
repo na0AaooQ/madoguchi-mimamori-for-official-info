@@ -3,7 +3,7 @@
   "artifact_type": "production",
   "artifact_scope": "national",
   "locale": "ja",
-  "generated_for_date": "2026-08-09",
+  "generated_for_date": "2026-08-21",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -27,6 +27,13 @@
       "navigation_label": "熊本県・熊本市",
       "scope_note": "熊本県全域向けの情報と、熊本市向けの情報を掲載しています。",
       "path": "/ja/regions/kumamoto/"
+    },
+    {
+      "region_id": "region-chiba-prefecture",
+      "region_slug": "chiba",
+      "navigation_label": "千葉県・千葉市",
+      "scope_note": "千葉県全域向けの情報と、千葉市向けの情報を掲載しています。",
+      "path": "/ja/regions/chiba/"
     }
   ]
 }
