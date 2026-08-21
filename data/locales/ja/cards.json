@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -89,6 +89,61 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-official-information",
+      "title": "千葉県・千葉市の公式情報",
+      "summary": "千葉県と千葉市が提供する公式情報への入口を確認できます。",
+      "region_label": "千葉県・千葉市",
+      "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "title": "防災情報を確認する",
+      "summary": "千葉県と千葉市が提供する防災、災害時の案内、安全・安心に関する情報を確認できます。",
+      "region_label": "千葉県・千葉市",
+      "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-water-supply-information",
+      "title": "千葉市営水道の公式情報",
+      "summary": "千葉市営水道が提供する公式情報、災害・緊急時の案内を確認できます。千葉市内でも地域により担当する水道事業体が異なるため、利用地域と給水区域を確認してください。",
+      "region_label": "千葉市",
+      "emergency_note": "断水・給水・災害に関する最新情報は、リンク先で直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "title": "罹災証明書・被災後の支援情報",
+      "summary": "千葉県と千葉市が案内する、罹災証明書・被災証明書など災害後の手続きと支援情報を確認できます。",
+      "region_label": "千葉県・千葉市",
+      "emergency_note": "申請方法、受付日時、必要書類などの最新情報は、リンク先で直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "title": "救急・救命情報",
+      "summary": "千葉市が案内する救急・救命、救急医療、119番通報に関する情報を確認できます。",
+      "region_label": "千葉市",
+      "emergency_note": "命に関わるなど明らかに緊急を要する場合は、119番通報してください。最新情報は、リンク先で直接確認してください。",
+      "details_label": "案内先の詳細を見る",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

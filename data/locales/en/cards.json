@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-kumamoto-prefecture-disaster-information",
@@ -97,6 +97,66 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-official-information",
+      "title": "Chiba Prefecture and Chiba City Official Information",
+      "summary": "You can access official information provided by Chiba Prefecture and Chiba City.",
+      "region_label": "Chiba Prefecture and Chiba City",
+      "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "title": "Check Disaster Prevention Information",
+      "summary": "Check disaster prevention, emergency guidance, and safety information provided by Chiba Prefecture and Chiba City.",
+      "region_label": "Chiba Prefecture and Chiba City",
+      "emergency_note": "During a disaster, check the linked official destinations directly for the latest information.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-water-supply-information",
+      "title": "Official Information from Chiba City Water Supply",
+      "summary": "Check official information and emergency updates provided by Chiba City Water Supply. Water service in Chiba City is provided by multiple water utilities, so confirm your area and the applicable service zone.",
+      "region_label": "Chiba City",
+      "emergency_note": "Check the linked official destination directly for the latest information about water outages, emergency water supply, and other emergencies.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "title": "Disaster Damage Certificates and Recovery Support Information",
+      "summary": "Check information from Chiba Prefecture and Chiba City about disaster damage certificates and post-disaster support procedures.",
+      "region_label": "Chiba Prefecture and Chiba City",
+      "emergency_note": "Check the linked destinations directly for the latest application methods, reception hours, required documents, and other details.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "title": "Emergency and Life-Saving Information",
+      "summary": "Check Chiba City's information about emergency medical care, life-saving services, and how to call 119.",
+      "region_label": "Chiba City",
+      "emergency_note": "If the situation is clearly an emergency or life-threatening, call 119. Check the linked official destinations directly for the latest available information.",
+      "details_label": "View destination details",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

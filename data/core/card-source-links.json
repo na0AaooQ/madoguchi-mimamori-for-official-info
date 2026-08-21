@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "card-source-kumamoto-prefecture-disaster-information-disaster-portal",
@@ -265,6 +265,182 @@
       "role": "secondary",
       "visibility_context": "always",
       "internal_note": "日本語版の補助案内先。救急医療相談と119番の緊急導線を確認するための熊本市公式ページ。英語版カードには表示しない。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-official-information",
+      "source_id": "src-chiba-prefecture-home-ja",
+      "display_order": 1,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の主案内先。千葉県公式ホームページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-en",
+      "card_id": "card-chiba-prefecture-chiba-city-official-information",
+      "source_id": "src-chiba-prefecture-home-en",
+      "display_order": 2,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "英語版の主案内先。千葉県公式英語ページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-official-information",
+      "source_id": "src-chiba-prefecture-chiba-city-home-ja",
+      "display_order": 3,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の補助案内先。千葉市公式ホームページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-en",
+      "card_id": "card-chiba-prefecture-chiba-city-official-information",
+      "source_id": "src-chiba-prefecture-chiba-city-home-en",
+      "display_order": 4,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "英語版の補助案内先。千葉市公式英語ページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-disaster-portal",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "source_id": "src-chiba-prefecture-disaster-portal-ja",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日英両画面の主案内先。災害時はリンク先で最新情報を直接確認する。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "source_id": "src-chiba-prefecture-chiba-city-disaster-info-ja",
+      "display_order": 2,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の補助案内先。千葉市の防災・安全安心に関する常設入口。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-en",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "source_id": "src-chiba-prefecture-chiba-city-disaster-info-en",
+      "display_order": 3,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "英語版の補助案内先。千葉市公式サイトが提供する英語翻訳ページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-information-prefecture-disaster-safety-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-information",
+      "source_id": "src-chiba-prefecture-disaster-safety-ja",
+      "display_order": 4,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "千葉県の防災・安全・安心に関する補助案内先。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-home",
+      "card_id": "card-chiba-prefecture-chiba-city-water-supply-information",
+      "source_id": "src-chiba-prefecture-chiba-city-water-supply-home",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "千葉市営水道の通常時・災害時に関する主案内先。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-water-supply-emergency",
+      "card_id": "card-chiba-prefecture-chiba-city-water-supply-information",
+      "source_id": "src-chiba-prefecture-chiba-city-water-supply-emergency",
+      "display_order": 2,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "disaster",
+      "internal_note": "千葉市営水道の災害・緊急時の補助案内先。現在情報はリンク先で直接確認する。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-prefecture-disaster-certificate-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "source_id": "src-chiba-prefecture-disaster-certificate-ja",
+      "display_order": 1,
+      "display_locales": ["ja", "en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "千葉県全体向けの罹災証明書制度・支援情報への主案内先。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "source_id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-ja",
+      "display_order": 2,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の補助案内先。千葉市の罹災証明書・被災証明書案内。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-en",
+      "card_id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+      "source_id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-en",
+      "display_order": 3,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "英語版の補助案内先。千葉市公式サイトが提供する英語翻訳ページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "source_id": "src-chiba-prefecture-chiba-city-emergency-medical-care-ja",
+      "display_order": 1,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の主案内先。千葉市の救急・救命情報。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-en",
+      "card_id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "source_id": "src-chiba-prefecture-chiba-city-emergency-medical-care-en",
+      "display_order": 2,
+      "display_locales": ["en"],
+      "publication_status": "published",
+      "role": "primary",
+      "visibility_context": "always",
+      "internal_note": "英語版の主案内先。千葉市公式サイトが提供する英語翻訳ページ。"
+    },
+    {
+      "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-119-ja",
+      "card_id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+      "source_id": "src-chiba-prefecture-chiba-city-119-ja",
+      "display_order": 3,
+      "display_locales": ["ja"],
+      "publication_status": "published",
+      "role": "secondary",
+      "visibility_context": "always",
+      "internal_note": "日本語版の補助案内先。千葉市消防局の119番通報案内。英語版カードには表示しない。"
     }
   ]
 }

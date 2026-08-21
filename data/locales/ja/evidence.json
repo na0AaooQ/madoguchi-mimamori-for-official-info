@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "evidence-kumamoto-prefecture-official-organization",
@@ -281,6 +281,195 @@
       "locale_status": "published",
       "content_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "evidence-chiba-prefecture-official-organization",
+      "description": "千葉県が公式な地方公共団体であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-official-name-ja",
+      "description": "千葉県の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-official-name-en",
+      "description": "千葉県の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-home-ja-official-page",
+      "description": "千葉県の日本語ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-home-en-official-page",
+      "description": "千葉県の英語ホームページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-disaster-safety-official-page",
+      "description": "千葉県の防災・安全・安心ページが、千葉県自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-disaster-portal-official-page",
+      "description": "千葉県防災ポータルサイトが、千葉県の公式な防災情報案内先であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-disaster-certificate-official-page",
+      "description": "千葉県の罹災証明書案内ページが、千葉県自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-official-organization",
+      "description": "千葉市が公式な地方公共団体であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-official-name-ja",
+      "description": "千葉市の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-official-name-en",
+      "description": "千葉市の英語名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-home-ja-official-page",
+      "description": "千葉市の日本語ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-home-en-official-page",
+      "description": "千葉市の英語ホームページが公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-disaster-info-ja-official-page",
+      "description": "千葉市の防災・安全安心ページが、千葉市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-disaster-info-en-official-page",
+      "description": "千葉市の防災・安全安心ページの英語案内が、千葉市公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-residential-disaster-certificate-ja-official-page",
+      "description": "千葉市の罹災証明書・被災証明書案内ページが、千葉市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-residential-disaster-certificate-en-official-page",
+      "description": "千葉市の罹災証明書・被災証明書案内の英語ページが、千葉市公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-emergency-medical-care-ja-official-page",
+      "description": "千葉市の救急・救命案内ページが、千葉市自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-emergency-medical-care-en-official-page",
+      "description": "千葉市の救急・救命案内の英語ページが、千葉市公式サイトから提供されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-water-supply-official-organization",
+      "description": "千葉市営水道が公式な水道事業体として案内されていることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-water-supply-official-name-ja",
+      "description": "千葉市営水道の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-water-supply-organizational-relationship",
+      "description": "千葉市営水道と千葉市の組織関係を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-water-supply-home-official-page",
+      "description": "千葉市営水道ホームページが団体自身の公式ページであることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-water-supply-emergency-official-page",
+      "description": "千葉市営水道の緊急情報ページが千葉市公式サイトの案内先であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-fire-department-official-organization",
+      "description": "千葉市消防局が公式な消防・救急組織であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-fire-department-official-name-ja",
+      "description": "千葉市消防局の日本語正式名称を確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "evidence-chiba-prefecture-chiba-city-119-ja-official-page",
+      "description": "千葉市の119番のかけ方ページが千葉市消防局の公式案内であることを確認するための根拠です。",
+      "locale_status": "published",
+      "content_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

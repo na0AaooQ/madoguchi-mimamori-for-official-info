@@ -3,7 +3,7 @@
   "artifact_type": "production",
   "artifact_scope": "national",
   "locale": "en",
-  "generated_for_date": "2026-08-09",
+  "generated_for_date": "2026-08-21",
   "site": {
     "site_id": "madoguchi-mimamori",
     "default_locale": "ja",
@@ -27,6 +27,13 @@
       "navigation_label": "Kumamoto Prefecture and Kumamoto City",
       "scope_note": "Includes information for Kumamoto Prefecture as a whole and information for Kumamoto City.",
       "path": "/en/regions/kumamoto/"
+    },
+    {
+      "region_id": "region-chiba-prefecture",
+      "region_slug": "chiba",
+      "navigation_label": "Chiba Prefecture and Chiba City",
+      "scope_note": "Includes information for Chiba Prefecture as a whole and information for Chiba City.",
+      "path": "/en/regions/chiba/"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "src-kumamoto-prefecture-home-ja",
@@ -240,6 +240,173 @@
       "content_revision": 1,
       "based_on_ja_revision": 1,
       "content_reviewed_on": "2026-08-09"
+    },
+    {
+      "id": "src-chiba-prefecture-home-ja",
+      "display_title": "Chiba Prefecture Official Website",
+      "purpose": "You can check official information provided by Chiba Prefecture.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-home-en",
+      "display_title": "Chiba Prefecture Official Website (English)",
+      "purpose": "You can check official information provided by Chiba Prefecture in English.",
+      "public_note": "This is an official English page provided by Chiba Prefecture.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-disaster-safety-ja",
+      "display_title": "Chiba Prefecture Disaster Prevention and Safety Information",
+      "purpose": "You can check disaster prevention, safety, and security information provided by Chiba Prefecture.",
+      "destination_language_note": "Some information at the destination may be available only in Japanese.",
+      "public_note": "Check the latest information directly on the official website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-disaster-portal-ja",
+      "display_title": "Chiba Prefecture Disaster Prevention Portal",
+      "purpose": "You can check disaster prevention information provided by Chiba Prefecture.",
+      "destination_language_note": "The portal provides a language selection feature; some information may be available only in Japanese.",
+      "public_note": "During a disaster, check the latest information directly on the linked official page.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-disaster-certificate-ja",
+      "display_title": "Chiba Prefecture Information about Disaster Damage Certificates",
+      "purpose": "You can check official information about disaster damage certificates provided by Chiba Prefecture.",
+      "destination_language_note": "The destination is available in Japanese only.",
+      "public_note": "No official English page is currently registered; check the Japanese official page for the latest information.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-home-ja",
+      "display_title": "Chiba City Official Website (Japanese)",
+      "purpose": "You can check official information provided by Chiba City.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-home-en",
+      "display_title": "Chiba City English Homepage",
+      "purpose": "You can check official information in English for residents and visitors in Chiba City.",
+      "public_note": "This is an official English information page provided by Chiba City.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-disaster-info-ja",
+      "display_title": "Chiba City Disaster Prevention and Safety Information",
+      "purpose": "You can check disaster prevention, safety, and security information provided by Chiba City.",
+      "destination_language_note": "Some information at the destination may be available only in Japanese.",
+      "public_note": "Check the latest information directly on the official website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-disaster-info-en",
+      "display_title": "Chiba City Disaster Prevention and Safety Information",
+      "purpose": "You can check Chiba City's disaster prevention, safety, and security information through an English translation page.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-ja",
+      "display_title": "Chiba City Residential Disaster Damage Certificate Information",
+      "purpose": "You can check Chiba City's official information about disaster damage certificates.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-en",
+      "display_title": "Chiba City Residential Disaster Damage Certificate Information",
+      "purpose": "You can check Chiba City's information about disaster damage certificates through an English translation page.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-emergency-medical-care-ja",
+      "display_title": "Chiba City Emergency and Life-Saving Information",
+      "purpose": "You can check official emergency medical and life-saving information provided by Chiba City.",
+      "destination_language_note": "The destination is available in Japanese.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-emergency-medical-care-en",
+      "display_title": "Chiba City Emergency and Life-Saving Information",
+      "purpose": "You can check Chiba City's emergency medical and life-saving information through an English translation page.",
+      "public_note": "This is an English translation page provided through the official website. The Japanese page is the original source.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-119-ja",
+      "display_title": "Chiba City How to Call 119",
+      "purpose": "Check Chiba City's official guidance on how to call 119 in an emergency.",
+      "destination_language_note": "The destination is available in Japanese only.",
+      "public_note": "No official English page is currently registered; check the Japanese official page.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-water-supply-home",
+      "display_title": "Chiba City Water Supply Official Information",
+      "purpose": "You can check official information about water supply services provided by Chiba City Water Supply. Water service in Chiba City is provided by multiple water utilities, so confirm your area and the applicable service zone.",
+      "destination_language_note": "The destination is available in Japanese only.",
+      "public_note": "Check the latest information directly on the official website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
+    },
+    {
+      "id": "src-chiba-prefecture-chiba-city-water-supply-emergency",
+      "display_title": "Chiba City Water Supply Emergency Information",
+      "purpose": "You can check emergency information from Chiba City Water Supply, including service interruptions and water quality issues. If you are outside the Chiba City Water Supply service area, check the water utility responsible for your area.",
+      "destination_language_note": "The destination is available in Japanese only.",
+      "public_note": "Check the latest information directly on the official website.",
+      "locale_status": "published",
+      "content_revision": 1,
+      "based_on_ja_revision": 1,
+      "content_reviewed_on": "2026-08-21"
     }
   ]
 }

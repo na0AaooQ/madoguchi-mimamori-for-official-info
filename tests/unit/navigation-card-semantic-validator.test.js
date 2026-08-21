@@ -426,6 +426,19 @@ test('requires a structurally publishable primary link with E019', async (t) => 
   });
 });
 
+test('requires a structurally publishable primary link for each published card locale with E021', () => {
+  const input = createPublishedNavigationCardData();
+  input.core.cardSourceLinks[0].display_locales = ['ja'];
+  assert.ok(
+    hasResult(
+      validateNavigationCardData(input),
+      'E021',
+      'card-source-example-disaster-information-primary',
+      'display_locales'
+    )
+  );
+});
+
 test('collects multiple navigation errors deterministically and tolerates partial input', () => {
   const input = createPublishedNavigationCardData();
   input.core.cards[0].section_id = 'section-missing';

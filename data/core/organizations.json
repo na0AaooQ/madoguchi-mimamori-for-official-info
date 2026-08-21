@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "data_updated_on": "2026-08-18",
+  "data_updated_on": "2026-08-21",
   "items": [
     {
       "id": "org-kumamoto-prefecture",
@@ -37,6 +37,36 @@
       "region_ids": ["region-japan"],
       "publication_status": "published",
       "internal_note": "防衛省と自衛隊は同一の組織を指すという防衛省公式説明を根拠に、一つの団体として管理する。公式性・日英名称は確認根拠で管理する。"
+    },
+    {
+      "id": "org-chiba-prefecture",
+      "organization_type": "local-government",
+      "region_ids": ["region-chiba-prefecture"],
+      "publication_status": "published",
+      "internal_note": "実在情報の登録対象。公式名称と団体の公式性は確認根拠シートで管理する。"
+    },
+    {
+      "id": "org-chiba-prefecture-chiba-city",
+      "organization_type": "local-government",
+      "region_ids": ["region-chiba-prefecture"],
+      "publication_status": "published",
+      "internal_note": "実在情報の登録対象。公式名称と団体の公式性は確認根拠シートで管理する。"
+    },
+    {
+      "id": "org-chiba-city-water-supply",
+      "organization_type": "utility-operator",
+      "region_ids": ["region-chiba-prefecture"],
+      "parent_organization_id": "org-chiba-prefecture-chiba-city",
+      "publication_status": "published",
+      "internal_note": "千葉市営水道の公式情報を管理する。千葉市全体の行政情報とは分離して扱う。"
+    },
+    {
+      "id": "org-chiba-city-fire-department",
+      "organization_type": "fire-service",
+      "region_ids": ["region-chiba-prefecture"],
+      "parent_organization_id": "org-chiba-prefecture-chiba-city",
+      "publication_status": "published",
+      "internal_note": "将来他地域でも利用する可能性があるため独立した団体として管理する。"
     }
   ]
 }

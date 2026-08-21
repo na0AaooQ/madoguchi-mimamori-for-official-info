@@ -1,0 +1,401 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "production",
+  "artifact_scope": "region",
+  "locale": "ja",
+  "generated_for_date": "2026-08-21",
+  "site": {
+    "site_id": "madoguchi-mimamori",
+    "default_locale": "ja",
+    "supported_locales": [
+      "ja",
+      "en"
+    ],
+    "site_name": "まどぐちみまもり",
+    "subtitle": "公的機関・関係団体の公式情報案内",
+    "short_description": "災害時などに確認したい内容から担当する公的機関・関係団体を見つけ、その団体自身の公式発表へ進むための案内サイトです。",
+    "purpose": "公的機関・関係団体の公式情報へ短時間で到達できるよう案内します。",
+    "free_use_notice": "無料で利用でき、広告・アフィリエイトはなく、ログインも不要です。",
+    "external_site_notice": "案内先は外部の公式サイトです。最新情報はリンク先で確認してください。",
+    "disclaimer_summary": "行政機関が運営する公式サイト、速報サイト、情報の真偽判定サービスではありません。掲載は団体全体の信頼性や、案内先の情報の正しさを保証するものではありません。",
+    "contact_url": "https://portfolio.na0aaooq.com/contact.html"
+  },
+  "sections": [
+    {
+      "id": "section-public-institutions-disaster",
+      "anchor_id": "public-institutions-disaster",
+      "title": "公的機関・防災全般",
+      "short_description": "国・自治体の防災情報、避難、河川、行政対応や支援の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-official-information",
+          "title": "千葉県・千葉市の公式情報",
+          "summary": "千葉県と千葉市が提供する公式情報への入口を確認できます。",
+          "region_label": "千葉県・千葉市",
+          "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-official-information-prefecture-home-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "千葉県公式ホームページを見る",
+              "destination": {
+                "id": "src-chiba-prefecture-home-ja",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.pref.chiba.lg.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉県公式ホームページ",
+                "purpose": "千葉県の公式情報全般を確認できます。",
+                "public_note": "公開情報は千葉県公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "千葉県",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-official-information-city-home-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "千葉市公式ホームページを見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-home-ja",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市公式ホームページ",
+                "purpose": "千葉市の公式情報全般を確認できます。",
+                "public_note": "公開情報は千葉市公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "千葉市",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県千葉市の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "card-chiba-prefecture-chiba-city-disaster-information",
+          "title": "防災情報を確認する",
+          "summary": "千葉県と千葉市が提供する防災、災害時の案内、安全・安心に関する情報を確認できます。",
+          "region_label": "千葉県・千葉市",
+          "emergency_note": "災害時は、リンク先で最新の発表を直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-information-disaster-portal",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "千葉県防災ポータルサイトを見る",
+              "destination": {
+                "id": "src-chiba-prefecture-disaster-portal-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.bousai.pref.chiba.lg.jp/X_PUB_VF_Top",
+                "destination_locales": [
+                  "ja",
+                  "en"
+                ],
+                "display_title": "千葉県防災ポータルサイト",
+                "purpose": "千葉県が提供する防災情報を確認できます。",
+                "public_note": "災害時はリンク先で最新情報を直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "千葉県",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-information-city-disaster-info-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "千葉市防災・安全安心を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-disaster-info-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/anzen/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市 防災・安全安心",
+                "purpose": "千葉市の防災・安全・安心に関する情報を確認できます。",
+                "public_note": "公開情報は千葉市公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "千葉市",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県千葉市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-information-prefecture-disaster-safety-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "千葉県 防災・安全・安心を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-disaster-safety-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.pref.chiba.lg.jp/bousaik/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉県 防災・安全・安心",
+                "purpose": "千葉県の防災、安全、安心に関する情報を確認できます。",
+                "public_note": "公開情報は千葉県公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "千葉県",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-life-safety-medical",
+      "anchor_id": "life-safety-medical",
+      "title": "命・安全・医療",
+      "short_description": "警察、消防・救急、医療機関や救急相談の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-emergency-life-saving-information",
+          "title": "救急・救命情報",
+          "summary": "千葉市が案内する救急・救命、救急医療、119番通報に関する情報を確認できます。",
+          "region_label": "千葉市",
+          "emergency_note": "命に関わるなど明らかに緊急を要する場合は、119番通報してください。最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-emergency-medical-care-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "千葉市の救急・救命情報を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-emergency-medical-care-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/anzen/kyukyu/index.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市 救急・救命",
+                "purpose": "千葉市が案内する救急・救命に関する公式情報を確認できます。",
+                "public_note": "公開情報は千葉市公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "千葉市",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県千葉市の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-emergency-life-saving-information-119-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "千葉市の119番のかけ方を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-119-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/shobo/keibo/shirei/119nokakekata.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市 119番のかけ方",
+                "purpose": "119番通報の方法など、緊急時の公式案内を確認できます。",
+                "public_note": "公開情報は千葉市消防局公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-city-fire-department",
+                  "official_name": "千葉市消防局",
+                  "name_kind": "official-ja",
+                  "summary": "千葉市の消防・救急業務を担う組織です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-lifelines",
+      "anchor_id": "lifelines",
+      "title": "ライフライン",
+      "short_description": "水道・下水道、電気、ガス、通信の公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-water-supply-information",
+          "title": "千葉市営水道の公式情報",
+          "summary": "千葉市営水道が提供する公式情報、災害・緊急時の案内を確認できます。千葉市内でも地域により担当する水道事業体が異なるため、利用地域と給水区域を確認してください。",
+          "region_label": "千葉市",
+          "emergency_note": "断水・給水・災害に関する最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-home",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "千葉市営水道の公式情報を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-water-supply-home",
+                "source_type": "official-homepage",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/suido/somu/main.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市営水道 公式情報",
+                "purpose": "千葉市営水道が提供する水道サービスに関する公式情報を確認できます。千葉市内でも地域により担当する水道事業体が異なるため、利用地域と給水区域を確認してください。",
+                "public_note": "公開情報は千葉市営水道公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-city-water-supply",
+                  "official_name": "千葉市営水道",
+                  "name_kind": "official-ja",
+                  "summary": "千葉市営水道が提供する水道サービスに関する情報を提供する事業体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-water-supply-information-water-supply-emergency",
+              "role": "secondary",
+              "visibility_context": "disaster",
+              "button_label": "千葉市営水道の災害・緊急時情報を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-water-supply-emergency",
+                "source_type": "disaster-page",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/suido/jigyo/kinkyuujyouhou.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市営水道 災害・緊急時情報",
+                "purpose": "断水、赤水、濁り水など、千葉市営水道の緊急情報を確認できます。千葉市営水道以外の給水区域では、担当する水道事業体を確認してください。",
+                "public_note": "災害・緊急時はリンク先で最新情報を直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-city-water-supply",
+                  "official_name": "千葉市営水道",
+                  "name_kind": "official-ja",
+                  "summary": "千葉市営水道が提供する水道サービスに関する情報を提供する事業体です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-support-recovery",
+      "anchor_id": "support-recovery",
+      "title": "支援・復旧",
+      "short_description": "り災証明、住まい、福祉、事業者支援、義援金などの公式案内を探します。",
+      "cards": [
+        {
+          "id": "card-chiba-prefecture-chiba-city-disaster-damage-support-information",
+          "title": "罹災証明書・被災後の支援情報",
+          "summary": "千葉県と千葉市が案内する、罹災証明書・被災証明書など災害後の手続きと支援情報を確認できます。",
+          "region_label": "千葉県・千葉市",
+          "emergency_note": "申請方法、受付日時、必要書類などの最新情報は、リンク先で直接確認してください。",
+          "details_label": "案内先の詳細を見る",
+          "links": [
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-prefecture-disaster-certificate-ja",
+              "role": "primary",
+              "visibility_context": "always",
+              "button_label": "千葉県の罹災証明書について見る",
+              "destination": {
+                "id": "src-chiba-prefecture-disaster-certificate-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.pref.chiba.lg.jp/bousaik/jibun/koudou/risaisyomei.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉県 罹災証明書について",
+                "purpose": "罹災証明書に関する千葉県の公式情報を確認できます。",
+                "public_note": "公開情報は千葉県公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture",
+                  "official_name": "千葉県",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県の行政を担う地方公共団体です。"
+                }
+              }
+            },
+            {
+              "id": "card-source-chiba-prefecture-chiba-city-disaster-damage-support-information-city-residential-disaster-certificate-ja",
+              "role": "secondary",
+              "visibility_context": "always",
+              "button_label": "千葉市の罹災証明書・被災証明書を見る",
+              "destination": {
+                "id": "src-chiba-prefecture-chiba-city-residential-disaster-certificate-ja",
+                "source_type": "information-page",
+                "content_format": "html",
+                "url": "https://www.city.chiba.jp/sogoseisaku/kikikanri/kikikanri/sinnrisaishomei.html",
+                "destination_locales": [
+                  "ja"
+                ],
+                "display_title": "千葉市 罹災証明書・被災証明書",
+                "purpose": "千葉市の罹災証明書・被災証明書に関する公式情報を確認できます。",
+                "public_note": "公開情報は千葉市公式ページを直接確認してください。",
+                "destination_checked_on": "2026-08-21",
+                "official_information_checked_on": "2026-08-21",
+                "organization": {
+                  "id": "org-chiba-prefecture-chiba-city",
+                  "official_name": "千葉市",
+                  "name_kind": "official-ja",
+                  "summary": "千葉県千葉市の行政を担う地方公共団体です。"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "region": {
+    "region_id": "region-chiba-prefecture",
+    "region_slug": "chiba",
+    "region_name": "千葉県",
+    "scope_note": "千葉県全域向けの情報と、千葉市向けの情報を掲載しています。",
+    "path": "/ja/regions/chiba/"
+  }
+}
