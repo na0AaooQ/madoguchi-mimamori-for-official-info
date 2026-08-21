@@ -78,7 +78,6 @@ function expectedPageMetadata(file) {
 
   const [, locale, rest] = /^(ja|en)\/(.*)index\.html$/.exec(file);
   const navigation = productionInputs.navigations[locale];
-  const regional = productionInputs.regionalNavigations[locale].kumamoto;
   const ui = productionInputs.uiLocales[locale];
   let title;
   let description;
@@ -91,34 +90,45 @@ function expectedPageMetadata(file) {
     description = navigation.site.short_description;
     relative = `${locale}/`;
     titleIncludesSite = false;
-  } else if (rest === 'regions/kumamoto/') {
-    title = [regional.region.region_name, navigation.site.site_name].join(
-      locale === 'ja' ? '｜' : ' | '
-    );
-    description = regional.region.scope_note;
-    relative = `${locale}/regions/kumamoto/`;
-    titleIncludesSite = false;
-  } else if (rest === 'regions/kumamoto/organizations/') {
-    title = ui.pages.organizations_title;
-    description = ui.pages.organizations_intro;
-    title = [title, regional.region.region_name, navigation.site.site_name].join(
-      locale === 'ja' ? '｜' : ' | '
-    );
-    relative = `${locale}/regions/kumamoto/organizations/`;
-    titleIncludesSite = false;
   } else if (rest === 'privacy/') {
     title = ui.pages.privacy_title;
     description = ui.social.privacy_description;
     relative = `${locale}/privacy/`;
   } else {
-    const anchorId = /^regions\/kumamoto\/sections\/([^/]+)\/$/.exec(rest)[1];
-    const section = regional.sections.find(({ anchor_id: value }) => value === anchorId);
-    title = [section.title, regional.region.region_name, navigation.site.site_name].join(
-      locale === 'ja' ? '｜' : ' | '
-    );
-    description = section.short_description;
-    relative = `${locale}/regions/kumamoto/sections/${anchorId}/`;
-    titleIncludesSite = false;
+    const regionMatch = /^regions\/([^/]+)\/(.*)$/.exec(rest);
+    assert.ok(regionMatch, file);
+    const [, slug, regionalRest] = regionMatch;
+    const regional = productionInputs.regionalNavigations[locale][slug];
+    assert.ok(regional, file);
+    if (regionalRest === '') {
+      title = [regional.region.region_name, navigation.site.site_name].join(
+        locale === 'ja' ? '｜' : ' | '
+      );
+      description = regional.region.scope_note;
+      relative = `${locale}/regions/${slug}/`;
+      titleIncludesSite = false;
+    } else if (regionalRest === 'organizations/') {
+      title = [
+        ui.pages.organizations_title,
+        regional.region.region_name,
+        navigation.site.site_name
+      ].join(locale === 'ja' ? '｜' : ' | ');
+      description = ui.pages.organizations_intro;
+      relative = `${locale}/regions/${slug}/organizations/`;
+      titleIncludesSite = false;
+    } else {
+      const sectionMatch = /^sections\/([^/]+)\/$/.exec(regionalRest);
+      assert.ok(sectionMatch, file);
+      const anchorId = sectionMatch[1];
+      const section = regional.sections.find(({ anchor_id: value }) => value === anchorId);
+      assert.ok(section, file);
+      title = [section.title, regional.region.region_name, navigation.site.site_name].join(
+        locale === 'ja' ? '｜' : ' | '
+      );
+      description = section.short_description;
+      relative = `${locale}/regions/${slug}/sections/${anchorId}/`;
+      titleIncludesSite = false;
+    }
   }
   return {
     title: titleIncludesSite
