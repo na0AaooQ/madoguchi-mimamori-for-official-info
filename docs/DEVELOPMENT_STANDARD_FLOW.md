@@ -173,13 +173,13 @@ Phase 0を開始する前に、最低限、以下の8項目を揃える。
 
 ローカルGit状態を利用者または実行可能な開発環境で確認する場合は、最低限以下を確認対象とする。
 
-\`\`\`sh
+```sh
 pwd
 git branch --show-current
 git status -s
 git diff origin/main
 ls -la
-\`\`\`
+```
 
 確認する内容は以下とする。
 
