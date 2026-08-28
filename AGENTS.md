@@ -141,9 +141,9 @@ ls -la
 
 最低限、次をこの順序で実行する。
 
+検証開始前の確認として、次を実行する。
+
 ```sh
-npm run validate:data
-npm run check
 git branch --show-current
 git diff --check
 git status -s
@@ -151,7 +151,26 @@ git diff --stat
 git diff
 ```
 
+想定外の差分がある場合は、必須自動検証へ進まず `STOP` とする。
+
+続けて、必須自動検証を次の順序で実行する。
+
+```sh
+npm run validate:data
+npm run check
+```
+
 `npm run check`に`validate:data`が含まれていても、先行する`npm run validate:data`を省略しない。
+
+検証後の最終確認として、次を実行する。
+
+```sh
+git branch --show-current
+git diff --check
+git status -s
+git diff --stat
+git diff
+```
 
 さらに、相対リンク、見出し階層、日付、決定記録の連番、用語と数値、実装済み・公開済み・未実装の区別を確認する。作業前後の差分を見比べ、依頼範囲外のファイルを変更していないことを確認する。
 
