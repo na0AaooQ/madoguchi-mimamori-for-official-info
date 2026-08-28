@@ -10,9 +10,9 @@
 
 ## 現在の公開状態
 
-第一版productionは2026年8月4日に公開済みです。正式URLは <https://madoguchi.kokoromimamori.na0aaooq.com/> で、日本語・英語、5分野、8カード、24案内先を提供しています。GitHub Pages、カスタムドメイン、HTTPS、`workflow_dispatch`だけの手動デプロイworkflowを使用します。
+第一版productionは2026年8月4日に公開済みです。正式URLは <https://madoguchi.kokoromimamori.na0aaooq.com/> です。GitHub Pages、カスタムドメイン、HTTPS、`workflow_dispatch`だけの手動デプロイworkflowを使用します。
 
-リポジトリ内のproduction成果物は、熊本県と千葉県の2地域、5分野、13カード、40案内先を扱います。千葉第一公開単位を含む成果物は、PRのマージと手動workflow実行前には正式URLへ反映されません。未公開の地域や将来候補を公開済みとして扱わないでください。
+リポジトリ内のproduction成果物と、正式URLへ実際に公開されている状態は一致しない場合があります。PRマージだけではproductionへ自動反映されません。公開済み、マージ済み、リポジトリ内成果物、未公開を区別してください。未公開の地域や将来候補を公開済みとして扱わないでください。
 
 公開後の改善、継続運用、将来構想は[公開後バックログ](docs/POST_LAUNCH_BACKLOG.md)を参照してください。バックログ項目は実装済み・公開済みとは扱いません。
 
@@ -37,7 +37,21 @@ git diff origin/main
 ls -la
 ```
 
-あわせて、`README.md`、`AGENTS.md`、関連する`docs/`文書、`LICENSE`、`.gitignore`を読む。指定ブランチと異なる場合、または作業前から未コミット差分がある場合は、既存差分を修正・削除せず、ユーザーへ状況を報告する。
+あわせて、最低限、以下の文書の実内容を確認する。
+
+- `README.md`
+- `AGENTS.md`
+- `docs/DEVELOPMENT_PROCESS_RULES.md`
+- `docs/DEVELOPMENT_STANDARD_FLOW.md`
+- 今回の変更に関連する`docs/`文書
+- `LICENSE`
+- `.gitignore`
+
+`DEVELOPMENT_PROCESS_RULES.md`では変更種別・適用方法を確認し、`DEVELOPMENT_STANDARD_FLOW.md`では今回適用するPhaseおよび判断に必要な範囲の実内容を確認する。4,000行超の文書全文を毎案件で機械的に読み直すのではなく、判断に必要な実内容を確認する。ファイル名やリンクの存在だけを確認済みとして扱わない。
+
+指定ブランチと異なる場合、または作業前から未コミット差分がある場合は、既存差分を勝手に修正・削除せず、ユーザーへ状況を報告する。
+
+変更種別C「緊急対応」では、安全確保・復旧を優先し、Phase 0の事前完了を対応開始条件としない。ただし、Scopeを必要以上に拡大せず、利用者の明示承認ルールを自動解除せず、対応後に`DEVELOPMENT_PROCESS_RULES.md`に従って事後レビューを行う。
 
 ## 仕様・情報の扱い
 
@@ -125,27 +139,61 @@ ls -la
 - `npm run format`は対象ファイルを書き換える。`npm run check`はファイルを書き換えない。
 - 既存MarkdownのPrettierベースラインを検査回避目的で追加・更新しない。変更した文書は整形し、登録があれば削除する。
 
-最低限、次を実行する。
+最低限、次をこの順序で実行する。
+
+検証開始前の確認として、次を実行する。
 
 ```sh
+git branch --show-current
 git diff --check
 git status -s
 git diff --stat
 git diff
+```
+
+想定外の差分がある場合は、必須自動検証へ進まず `STOP` とする。
+
+続けて、必須自動検証を次の順序で実行する。
+
+```sh
 npm run validate:data
 npm run check
 ```
 
+`npm run check`に`validate:data`が含まれていても、先行する`npm run validate:data`を省略しない。
+
+検証後の最終確認として、次を実行する。
+
+```sh
+git branch --show-current
+git diff --check
+git status -s
+git diff --stat
+git diff
+```
+
 さらに、相対リンク、見出し階層、日付、決定記録の連番、用語と数値、実装済み・公開済み・未実装の区別を確認する。作業前後の差分を見比べ、依頼範囲外のファイルを変更していないことを確認する。
 
-## Git操作
+## Git操作・状態変更操作
 
-ユーザーの明示的な依頼なしに、次を行わない。
+ユーザーの明示的な依頼・承認なしに、次を行わない。
 
+- 実装開始
+- `git pull --ff-only`
+- ブランチ作成
+- ブランチ切替
 - commit
 - push
 - Pull Requestの作成
+- Pull Requestの修正
+- Pull Requestのマージ
+- productionデプロイ
+- GitHub Actions workflowの再実行
+- revert
+- 再デプロイ
+- 作業ブランチ削除
 - 既存差分の破棄・上書き
-- ブランチの作成・切り替え
 
-作業結果は、変更ファイル、検証結果、未確定事項とともに報告し、ユーザーが差分を確認できる状態で停止する。
+複数操作について利用者が範囲を明確に一括承認した場合は、その承認範囲内で実施してよい。承認されていない操作を前後関係から推測して実行しない。
+
+作業結果は、変更ファイル、検証結果、未確定事項とともに報告する。次の状態変更に別途承認が必要な場合は、その状態で停止する。
