@@ -1,11 +1,13 @@
 # ドキュメント目次
 
-「まどぐちみまもり｜熊本県・熊本市の公式情報案内」の設計・運用文書をまとめています。第一版productionサイトは2026年8月4日に公開済みです。GitHub Pagesの手動workflowでbuildとdeployが成功し、カスタムドメイン <https://madoguchi.kokoromimamori.na0aaooq.com/>、HTTPS、日英画面、リンク、アセット、404、sitemapを公開後に確認しています。
+「まどぐちみまもり｜公的機関・関係団体の公式情報案内」の設計・開発・運用文書をまとめています。第一版productionサイトは2026年8月4日に公開済みです。GitHub Pagesの手動workflowでbuildとdeployが成功し、カスタムドメイン <https://madoguchi.kokoromimamori.na0aaooq.com/>、HTTPS、日英画面、リンク、アセット、404、sitemapを公開後に確認しています。
 
 ## 基本文書
 
 | 文書                                                           | 役割                                                            |
 | -------------------------------------------------------------- | --------------------------------------------------------------- |
+| [開発作業標準フロー 管理ルール](DEVELOPMENT_PROCESS_RULES.md)  | 開発フローの管理、適用判断、変更種別、情報確認原則              |
+| [開発作業標準フロー](DEVELOPMENT_STANDARD_FLOW.md)             | Phase 0〜Phase 6の開始条件、実施手順、完了条件、終了判定        |
 | [プロジェクト背景](PROJECT_BACKGROUND.md)                      | 企画の背景、利用者の課題、対象範囲、名称決定の経緯              |
 | [設計原則](DESIGN_PRINCIPLES.md)                               | 安全性、分かりやすさ、維持可能性、技術・UIの基本原則            |
 | [情報掲載方針](INFORMATION_LISTING_POLICY.md)                  | 掲載対象、公式性確認、除外基準、リンク区分                      |
@@ -59,7 +61,11 @@
 
 ## 文書の読み方
 
-- プロジェクトへ初めて参加する場合は、ルートの[README](../README.md)から読み始めてください。
-- 実装や文書変更を行う開発エージェントは、ルートの[AGENTS.md](../AGENTS.md)を先に確認してください。
+1. プロジェクトへ初めて参加する場合は、ルートの[README](../README.md)から読み始めてください。
+2. 実装や文書変更を行う開発エージェントは、ルートの[AGENTS.md](../AGENTS.md)を先に確認してください。
+3. 開発作業の変更種別・適用判断・情報確認原則は、[DEVELOPMENT_PROCESS_RULES.md](DEVELOPMENT_PROCESS_RULES.md)を確認してください。
+4. Phase 0〜Phase 6を適用する場合は、[DEVELOPMENT_STANDARD_FLOW.md](DEVELOPMENT_STANDARD_FLOW.md)の該当Phaseを確認してください。
+5. 今回の変更内容に応じて、個別の設計・開発・運用文書を確認してください。
+
 - 「決定済み」「暫定」「未確定」を区別し、未確定事項は実装構成が決まったときに更新してください。
 - 設計方針を変更する場合は、関係する基本文書と設計判断記録の整合性を保ってください。
