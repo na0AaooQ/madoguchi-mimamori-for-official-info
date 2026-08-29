@@ -43,7 +43,7 @@
 
 ## OGP画像とSNS共有メタデータ
 
-OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だけBufferとして読み込み、`dist/site/production/ogp-image.png`へバイト列を変更せず生成します。previewでは入力として読み込まず、成果物にも生成しません。正式画像のSHA-256は`7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84`です。
+OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だけBufferとして読み込み、`dist/site/production/ogp-image.png`へバイト列を変更せず生成します。共通画像には地域名を固定せず、サイト名「まどぐちみまもり / Madoguchi Mimamori」と、日英の正式subtitle「公的機関・関係団体の公式情報案内 / Guide to Official Information from Public Institutions and Related Organizations」でサイトの役割を示します。画像URLは`/ogp-image.png`を維持します。previewでは入力として読み込まず、成果物にも生成しません。正式画像のSHA-256は`4df3f82277d9edf0575d2682abe3286e1aaac57e8809c0f5a852a788f3bc593c`です。
 
 共通画像1枚を、sitemapと同じproduction通常ページ全31ページで使用します。各ページにOpen Graph 10項目とX向け6項目を1件ずつ設定し、`title`、`description`、`og:url`はページごとの地域成果物と正式URL設定から生成します。ルートは日英共通値、日本語・英語ページは対応するLocaleと公開ナビゲーションを使用します。productionの`404.html`とpreview全HTMLは対象外です。
 
@@ -55,7 +55,7 @@ OGP画像の正本は`site/assets/ogp-image.png`です。production生成時だ�
 
 ルートには、本文へのスキップリンク、日英サイト名を表示する共通ヘッダー、一組の日英併記文字サイズ切り替え、共通フッターを設けます。ヘッダーのサイト名は自ページリンクにしません。フッターには、日英のプライバシーポリシー、言語別の外部問い合わせ、運営者情報、無料・広告なし・ログイン不要の案内、著作権を表示し、ルート自身へ戻るトップリンクは置きません。JavaScriptが無効でも言語選択、プライバシーポリシー、問い合わせ、運営者プロフィールへの主要導線を利用できます。
 
-本文上部には、日本語Localeの`site_name`と`subtitle`から生成した「まどぐちみまもり｜熊本県・熊本市の公式情報案内」を通常の本文として表示します。ルートは引き続き日本語・英語を選択する共通入口であり、言語選択の`h1`は変更しません。
+本文上部には、日本語Localeの`site_name`と`subtitle`から生成した「まどぐちみまもり｜公的機関・関係団体の公式情報案内」を通常の本文として表示します。ルートは引き続き日本語・英語を選択する共通入口であり、言語選択の`h1`は変更しません。
 
 productionの`/ja/`と`/en/`は全国トップとし、地域ページを`/{locale}/regions/{region_slug}/`以下へ配置します。previewにはルートを設けず、`/preview/ja/`と`/preview/en/`から始まる従来構造を維持します。
 

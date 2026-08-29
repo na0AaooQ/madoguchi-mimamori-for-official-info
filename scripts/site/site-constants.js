@@ -17,7 +17,7 @@ export const SITE_PRODUCTION_BINARY_ASSET_SOURCE_PATHS = Object.freeze({
 
 export const SITE_OGP_IMAGE_PATH = 'ogp-image.png';
 export const SITE_OGP_IMAGE_SHA256 =
-  '7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84';
+  '4df3f82277d9edf0575d2682abe3286e1aaac57e8809c0f5a852a788f3bc593c';
 
 export const SITE_ICON_PATHS = Object.freeze([
   'favicon.ico',
