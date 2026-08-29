@@ -54,10 +54,10 @@ test('loads SVG as text and ICO and PNG as byte buffers for both modes', async (
 
 test('loads and validates the approved production-only OGP image', async () => {
   const source = await readIcon('ogp-image.png');
-  assert.equal(source.length, 564_713);
+  assert.equal(source.length, 658_573);
   assert.equal(
     createHash('sha256').update(source).digest('hex'),
-    '7a87da512d851cbb38226b833f5f34b34525c191902b01acb0f203cfcdd61f84'
+    '4df3f82277d9edf0575d2682abe3286e1aaac57e8809c0f5a852a788f3bc593c'
   );
   assert.deepEqual(validateOgpImage(source), []);
 

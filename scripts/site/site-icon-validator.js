@@ -187,8 +187,8 @@ export function validateOgpImage(source) {
   const messages = inspection.messages;
   if (!Buffer.isBuffer(source)) return messages;
 
-  if (source.length !== 564_713)
-    messages.push(`${file}は564713 bytesにしてください（実際: ${source.length}）。`);
+  if (source.length !== 658_573)
+    messages.push(`${file}は658573 bytesにしてください（実際: ${source.length}）。`);
   const actualHash = createHash('sha256').update(source).digest('hex');
   if (actualHash !== SITE_OGP_IMAGE_SHA256)
     messages.push(`${file}のSHA-256が正式採用値と一致しません。`);
