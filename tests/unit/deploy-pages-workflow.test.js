@@ -25,7 +25,7 @@ test('Pages workflow uses only the requested official action majors and artifact
       'actions/deploy-pages@v4'
     ]
   );
-  assert.match(workflow, /node-version: 24\.18\.0/);
+  assert.match(workflow, /^ {10}node-version: 24\.22\.1$/m);
   assert.match(workflow, /path: dist\/site\/production/);
   assert.doesNotMatch(workflow, /path: (?:\.|data|schemas|tests|docs)\s*$/m);
 });

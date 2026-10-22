@@ -252,7 +252,7 @@
 
 - **区分:** CI・公開運用
 - **状態:** `deferred`
-- **背景・現在の状態:** 2026年8月4日のworkflow実行 #2では、GitHub Actions画面にNode.js 20非推奨に関する非ブロッキング警告が2件表示されました。2026年8月8日のGitHub Pages手動デプロイ `Deploy production site to GitHub Pages #9`でも同種の非ブロッキング警告がbuild/deployで計2件表示されましたが、workflow全体、build、deploy、production公開、サイト動作は正常でした。現在のworkflowでは`actions/checkout@v6`、`actions/setup-node@v6`、`actions/configure-pages@v6`、`actions/upload-pages-artifact@v4`、`actions/deploy-pages@v4`を利用しています。workflowでアプリを実行するNode.jsは`24.18.0`です。警告元の内部原因はこの文書で断定しません。
+- **背景・現在の状態:** 2026年8月4日のworkflow実行 #2では、GitHub Actions画面にNode.js 20非推奨に関する非ブロッキング警告が2件表示されました。2026年8月8日のGitHub Pages手動デプロイ `Deploy production site to GitHub Pages #9`でも同種の非ブロッキング警告がbuild/deployで計2件表示されましたが、workflow全体、build、deploy、production公開、サイト動作は正常でした。現在のworkflowでは`actions/checkout@v6`、`actions/setup-node@v6`、`actions/configure-pages@v6`、`actions/upload-pages-artifact@v4`、`actions/deploy-pages@v4`を利用しています。現在のworkflow設定でアプリに指定するNode.jsは`24.22.1`です。対象npmは`11.19.1`です。この指定更新後のGitHub Actions実行・警告の再検証は未実施であり、警告解消済みとは扱いません。警告元の内部原因はこの文書で断定しません。
 - **今回含めないこと:** 警告対応のためのActionバージョン変更、workflow変更、再デプロイ
 - **再検討条件:** GitHub公式Actionに警告を解消する安定版が提供された、警告がエラーへ変わった、workflow実行へ影響が出た、またはGitHubから移行期限や必要対応が明示された場合
 
