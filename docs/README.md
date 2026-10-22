@@ -58,6 +58,7 @@
 | [0024](decisions/0024-expand-one-site-nationally-and-defer-regional-url-migration.md) | 同一サイトを全国版へ拡張し、地域別URL移行を2県目追加前に行う |
 | [0025](decisions/0025-adopt-minimal-ga4-analytics-for-production.md)                  | productionへ必要最小限のGoogle Analytics 4を導入する         |
 | [0026](decisions/0026-implement-national-regional-url-foundation.md)                  | 全国版・地域別URL共通基盤を工程Aとして実装する               |
+| [0027](decisions/0027-update-node-npm-security-baseline.md)                           | Node.js・npmのセキュリティ更新を採用する                     |
 
 ## 文書の読み方
 

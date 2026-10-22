@@ -21,8 +21,8 @@ ESLintの書式規則は`eslint-config-prettier`で無効化し、書式はPrett
 
 ## 固定バージョン
 
-- Node.js `24.18.0`
-- npm `11.16.0`
+- Node.js `24.22.1`
+- npm `11.19.1`
 - eslint `10.7.0`
 - `@eslint/js` `10.0.1`
 - `@eslint/json` `2.0.1`
@@ -37,7 +37,7 @@ ESLintの書式規則は`eslint-config-prettier`で無効化し、書式はPrett
 
 ## Node.jsとnpmの準備
 
-`.nvmrc`にNode.js `24.18.0`を記録しています。nvmを利用できる環境では次を実行します。
+`.nvmrc`にNode.js `24.22.1`を記録しています。nvmを利用できる環境では次を実行します。
 
 ```sh
 nvm use
@@ -45,7 +45,7 @@ node --version
 npm --version
 ```
 
-期待値は`v24.18.0`と`11.16.0`です。依存関係は次のコマンドで再現します。
+期待値は`v24.22.1`と`11.19.1`です。依存関係は次のコマンドで再現します。
 
 ```sh
 npm ci
