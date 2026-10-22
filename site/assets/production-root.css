@@ -2,12 +2,6 @@
   text-align: center;
 }
 
-@media (min-width: 64rem) {
-  .production-root .root-description-ja {
-    white-space: nowrap;
-  }
-}
-
 @media (max-width: 34rem) {
   .production-root .font-size-control legend {
     float: none;
