@@ -577,11 +577,30 @@ test('generates the agreed common UI and accessible bilingual production root', 
   );
   assert.match(
     root,
-    /<p class="root-description-ja">公開中の地域について、公的機関・関係団体自身の公式情報へ進むための案内サイトです。<\/p>/
+    /<p class="root-description-ja">「まどぐちみまもり」は、公開中の地域について、公的機関・関係団体自身の公式情報・公式窓口へ進むための案内サイトです。<\/p>/
   );
   assert.match(
     root,
-    /<p lang="en">A guide to official information published by public institutions and related organizations for the regions currently covered by this site\.<\/p>/
+    /<p lang="en">Madoguchi Mimamori is a guide to official information and contact points provided by public institutions and related organizations for the regions currently covered by this site\.<\/p>/
+  );
+  assert.equal(
+    countLiteral(
+      root,
+      `<p class="root-description-ja">${escapeHtml(japaneseUi.root.description)}</p>`
+    ),
+    1
+  );
+  assert.equal(countLiteral(root, `<p lang="en">${escapeHtml(englishUi.root.description)}</p>`), 1);
+  const socialDescription = escapeHtml(
+    `${japaneseUi.root.description} / ${englishUi.root.description}`
+  );
+  assert.equal(
+    countLiteral(root, `<meta property="og:description" content="${socialDescription}">`),
+    1
+  );
+  assert.equal(
+    countLiteral(root, `<meta name="twitter:description" content="${socialDescription}">`),
+    1
   );
   assert.match(root, /<p class="note">行政機関が運営する公式サイトではありません。<\/p>/);
   assert.match(root, /<p class="note" lang="en">This is not an official government website\.<\/p>/);
