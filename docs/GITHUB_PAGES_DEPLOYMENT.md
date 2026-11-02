@@ -1,10 +1,14 @@
-# GitHub Pagesへのproductionサイト手動デプロイと公開後運用
+# GitHub Pagesへの手動デプロイ・メンテナンス切り替えと公開後運用
 
 ## 目的
 
-第一版の実在管理データから日本語・英語のproduction公開データと静的サイトを決定論的に生成し、GitHub Pagesへ手動デプロイする手順、初回公開記録、再実行・復旧方針を定めます。公開後も修正PRまたはrevertをマージし、同じworkflowを手動実行して更新・復旧できます。
+第一版の実在管理データから日本語・英語のproduction公開データと静的サイトを決定論的に生成し、GitHub Pagesへ手動デプロイする手順、初回公開記録、再実行・復旧方針を定めます。通常公開は指定コミットのGit管理済み成果物、メンテナンス公開は実行時mainのSorryページを使用します。PRマージだけでは本番公開されません。
+
+2026-11-03の設計・実装方針として、詳細設計v0.6の手動切り替えとSHA指定復旧を採用します。既存のPages Source、カスタムドメイン、DNS、HTTPS、権限および同時実行制御を維持し、新しい外部サービスや復旧SHAの自動保存システムは追加しません。この記載は本番切り替え・復旧の実施記録ではありません。
 
 ## 現在状態
+
+以下は既存の公開確認記録です。現在実際に公開されているコミットSHAは、成功したデプロイ実行と公開内容を照合して別途確認します。リポジトリのmain HEADを公開済みの証明として扱いません。
 
 | 項目             | 状態                                                      |
 | ---------------- | --------------------------------------------------------- |
@@ -73,7 +77,7 @@ https://madoguchi.kokoromimamori.na0aaooq.com
 
 base pathはURLのルート`/`です。設定は`site/production.json`へ集約しています。HTMLの内部リンク、CSS・JavaScript、ルートページ、404、sitemapはこの設定から生成します。GitHub Pages標準プロジェクトURLは正式base URLとして使用しません。
 
-将来別のドメインまたはパスへ変更する場合は、`site/production.json`の`base_url`だけを変更し、productionサイトを再生成して差分をPRで確認します。workflowは`actions/configure-pages`が返す`base_url`とGit管理中の設定を末尾スラッシュだけ正規化して比較し、不一致ならartifactのアップロード前に停止します。
+将来別のドメインまたはパスへ変更する場合は、`site/production.json`の`base_url`だけを変更し、productionサイトを再生成して差分をPRで確認します。今回の切り替えでは公開先設定を変更しません。workflowは`actions/configure-pages`が返す`base_url`と制御用mainの設定を比較し、productionでは指定SHAの設定とも比較します。既存の`check:site:base-url`と同じ`baseUrlsMatch`を標準Node.jsだけで再利用し、不一致ならartifactのアップロード前に停止します。ローカルの既存確認コマンドも引き続き利用できます。
 
 ## ローカル確認
 
@@ -102,7 +106,18 @@ npm run serve:site:production
 - `actions/upload-pages-artifact@v4`
 - `actions/deploy-pages@v4`
 
-`actions/checkout@v6`には`fetch-depth: 0`を設定し、`npm run check`が参照する既存MarkdownのPrettier基準コミットを含む全Git履歴を取得します。記載するActionバージョンは、現在のworkflowファイルと一致させます。
+制御側は実行時mainのSHAを`control/`へ、通常公開側は検証済みの指定SHAを`production-source/`へCheckoutします。両方の`actions/checkout@v6`には`fetch-depth: 0`を設定し、main履歴の検証と、過去SHAの`npm run check`が参照する既存MarkdownのPrettier基準コミットを含む全Git履歴を取得します。記載するActionバージョンは、現在のworkflowファイルと一致させます。
+
+Node.jsは両モードとも`24.22.1`です。メンテナンス側を通常サイトのlockfileに依存させないためnpmキャッシュは使用しません。productionだけが指定SHAのディレクトリで`npm ci`と`npm run check`を実行します。制御側にはnpm依存関係を導入しません。
+
+入力条件は次のとおりです。main以外のブランチやタグからの実行、表にないモード・組み合わせはアップロード前に拒否します。
+
+| deploy_mode            | production_sha | 条件                                                          |
+| ---------------------- | -------------- | ------------------------------------------------------------- |
+| `production`（初期値） | 必須           | 40桁の16進コミットSHA。存在し、実行時mainの履歴に含まれること |
+| `maintenance`          | 空欄のみ       | 実行時mainの`maintenance/sorry.html`を使用                    |
+
+`production_sha`はworkflow画面上では任意入力ですが、productionモードでは条件付き必須です。短縮SHA、ブランチ名、SHA前後の空白は使いません。不正入力、指定SHAの検証失敗、公開先不一致、空の成果物では停止し、最新mainへフォールバックしません。
 
 PRをマージした後、利用者が次を実行します。
 
@@ -111,12 +126,68 @@ PRをマージした後、利用者が次を実行します。
 3. HTTPS証明書が発行済みで、Enforce HTTPSが有効であることを確認する
 4. Actionsを開く
 5. `Deploy production site to GitHub Pages`を選ぶ
-6. `Run workflow`から`main`を手動実行する
-7. buildで`npm ci`、`npm run check`、Pages base URL一致確認、artifact uploadが成功したことを確認する
-8. deployジョブが成功したことを確認する
-9. workflowに表示される`page_url`を開く
+6. 公開する40桁のコミットSHAを確認する。新規更新時はPRマージ後の公開対象コミット、復旧時は事前記録した公開済みSHAを使用する
+7. 前のPages実行が完了していることを確認し、`Run workflow`でブランチ`main`、`deploy_mode=production`、`production_sha=公開対象SHA`を指定して新規実行する
+8. buildで指定SHAの`npm ci`、`npm run check`、Pages base URL・成果物の安全確認、artifact uploadが成功したことを確認する
+9. deployジョブが成功したことを確認する
+10. サマリーの制御SHAとコンテンツSHAを確認し、workflowに表示される`page_url`と正式URLで公開後確認を行う
 
-アップロード対象は`dist/site/production`だけです。リポジトリ全体、管理用`data/`、Schema、テスト、文書、実在TSVはPages artifactへ含めません。
+通常公開のアップロード対象は指定SHAの`production-source/dist/site/production`だけです。Git管理済み成果物を上書き再生成しません。ファイル一覧と内容をGitと照合し、未追跡ファイル、変更済みファイル、空ファイル、シンボリックリンク等があれば停止します。メンテナンス公開の対象は`control/dist/site/maintenance`だけです。リポジトリ全体、管理用`data/`、Schema、テスト、文書、実在TSV、もう一方の公開成果物はPages artifactへ含めません。
+
+サマリーとログに公開モード、制御SHA、コンテンツSHA、対象ディレクトリ、検証・アップロード・デプロイ結果を表示します。build成功はデプロイ成功ではありません。deployの結果と実URLの確認を分け、失敗・キャンセル・スキップを成功扱いしません。maintenanceのコンテンツSHAはSorryページを取得したmainのSHAです。
+
+## 公開済みSHAの確認と復旧記録
+
+メンテナンス開始前に、最後に正常公開した通常サイトの40桁SHAをローカルへ控え、対応する成功デプロイ実行と照合します。GitHub Actionsの実行履歴、サマリー、ログと正式URLの表示を確認してください。履歴は例えば次の読み取り専用コマンドで確認できます。
+
+```sh
+gh run list --workflow deploy-pages.yml --branch main --status success --limit 10
+gh run view RUN_ID --log
+```
+
+新方式では実行のHEADは制御SHAであり、復旧に必要なのはproductionの**コンテンツSHA**です。切り替え機能導入前の成功実行は、その実行でCheckoutされたSHAと公開内容を確認します。メンテナンス公開の成功SHAや、単に現在のmain HEADを復旧SHAにしないでください。
+
+記録はリポジトリ外のローカルメモ等で管理し、次の項目を保存します。設計時点の参考SHAを固定値として採用しません。
+
+- 通常公開コンテンツの40桁SHA
+- 成功したGitHub Actions実行のURL・番号・日時
+- 正式URLで通常サイトを確認した日時
+- メンテナンス開始と復旧時の実行記録
+
+これは運営者の手動記録を正本とする運用です。Actionsの実行履歴やサマリーは照合用であり、自動的な復旧先決定には使用しません。
+
+## メンテナンス開始とSorryページ確認
+
+1. 上記の公開済み通常サイトSHAと成功実行を記録・照合する
+2. 必要に応じて利用者へ事前案内し、直前のPagesデプロイが完了していることを確認する
+3. `Run workflow`でブランチ`main`、`deploy_mode=maintenance`を選び、`production_sha`を空欄にして新規実行する
+4. Sorryページ専用検証、生成、公開先・成果物検証、アップロード、deployの各結果を確認する
+5. 正式URLのルートで指定した日本語・英語のメンテナンス案内が表示されることを確認する
+6. 存在しないURL（例：`/maintenance-check-not-found/`）でも同じ案内が表示されることを確認する
+7. スマートフォン・PCで読みやすく、横スクロールや通常サイトの残存表示がないことを確認する
+8. サマリーのコンテンツSHAが制御用mainのSHAであることを確認する
+
+唯一の正本は`maintenance/sorry.html`です。`scripts/maintenance/prepare-pages.js`が標準Node.jsだけで文言、HTML・言語・見出し構造、禁止要素を検証し、一時ディレクトリで`index.html`と`404.html`を生成・照合してから`dist/site/maintenance/`へ置換します。過去の余計なファイルは残しません。生成失敗時は既存成果物を保持しますが、workflowは失敗してアップロードへ進みません。生成先は既存の`.gitignore`で除外され、Gitへ追加しません。
+
+メンテナンス公開は通常サイトの`npm ci`・`npm run check`・ビルドを実行せず、通常サイトの依存関係やビルドの失敗から独立します。Sorryページの専用検証は省略しません。外部CSS・JavaScript・画像・フォント、GA4、API通信、Cookie・Web Storage、フォーム、自動転送は含めません。
+
+ローカルでは次のように生成・テスト・表示確認できます。本番デプロイは実行しません。
+
+```sh
+node --test tests/unit/maintenance-pages.test.js tests/unit/deploy-pages-workflow.test.js
+node --input-type=module -e 'import { prepareMaintenancePages } from "./scripts/maintenance/prepare-pages.js"; await prepareMaintenancePages();'
+python3 -m http.server 4174 --bind 127.0.0.1 --directory dist/site/maintenance
+```
+
+`http://127.0.0.1:4174/`と`http://127.0.0.1:4174/404.html`を開き、390px・768px・PC幅、日本語・英語、横スクロール、JavaScript無効時、コンソールを確認します。この簡易ローカルサーバーはGitHub Pagesのカスタム404配信を再現しないため、`404.html`を直接確認します。
+
+GitHub Pagesではルートの案内はHTTP 200、存在しないパスのカスタム404はHTTP 404となります。HTTP 503や`Retry-After`を返す仕組みは実装しません。GitHub Pages自体が停止している場合は、この方法でもSorryページを配信できません。切り替えのためにPages Source、カスタムドメイン、DNS、HTTPSの設定を変更しないでください。
+
+## 重複実行と失敗時の扱い
+
+`concurrency: group: pages`、`cancel-in-progress: false`を維持します。ただし、これだけですべての実行順序が厳密に保証されるとは扱いません。運営者1名が、前の実行のbuild・deployが完了してから次を手動実行します。途中の実行がある状態で切り替え・復旧を重ねないでください。
+
+入力・検証・アップロード失敗時は新しいデプロイへ進みません。deployの失敗・キャンセル時は、画面とログで結果を確認し、実URLの公開状態も確認してください。未確認の状態を公開・復旧成功として記録せず、原因を解消して対象モードとSHAを再確認します。検証を省略したり、別のSHAへ自動的に差し替えたりしません。
 
 ## 公開後の確認
 
@@ -170,9 +241,13 @@ Google Analytics 4を含む変更を公開した場合は、運営者だけがGA
 
 ## 再デプロイと復旧
 
-問題がある場合は、生成成果物を直接編集せず、管理データ・Locale・生成処理を修正するPRを作成します。修正PRをマージ後、最新`main`から新しい`Run workflow`を実行します。
+メンテナンス終了後は、前の実行の完了を確認し、最新`main`から新しい`Run workflow`を開きます。`deploy_mode=production`、`production_sha=メンテナンス開始前に記録した公開済みSHA`を指定します。指定SHAのGit管理済み成果物だけを検証・再公開するため、最新mainの未公開変更は混入しません。過去SHAに切り替え機能がなくても、現在の制御用mainが処理します。過去SHAの`npm ci`や`npm run check`に失敗した場合は復旧デプロイを停止し、最新mainへフォールバックしません。
 
-直前の変更を取り消す場合は、対象PRをrevertするPRを作成してマージし、workflowを再実行します。workflow失敗時はGitHub Pagesへ新しいartifactがデプロイされないため、エラーを修正してから再実行します。
+deploy成功後、通常サイトのルート、日本語・英語、主要ページ、静的資産、404等を「公開後の確認」に従って確認し、記録したコンテンツSHAと一致する復旧であることを記録します。現在のNode.jsで検証できないほど古いSHAについても検証を回避せず、原因と対応を確認します。
+
+修正を伴う更新では、生成成果物を直接編集せず、管理データ・Locale・生成処理を修正するPRを作成します。修正PRをマージ後、最新`main`から新しい`Run workflow`を実行し、公開対象SHAを明示します。
+
+ソースの変更自体を取り消す場合は、対象PRをrevertするPRを作成してマージし、その公開対象SHAを指定してworkflowを実行します。公開済みの通常サイトへ戻すだけなら、revertせず記録済みSHAを指定できます。PRマージ、本番切り替え、本番復旧テストはそれぞれ利用者の別途承認後に実施します。
 
 ## Node.js 20非推奨警告
 
