@@ -2,6 +2,20 @@ name: Deploy production site to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_mode:
+        description: Site to publish
+        type: choice
+        required: true
+        default: production
+        options:
+          - production
+          - maintenance
+      production_sha:
+        description: Full 40-digit published commit SHA (production only)
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -15,32 +29,93 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_MODE: ${{ inputs.deploy_mode }}
+      PRODUCTION_SHA: ${{ inputs.production_sha }}
+      CONTROL_SHA: ${{ github.sha }}
+    outputs:
+      mode: ${{ steps.inputs.outputs.mode }}
+      control_sha: ${{ steps.inputs.outputs.control_sha }}
+      content_sha: ${{ steps.inputs.outputs.content_sha }}
+      artifact_path: ${{ steps.artifact.outputs.artifact_path }}
+      validated: ${{ steps.artifact.outputs.validated }}
     steps:
-      - name: Checkout
+      - name: Require main branch
+        run: test "$GITHUB_REF" = refs/heads/main
+      - name: Checkout control main
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.sha }}
+          path: control
           fetch-depth: 0
+          persist-credentials: false
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24.22.1
-          cache: npm
-      - name: Install dependencies
+      - name: Validate deployment inputs and ancestry
+        id: inputs
+        run: node control/scripts/maintenance/prepare-pages.js validate-inputs
+      - name: Checkout selected production commit
+        if: steps.inputs.outputs.mode == 'production'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.inputs.outputs.content_sha }}
+          path: production-source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install production dependencies
+        if: steps.inputs.outputs.mode == 'production'
+        working-directory: production-source
         run: npm ci
       - name: Validate tracked production artifacts
+        if: steps.inputs.outputs.mode == 'production'
+        working-directory: production-source
         run: npm run check
+      - name: Prepare and validate maintenance artifacts
+        if: steps.inputs.outputs.mode == 'maintenance'
+        run: node control/scripts/maintenance/prepare-pages.js prepare-maintenance
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v6
-      - name: Confirm production base URL
-        run: npm run check:site:base-url -- --actual "${{ steps.pages.outputs.base_url }}"
-      - name: Upload production site
+      - name: Confirm base URL and permitted artifact
+        id: artifact
+        env:
+          ACTUAL_BASE_URL: ${{ steps.pages.outputs.base_url }}
+          ARTIFACT_PATH: ${{ steps.inputs.outputs.mode == 'production' && 'production-source/dist/site/production' || 'control/dist/site/maintenance' }}
+        run: node control/scripts/maintenance/prepare-pages.js validate-artifact
+      - name: Upload validated site
+        id: upload
+        if: success() && steps.artifact.outputs.validated == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist/site/production
+          path: ${{ steps.artifact.outputs.artifact_path }}
+      - name: Build summary
+        if: always()
+        env:
+          MODE: ${{ steps.inputs.outputs.mode || 'unvalidated' }}
+          CONTENT_SHA: ${{ steps.inputs.outputs.content_sha || 'unvalidated' }}
+          ARTIFACT_PATH: ${{ steps.artifact.outputs.artifact_path || 'unvalidated' }}
+          INPUT_RESULT: ${{ steps.inputs.outcome }}
+          VALIDATION_RESULT: ${{ steps.artifact.outcome }}
+          UPLOAD_RESULT: ${{ steps.upload.outcome }}
+        run: |
+          {
+            printf '## Pages validation (deployment has not completed)\n\n'
+            printf '| Item | Value |\n| --- | --- |\n'
+            printf '| Mode | %s |\n' "$MODE"
+            printf '| Control SHA | %s |\n' "$CONTROL_SHA"
+            printf '| Content SHA | %s |\n' "$CONTENT_SHA"
+            printf '| Artifact directory | %s |\n' "$ARTIFACT_PATH"
+            printf '| Inputs and ancestry | %s |\n' "$INPUT_RESULT"
+            printf '| Final validation | %s |\n' "$VALIDATION_RESULT"
+            printf '| Upload | %s |\n' "$UPLOAD_RESULT"
+            printf '| Deployment | Not attempted by build job; see deploy result |\n'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
   deploy:
     needs: build
+    if: needs.build.result == 'success' && needs.build.outputs.validated == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -49,3 +124,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Deployment summary
+        if: always()
+        env:
+          MODE: ${{ needs.build.outputs.mode }}
+          CONTROL_SHA: ${{ needs.build.outputs.control_sha }}
+          CONTENT_SHA: ${{ needs.build.outputs.content_sha }}
+          ARTIFACT_PATH: ${{ needs.build.outputs.artifact_path }}
+          DEPLOY_RESULT: ${{ steps.deployment.outcome }}
+        run: |
+          {
+            printf '## Pages deployment result\n\n'
+            printf '| Item | Value |\n| --- | --- |\n'
+            printf '| Mode | %s |\n' "$MODE"
+            printf '| Control SHA | %s |\n' "$CONTROL_SHA"
+            printf '| Content SHA | %s |\n' "$CONTENT_SHA"
+            printf '| Artifact directory | %s |\n' "$ARTIFACT_PATH"
+            printf '| Validation | success |\n'
+            printf '| Deployment | %s |\n' "$DEPLOY_RESULT"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
