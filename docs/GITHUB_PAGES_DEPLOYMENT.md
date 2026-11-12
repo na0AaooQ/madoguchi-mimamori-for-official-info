@@ -37,7 +37,7 @@ PR #31は2026年8月9日にマージされ、BL-006-C第三公開単位とBL-006
 
 ## production成果物の生成
 
-対象環境はNode.js `24.22.1`、npm `11.19.1`です。依存関係を準備し、本番用管理データを検証してから、基準日を明示して日英の公開データを生成します。
+対象環境はNode.js `24.22.3`、npm `11.19.1`です。依存関係を準備し、本番用管理データを検証してから、基準日を明示して日英の公開データを生成します。
 
 ```sh
 node --version
@@ -108,7 +108,7 @@ npm run serve:site:production
 
 制御側は実行時mainのSHAを`control/`へ、通常公開側は検証済みの指定SHAを`production-source/`へCheckoutします。両方の`actions/checkout@v6`には`fetch-depth: 0`を設定し、main履歴の検証と、過去SHAの`npm run check`が参照する既存MarkdownのPrettier基準コミットを含む全Git履歴を取得します。記載するActionバージョンは、現在のworkflowファイルと一致させます。
 
-Node.jsは両モードとも`24.22.1`です。メンテナンス側を通常サイトのlockfileに依存させないためnpmキャッシュは使用しません。productionだけが指定SHAのディレクトリで`npm ci`と`npm run check`を実行します。制御側にはnpm依存関係を導入しません。
+Node.jsは両モードとも`24.22.3`です。メンテナンス側を通常サイトのlockfileに依存させないためnpmキャッシュは使用しません。productionだけが指定SHAのディレクトリで`npm ci`と`npm run check`を実行します。制御側にはnpm依存関係を導入しません。
 
 入力条件は次のとおりです。main以外のブランチやタグからの実行、表にないモード・組み合わせはアップロード前に拒否します。
 

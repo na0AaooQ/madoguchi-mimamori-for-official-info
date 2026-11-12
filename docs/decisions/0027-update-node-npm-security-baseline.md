@@ -45,6 +45,12 @@ Node.js `24.22.1`、npm `11.19.1`で、既存の`node_modules`を再構築せず
 
 GitHub Actions上の実行結果は、Phase 6で別途承認後に確認します。Node.js 20非推奨警告[BL-018](../POST_LAUNCH_BACKLOG.md#bl-018-github-actionsのnodejs-20非推奨警告)は`deferred`を維持し、実際の再検証前に解消済みとは扱いません。
 
+## 2026年11月12日の更新
+
+[Node.jsのセキュリティ修正版](https://nodejs.org/en/blog/release/v24.22.3)への対応として、Node.jsを24.22.1から24.22.3へ更新し、npm 11.19.1を維持します。利用者による工程Cのローカル互換性検証では、この環境で既存647テストを含む`npm run check`が正常終了しました。
+
+開発環境のバージョン指定とGitHub Pages workflowの両モードで使うNode.js指定を更新します。npm 11.19.1でlockfileのルートのNode.js条件を整合させ、依存パッケージとサイト機能を維持します。GitHub Actionsでの検証とproductionデプロイは後続工程で行います。
+
 ## 関連文書
 
 - [品質管理基盤](../QUALITY_TOOLING.md)

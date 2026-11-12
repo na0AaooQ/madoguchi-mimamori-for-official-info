@@ -41,7 +41,7 @@ test('Pages workflow preserves official action majors and pinned Node.js', () =>
       'actions/deploy-pages@v4'
     ]
   );
-  assert.match(step('Setup Node.js'), /node-version: 24\.22\.1/);
+  assert.match(step('Setup Node.js'), /node-version: 24\.22\.3/);
   assert.doesNotMatch(step('Setup Node.js'), /cache:/);
 });
 
