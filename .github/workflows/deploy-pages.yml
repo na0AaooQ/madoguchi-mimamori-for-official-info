@@ -52,7 +52,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24.22.1
+          node-version: 24.22.3
       - name: Validate deployment inputs and ancestry
         id: inputs
         run: node control/scripts/maintenance/prepare-pages.js validate-inputs

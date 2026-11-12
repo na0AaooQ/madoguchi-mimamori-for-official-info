@@ -54,7 +54,10 @@ test('builds the deterministic production site from production navigation only',
   );
   for (const file of ['index.html', '404.html', 'sitemap.xml']) assert.ok(first.has(file));
   assert.equal(Buffer.isBuffer(first.get('ogp-image.png')), true);
-  assert.match(first.get('assets/styles.css'), /\.production-root \.root-language-heading/);
+  assert.match(
+    first.get('assets/styles.css'),
+    /\.production-root \.root-language-heading\s*\{\s*text-align:\s*start;\s*\}/
+  );
   assert.doesNotMatch(
     buildSiteArtifacts(previewInputs).get('assets/styles.css'),
     /\.production-root \.root-language-heading/

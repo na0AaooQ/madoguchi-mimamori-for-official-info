@@ -1,5 +1,5 @@
 .production-root .root-language-heading {
-  text-align: center;
+  text-align: start;
 }
 
 @media (max-width: 34rem) {
