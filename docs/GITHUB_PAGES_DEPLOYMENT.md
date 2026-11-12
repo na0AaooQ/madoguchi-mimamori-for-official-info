@@ -253,7 +253,9 @@ deploy成功後、通常サイトのルート、日本語・英語、主要ペ�
 
 workflow実行 #2では、GitHub Actions画面にNode.js 20非推奨に関する非ブロッキング警告が2件表示されました。build、deploy、production公開は成功し、workflowでアプリを実行するNode.jsは`24.18.0`です。警告元のActionは確認できていないため推測で断定せず、今回Actionバージョンは変更しません。
 
-この対応は`deferred`です。再検討条件は[公開後バックログのBL-018](POST_LAUNCH_BACKLOG.md#bl-018-github-actionsのnodejs-20非推奨警告)を参照してください。
+2026年11月12日の[Deploy production site to GitHub Pages #19](https://github.com/na0AaooQ/madoguchi-mimamori-for-official-info/actions/runs/43204602401)では、Node.js `v24.22.3`／npm `11.19.1`でbuild・deployが成功し、productionデプロイと正式URLの公開後確認が完了しました。Control SHA・Content SHAはいずれも指定した`5fbfdbda81ecb1fd1e9fca36a837a3c723fc4979`と一致しました。Node.js 20非推奨警告は非ブロッキングのままbuild・deployで各1件、計2件継続しました。buildでは直接指定した`actions/upload-pages-artifact@v4`の実行ログに内部Actionの`actions/upload-artifact`が表示され、deployでは`actions/deploy-pages@v4`が表示されました。これらはActionの実行環境に関する警告であり、アプリ用Node.jsのセキュリティ更新やデプロイの失敗を意味しません。
+
+BL-018は`deferred`を維持し、今回、警告対応を目的としたAction変更や再デプロイは行いません。再検討条件は[公開後バックログのBL-018](POST_LAUNCH_BACKLOG.md#bl-018-github-actionsのnodejs-20非推奨警告)を参照してください。
 
 ## CNAMEとDNS
 
